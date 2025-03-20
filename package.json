@@ -1,0 +1,16 @@
+{
+  "name": "mycelis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start":"concurrently \"pnpm run --filter @mycelis/frontend dev\" \"pnpm run --filter @mycelis/backend start -b swc -w\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.6.4",
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
