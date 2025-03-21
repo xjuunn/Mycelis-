@@ -32,3 +32,4 @@ DS_Store
 migrations
 *.db
 *.local
+*.db-journal

@@ -1,0 +1,23 @@
+{
+  "name": "@mycelis/database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "scripts": {
+    "build":"tsc && tsc -p tsconfig.cjs.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.6.4",
+  "dependencies": {
+    "@prisma/client": "6.5.0",
+    "@types/node": "^22.10.7",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "prisma": "^6.5.0"
+  }
+}
