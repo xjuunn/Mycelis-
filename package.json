@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "setup": "pnpm install -r",
-    "start": "turbo run start",
+    "dev": "cross-env NODE_ENV=development dotenv -e .env.public turbo run start",
+    "start": "dotenv -e .env.public turbo run start",
     "build": "turbo run build",
     "build:packages": "turbo run build --filter \"./packages/*\"",
     "cleanup": "npx shx rm -rf packages/*/dist && npx shx rm -rf apps/*/dist && pnpm run --filter @mycelis/frontend cleanup"
@@ -15,9 +16,14 @@
   "license": "ISC",
   "packageManager": "pnpm@10.6.5",
   "dependencies": {
-    "concurrently": "^9.1.2"
+    "@types/node": "^22.10.7",
+    "concurrently": "^9.1.2",
+    "typescript": "^5.7.3"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
+    "dotenv-cli": "^8.0.0",
     "shx": "^0.4.0",
     "turbo": "^2.4.4"
   }

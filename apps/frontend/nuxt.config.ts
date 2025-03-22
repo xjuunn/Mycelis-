@@ -10,6 +10,9 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  runtimeConfig: {
+    public: {},
+  },
   css: ["~/assets/app.css"],
   modules: [
     "@nuxt/icon",

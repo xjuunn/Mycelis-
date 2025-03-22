@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
+    "@iconify/json": "^2.2.319",
     "@mycelis/database": "workspace:^",
     "@mycelis/types": "workspace:^",
     "@nuxt/icon": "1.11.0",
