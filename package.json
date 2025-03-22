@@ -4,13 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start":"concurrently \"pnpm run --filter @mycelis/frontend dev\" \"pnpm run --filter @mycelis/backend start -b swc -w\""
+    "setup": "pnpm install -r",
+    "start": "turbo run start",
+    "build": "turbo run build",
+    "build:packages": "turbo run build --filter \"./packages/*\"",
+    "cleanup": "npx shx rm -rf packages/*/dist && npx shx rm -rf apps/*/dist && pnpm run --filter @mycelis/frontend cleanup"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.6.4",
+  "packageManager": "pnpm@10.6.5",
   "dependencies": {
     "concurrently": "^9.1.2"
+  },
+  "devDependencies": {
+    "shx": "^0.4.0",
+    "turbo": "^2.4.4"
   }
 }

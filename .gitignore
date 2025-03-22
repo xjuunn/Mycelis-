@@ -33,3 +33,5 @@ migrations
 *.db
 *.local
 *.db-journal
+
+.turbo
