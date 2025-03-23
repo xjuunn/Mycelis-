@@ -1,26 +1,42 @@
+import { Prisma, UserDB, User } from '@mycelis/database';
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserDB } from '@mycelis/database';
+
 @Injectable()
 export class UserService {
-  async create(createUserDto: CreateUserDto) {
-    return await UserDB.addUser(createUserDto.name, createUserDto.email);
+  create(
+    createUserDto: Prisma.UserCreateInput,
+  ): Prisma.Prisma__UserClient<User> {
+    return UserDB.add(createUserDto);
   }
 
-  async findAll() {
-    return await UserDB.findAll();
+  findAll(
+    where: Prisma.UserWhereInput,
+    take: number,
+    skip: number,
+  ): Prisma.Prisma__UserClient<User[]> {
+    return UserDB.list(where, take, skip);
   }
 
-  async findOne(id: number) {
-    return await UserDB.findUser(id);
+  findOne(idOrName: number | string): Prisma.Prisma__UserClient<User | null> {
+    if (typeof idOrName == 'number') {
+      return UserDB.find(idOrName);
+    } else {
+      return UserDB.find(idOrName);
+    }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(
+    where: Prisma.UserWhereUniqueInput,
+    data: Prisma.UserUpdateInput,
+  ): Prisma.Prisma__UserClient<User> {
+    return UserDB.update(where, data);
   }
 
-  async remove(id: number) {
-    return await UserDB.delUser(id);
+  remove(idOrName: number | string): Prisma.Prisma__UserClient<User> {
+    if (typeof idOrName == 'number') {
+      return UserDB.del(idOrName);
+    } else {
+      return UserDB.del(idOrName);
+    }
   }
 }

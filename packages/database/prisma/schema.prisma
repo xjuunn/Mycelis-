@@ -1,17 +1,32 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  name  String
+  id           Int     @id @default(autoincrement())
+  name         String     @unique
+  displayName  String?
+  passwordHash String
+  avatarUrl    String?
+  status       UserStatus @default(OFFLINE)
+  role         UserRole   @default(USER)
+  isActive     Boolean    @default(true)
+  createAt     DateTime   @default(now())
+  updateAt     DateTime   @updatedAt
+  lastLoginAt  DateTime?
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
