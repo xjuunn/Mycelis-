@@ -1,12 +1,14 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Result } from '@mycelis/types';
+import { Public } from 'src/d/public/public.decorator';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
     @Post('signIn')
+    @Public()
     signIn(@Body('name') name: string, @Body('password') password: string) {
         if (!name || !name.length)
             return new Result("请输入用户名", 200, "请输入用户名");

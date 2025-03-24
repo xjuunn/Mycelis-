@@ -6,6 +6,7 @@ import { ResultInterceptor } from './itc/result/result.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './res/user/auth/auth.module';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './res/user/auth/auth.module';
     })],
   controllers: [AppController],
   providers: [
+    JwtService,
     AppService,
     {
       provide: APP_INTERCEPTOR,
