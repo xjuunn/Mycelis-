@@ -8,7 +8,7 @@ import { Prisma, User } from "@prisma/client";
 export function add(
   user: Prisma.UserCreateInput
 ): Prisma.Prisma__UserClient<User> {
-  
+
   return prisma.user.create({
     data: { ...user },
   });
@@ -85,8 +85,8 @@ export function find(nameOrId: string | number) {
  */
 export function list(
   where: Prisma.UserWhereInput,
-  take: number,
-  skip: number
+  take: number = 15,
+  skip: number = 1
 ): Prisma.PrismaPromise<User[]> {
   return prisma.user.findMany({
     take,

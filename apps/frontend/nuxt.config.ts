@@ -11,7 +11,10 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
   runtimeConfig: {
-    public: {},
+    jwt_secret: process.env.JWT_SECRET,
+    public: {
+
+    },
   },
   css: ["~/assets/app.css"],
   modules: [
