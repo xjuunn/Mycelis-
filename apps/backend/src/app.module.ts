@@ -9,6 +9,7 @@ import { AuthModule } from './res/user/auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
 import { RoleGuard } from './gu/role/role.guard';
 import { AuthGuard } from './gu/auth/auth.guard';
+import { FilesModule } from './res/files/files.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { AuthGuard } from './gu/auth/auth.guard';
     ConfigModule.forRoot({
       isGlobal: true,
       // envFilePath: '../../../.env'
-    })],
+    }),
+    FilesModule],
   controllers: [AppController],
   providers: [
     JwtService,

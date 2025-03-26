@@ -36,3 +36,5 @@ migrations
 *.db-journal
 
 .turbo
+
+/files
