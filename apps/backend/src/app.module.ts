@@ -10,6 +10,9 @@ import { JwtService } from '@nestjs/jwt';
 import { RoleGuard } from './gu/role/role.guard';
 import { AuthGuard } from './gu/auth/auth.guard';
 import { FilesModule } from './res/files/files.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { getFileUrl } from './utils/FileUrl';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -19,7 +22,21 @@ import { FilesModule } from './res/files/files.module';
       isGlobal: true,
       // envFilePath: '../../../.env'
     }),
-    FilesModule],
+    FilesModule,
+    ServeStaticModule.forRootAsync({
+      useFactory: async () => {
+        const rootPath = join(await getFileUrl(), 'images');
+        return [{
+          rootPath,
+          serveRoot: '/images',
+          serveStaticOptions: {
+            index: false,
+            cacheControl: true,
+          },
+        }];
+      },
+    })
+  ],
   controllers: [AppController],
   providers: [
     JwtService,
@@ -27,7 +44,7 @@ import { FilesModule } from './res/files/files.module';
     {
       provide: APP_GUARD,
       useClass: AuthGuard
-    },{
+    }, {
       provide: APP_GUARD,
       useClass: RoleGuard
     }, {
