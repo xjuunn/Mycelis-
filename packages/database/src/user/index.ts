@@ -86,7 +86,7 @@ export function find(nameOrId: string | number) {
 export function list(
   where: Prisma.UserWhereInput,
   take: number = 15,
-  skip: number = 1
+  skip: number = 0
 ): Prisma.PrismaPromise<User[]> {
   return prisma.user.findMany({
     take,
