@@ -3,6 +3,7 @@ import { UserService } from '../user.service';
 import { Result } from '@mycelis/types';
 import { JwtService } from '@nestjs/jwt';
 import { Crypto } from '@mycelis/utils';
+import { Prisma, Types } from '@mycelis/database';
 
 @Injectable()
 export class AuthService {
@@ -19,5 +20,9 @@ export class AuthService {
             token: await this.jwtService.signAsync(payload),
             user
         }, 200, '登录成功')
+    }
+
+    signUp(name: string, password: string): Prisma.Prisma__UserClient<Types.User> {
+        return this.userService.create({ name, passwordHash: password })
     }
 }
