@@ -24,7 +24,7 @@
                         已有账号？
                     </NuxtLink>
                 </div>
-                <button class="btn btn-block mt-4 btn-primary">注 册</button>
+                <button class="btn btn-block mt-4 btn-primary" @click="btnSignup">注 册</button>
             </div>
             <div class="divider">OR</div>
             <div class="grid gap-2 grid-cols-2">
@@ -113,5 +113,15 @@
     </div>
 </template>
 <script setup lang="ts">
+const { axios } = useAxios();
+async function btnSignup() {
+    let {data} = await axios.get('/');
+    console.log(data);
+
+
+
+
+
+}
 
 </script>

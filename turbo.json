@@ -3,7 +3,7 @@
     "start": {
       "dependsOn": ["^build"],
       "outputs": [],
-      "env":["JWT_SECRET","FILE_URL"]
+      "env":["JWT_SECRET","FILE_URL","BASE_URL"]
     },
     "build": {
       "dependsOn": ["^build"],

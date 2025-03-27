@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     jwt_secret: process.env.JWT_SECRET,
     public: {
-
+    BASE_URL:process.env.BASE_URL
     },
   },
   css: ["~/assets/app.css"],
