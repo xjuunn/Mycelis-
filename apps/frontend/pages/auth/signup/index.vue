@@ -31,8 +31,8 @@
                 </div>
                 <button class="btn btn-block mt-4 btn-primary" @click="btnSignup">注 册</button>
             </div>
-            <div class="divider">OR</div>
-            <div class="grid gap-2 grid-cols-2">
+            <div class="divider hidden">OR</div>
+            <div class="grid gap-2 grid-cols-2 hidden">
                 <!-- WeChat -->
                 <button class="btn btn-sm bg-[#5EBB2B] text-white border-[#4eaa0c]">
                     <svg aria-label="WeChat logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg"
@@ -172,8 +172,7 @@ async function btnSignup() {
     let avatarUrl = await uploadFile();
     let { data } = await User.signUp(name.value, password1.value, avatarUrl);
     if (data.code !== 200) {
-        // TODO 错误提示
-        console.log("注册失败： ", data.msg);
+        msg.value = data.msg;
         return;
     }
     navigateTo('/auth/signIn')

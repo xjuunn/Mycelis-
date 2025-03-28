@@ -5,24 +5,27 @@
             <div class="mt-4 pt-4 pb-2">
                 <div class="input focus-within:outline-0">
                     <div class="label w-20 justify-end">用户名</div>
-                    <input type="text" placeholder="输入用户名">
+                    <input v-model="name" type="text" placeholder="输入用户名">
                 </div>
                 <div class="input mt-2 focus-within:outline-0">
                     <div class="label w-20 justify-end">密码</div>
-                    <input type="password" placeholder="输入密码">
+                    <input v-model="password" type="password" placeholder="输入密码">
                 </div>
-                <div class="text-xs mt-2">
+                <div class="text-xs mt-2 flex">
                     <!-- <span class="hover:link hover:text-primary opacity-50 hover:opacity-100">
                         忘记密码？
                     </span> -->
                     <NuxtLink to="/auth/signup" class="hover:link hover:text-primary  opacity-50 hover:opacity-100">
                         还没有注册？
                     </NuxtLink>
+                    <span class="flex-1 text-end p-1 text-error">
+                        {{ msg }}
+                    </span>
                 </div>
-                <button class="btn btn-block mt-4 btn-primary">登 录</button>
+                <button class="btn btn-block mt-4 btn-primary" @click="btnSignIn">登 录</button>
             </div>
-            <div class="divider">OR</div>
-            <div class="grid gap-2 grid-cols-2">
+            <div class="divider hidden">OR</div>
+            <div class="grid gap-2 grid-cols-2 hidden">
                 <!-- WeChat -->
                 <button class="btn btn-sm bg-[#5EBB2B] text-white border-[#4eaa0c]">
                     <svg aria-label="WeChat logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg"
@@ -109,5 +112,37 @@
 </template>
 
 <script setup lang="ts">
+import * as User from '~/api/user';
+let name = ref('');
+let password = ref('');
+let { setUser } = useAppStore();
+let msg = ref('');
+function btnSignIn() {
+    if (name.value === '') {
+        msg.value = "请输入用户名";
+        return;
+    }
+    if (name.value.length > 20) {
+        msg.value = "用户名太长了";
+        return;
+    }
+    if (password.value === '') {
+        msg.value = '请输入密码';
+        return;
+    }
+    if (password.value.length > 50) {
+        msg.value = "密码太长了";
+        return;
+    }
+    User.signIn(name.value, password.value).then(({ data }) => {
+        setUser(data.data.user);
+        useAxios().updateToken(data.data.token);
+        navigateTo('/')
+    }).catch((error) => {
+        msg.value = error.msg
+
+    });
+
+}
 
 </script>

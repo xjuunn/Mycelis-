@@ -1,9 +1,11 @@
 import axios from 'axios';
-
+import { Result } from '@mycelis/types';
 export const useAxios = () => {
     const token = ref('');
 
     const getToken = () => {
+        if (token.value === '')
+            token.value = localStorage.getItem('token') ?? 'no token'
         return token.value;
     };
     const initAxios = () => {
@@ -19,15 +21,17 @@ export const useAxios = () => {
     const axiosInstance = ref(initAxios());
     axiosInstance.value.interceptors.response.use(
         (res) => res,
-        (error) => {
+        (error): Promise<Result<any>> => {
             console.error("Axios错误: ", error);
-            return Promise.reject(error);
+            return Promise.reject<Result<any>>(error.response.data);
         }
     );
     const refreshAxios = () => {
+        token.value = '';
         axiosInstance.value = initAxios();
     };
     const updateToken = (newToken: string) => {
+        localStorage.setItem('token', newToken);
         token.value = newToken;
         refreshAxios();
     };

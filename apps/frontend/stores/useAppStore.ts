@@ -7,7 +7,12 @@ export const useAppStore = defineStore("app", () => {
     const _user: Ref<Types.User | undefined> = ref()
     const baseurl = computed(() => _base_url.value)
     const user = computed(() => _user.value)
+    onBeforeMount(() => {
+        _user.value = JSON.parse(localStorage.getItem('user') ?? '{}');
+    })
     function setUser(user: Types.User) {
+        user.passwordHash = '';
+        localStorage.setItem('user', JSON.stringify(user))
         _user.value = user;
     }
     return {
