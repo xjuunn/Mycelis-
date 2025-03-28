@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 export const useAxios = () => {
-    const config = useRuntimeConfig();
     const token = ref('');
 
     const getToken = () => {
@@ -9,7 +8,7 @@ export const useAxios = () => {
     };
     const initAxios = () => {
         return axios.create({
-            baseURL: config.public.BASE_URL,
+            baseURL: useAppStore().baseurl,
             timeout: 10000,
             headers: {
                 "Content-Type": "application/json",

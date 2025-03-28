@@ -25,10 +25,10 @@ import { join } from 'path';
     FilesModule,
     ServeStaticModule.forRootAsync({
       useFactory: async () => {
-        const rootPath = join(await getFileUrl(), 'images');
+        const rootPath = join(await getFileUrl(), '');
         return [{
           rootPath,
-          serveRoot: '/images',
+          serveRoot: '/file',
           serveStaticOptions: {
             index: false,
             cacheControl: true,

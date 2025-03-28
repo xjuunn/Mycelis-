@@ -18,7 +18,7 @@ export class AuthController {
 
     @Post("signUp")
     @Public()
-    signUp(@Body('name') name: string, @Body('password') password: string): Prisma.Prisma__UserClient<Types.User> {
+    signUp(@Body('name') name: string, @Body('password') password: string, @Body('avatar') avatar: string = ''): Prisma.Prisma__UserClient<Types.User> {
         if (!name || !name.length) throw new BadRequestException("请输入用户名");
         if (!password || !password.length) throw new BadRequestException("请输入密码");
         if (name.length < 3) throw new BadRequestException("用户名过短");
@@ -27,7 +27,7 @@ export class AuthController {
         if (password.length > 50) throw new BadRequestException("密码过长");
         if (!this.isValidName(name)) throw new BadRequestException("用户名只能由字母、数字、下划线组成");
         if (!this.isValidPassword(password)) throw new BadRequestException("密码只能由以下字符组成：​大写字母 A-Z、​小写字母 a-z、​数字 0-9、​特殊字符 !@#$%^&*()_");
-        return this.authService.signUp(name, password);
+        return this.authService.signUp(name, password, avatar);
     }
 
     isValidName(str: string): boolean {

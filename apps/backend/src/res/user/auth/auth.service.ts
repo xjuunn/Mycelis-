@@ -22,7 +22,7 @@ export class AuthService {
         }, 200, '登录成功')
     }
 
-    signUp(name: string, password: string): Prisma.Prisma__UserClient<Types.User> {
-        return this.userService.create({ name, passwordHash: password })
+    signUp(name: string, password: string, avatar: string): Prisma.Prisma__UserClient<Types.User> {
+        return this.userService.create({ name, passwordHash: password, avatarUrl: avatar })
     }
 }

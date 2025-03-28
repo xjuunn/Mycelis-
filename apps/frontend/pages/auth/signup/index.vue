@@ -4,25 +4,30 @@
             <h2 class="font-bold text-2xl text-center">注 册</h2>
             <div class="mt-2 pt-4 pb-2">
                 <div>
-                    <button class="btn btn-primary btn-sm btn-soft">选择头像</button>
-                    <span class="ml-2 text-sm text-base-content/70">png、jpg、webp</span>
+                    <button class="btn btn-primary btn-sm btn-soft" @click="btnSelectCover">选择头像</button>
+                    <span class="ml-2 text-sm text-base-content/70" :class="{ 'line-clamp-1': fileName.length > 25 }">{{
+                        fileName }}</span>
+                    <input type="file" @change="onCoverSelected" class="hidden" ref="fileinput">
                 </div>
                 <div class="input mt-2 focus-within:outline-0">
-                    <div class="label w-20 justify-end">&nbsp;用户名</div>
-                    <input type="text" placeholder="输入用户名">
+                    <div class="label w-20 justify-end">&nbsp;&nbsp;用户名</div>
+                    <input v-model="name" type="text" placeholder="输入用户名">
                 </div>
                 <div class="input mt-2 focus-within:outline-0">
-                    <div class="label w-20 justify-end">&nbsp;&nbsp;&nbsp;密码</div>
-                    <input type="password" placeholder="输入密码">
+                    <div class="label w-20 justify-end">&nbsp;&nbsp;&nbsp;&nbsp;密码</div>
+                    <input v-model="password1" type="password" placeholder="输入密码">
                 </div>
                 <div class="input mt-2 focus-within:outline-0">
                     <div class="label w-20 justify-end">重复密码</div>
-                    <input type="password" placeholder="输入密码">
+                    <input v-model="password2" type="password" placeholder="输入密码">
                 </div>
-                <div class="text-xs mt-2">
+                <div class="text-xs mt-2 flex">
                     <NuxtLink to="/auth/signin" class="hover:link hover:text-primary  opacity-50 hover:opacity-100">
                         已有账号？
                     </NuxtLink>
+                    <span class="flex-1 text-end p-1 text-error">
+                        {{ msg }}
+                    </span>
                 </div>
                 <button class="btn btn-block mt-4 btn-primary" @click="btnSignup">注 册</button>
             </div>
@@ -113,15 +118,94 @@
     </div>
 </template>
 <script setup lang="ts">
-const { axios } = useAxios();
+import * as User from '~/api/user'
+import * as FileUpload from '~/api/file'
+let name = ref('');
+let password1 = ref('');
+let password2 = ref('');
+let msg = ref('');
+let fileinput: Ref<HTMLInputElement | null> = ref(null);
+let coverFile: File | null = null;
+let fileName = ref('png、jpg、webp、gif');
+
 async function btnSignup() {
-    let {data} = await axios.get('/');
-    console.log(data);
-
-
-
-
+    if (name.value === '') {
+        msg.value = "请输入用户名";
+        return;
+    }
+    if (name.value.length < 3) {
+        msg.value = "用户名过短";
+        return;
+    }
+    if (name.value.length > 20) {
+        msg.value = "用户名过长";
+        return;
+    }
+    if (password1.value === '') {
+        msg.value = "请输入密码";
+        return;
+    }
+    if (password1.value.length < 6) {
+        msg.value = "密码过短";
+        return;
+    }
+    if (password2.value.length > 50) {
+        msg.value = "密码过长";
+        return;
+    }
+    if (!isValidName(name.value)) {
+        msg.value = "用户名只能由字母、数字、下划线组成";
+        return;
+    }
+    if (!isValidPassword(password1.value)) {
+        msg.value = "密码只能由以下字符组成：​大写字母 A-Z、​小写字母 a-z、​数字 0-9、​特殊字符 !@#$%^&*()_";
+        return;
+    }
+    if (password1.value !== password2.value) {
+        msg.value = "两次输入的密码不一致";
+        return;
+    }
+    if (!coverFile) {
+        msg.value = "请选择头像";
+        return;
+    }
+    let avatarUrl = await uploadFile();
+    let { data } = await User.signUp(name.value, password1.value, avatarUrl);
+    if (data.code !== 200) {
+        // TODO 错误提示
+        console.log("注册失败： ", data.msg);
+        return;
+    }
+    navigateTo('/auth/signIn')
+}
+async function uploadFile() {
+    if (!coverFile) return;
+    let { data } = await FileUpload.uploadAvatar(coverFile);
+    return data.data
 
 }
 
+function isValidName(str: string): boolean {
+    return /^[a-zA-Z0-9_]+$/.test(str);
+}
+
+function isValidPassword(password: string): boolean {
+    return /^[A-Za-z0-9!@#$%^&*()_]+$/.test(password);
+}
+
+function btnSelectCover() {
+    fileinput.value?.click()
+}
+
+function onCoverSelected(event: Event) {
+    let target = event.target as HTMLInputElement;
+    if (target && target.files) {
+        coverFile = target.files[0];
+    }
+    if (!coverFile) {
+        msg.value = "请选择头像";
+        return;
+    }
+    fileName.value = coverFile.name;
+}
 </script>
