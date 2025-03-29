@@ -1,6 +1,8 @@
 {
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
+    "jsxFactory": "h",
+    "jsxImportSource": "vue",
     "baseUrl": ".",
     "paths": {
       "~/*": [

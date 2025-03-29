@@ -176,6 +176,7 @@ async function btnSignup() {
         return;
     }
     navigateTo('/auth/signIn')
+    // TODO 需要防止用户重复点击
 }
 async function uploadFile() {
     if (!coverFile) return;
