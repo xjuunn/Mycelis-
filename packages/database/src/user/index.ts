@@ -86,11 +86,23 @@ export function find(nameOrId: string | number) {
 export function list(
   where: Prisma.UserWhereInput,
   take: number = 15,
-  skip: number = 0
+  skip: number = 0,
+  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
 ): Prisma.PrismaPromise<User[]> {
   return prisma.user.findMany({
     take,
     skip,
     where,
+    orderBy
   });
+}
+
+/**
+ * 当前查询条件下的数据总量
+ * @param where 查询条件
+ */
+export async function total(
+  where: Prisma.UserWhereInput
+): Promise<number> {
+  return prisma.user.count({ where });
 }

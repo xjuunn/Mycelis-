@@ -23,3 +23,18 @@ export function signIn(name: string, password: string) {
         name, password
     })
 }
+
+export function search(keyword: string, take: number = 15, skip: number = 0) {
+    return useAxios().axios.get<Result<SearchResult>>(`/user/search?keyword=${keyword}&take=${take}&skip=${skip}`)
+}
+
+export interface SearchResult {
+    data: Types.User[],
+    total: number,
+    take: number,
+    skip: number
+}
+
+export function findByName(name: string) {
+    return useAxios().axios.get<Result<Types.User>>('/user/findbyname/' + name)
+}

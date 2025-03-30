@@ -15,11 +15,12 @@ export class UserService {
     where: Prisma.UserWhereInput,
     take: number,
     skip: number,
+    orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
   ): Prisma.Prisma__UserClient<Types.User[]> {
     return UserDB.list({
       ...where,
       passwordHash: undefined
-    }, take, skip);
+    }, take, skip, orderBy);
   }
 
   findOne(idOrName: number | string): Prisma.Prisma__UserClient<Types.User | null> {
@@ -46,5 +47,9 @@ export class UserService {
     } else {
       return UserDB.del(idOrName);
     }
+  }
+
+  total(where: Prisma.UserWhereInput): Promise<number> {
+    return UserDB.total(where)
   }
 }
