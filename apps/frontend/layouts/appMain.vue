@@ -5,9 +5,12 @@
                 <img class="opacity-20" src="/icon-light-256.png" alt="logo">
             </button>
             <div class="menu join join-vertical">
-                <button class="btn btn-md btn-square join-item opacity-50 hover:opacity-100 transition">
+                <NuxtLink to="/" class="btn btn-md btn-square join-item opacity-50 hover:opacity-100 transition">
                     <Icon name="solar:dialog-2-bold-duotone" size="1.2rem"></Icon>
-                </button>
+                </NuxtLink>
+                <NuxtLink to="/contacts" class="btn btn-md btn-square join-item opacity-50 hover:opacity-100 transition">
+                    <Icon name="solar:notebook-bold-duotone" size="1.2rem"></Icon>
+                </NuxtLink>
                 <button class="btn btn-md btn-square join-item opacity-50 hover:opacity-100 transition">
                     <Icon name="solar:cursor-square-bold-duotone" size="1.2rem"></Icon>
                 </button>
