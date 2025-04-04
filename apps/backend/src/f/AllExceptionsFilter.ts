@@ -10,6 +10,8 @@ import { Prisma } from '@mycelis/database';
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
     catch(exception: unknown, host: ArgumentsHost) {
+        console.error(exception);
+
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         let status = HttpStatus.INTERNAL_SERVER_ERROR;

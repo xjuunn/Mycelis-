@@ -13,6 +13,8 @@ import { FilesModule } from './res/files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { getFileUrl } from './utils/FileUrl';
 import { join } from 'path';
+import { FriendRequestModule } from './res/friend/friend-request/friend-request.module';
+import { FriendshipModule } from './res/friend/friendship/friendship.module';
 
 @Module({
   imports: [
@@ -35,7 +37,9 @@ import { join } from 'path';
           },
         }];
       },
-    })
+    }),
+    FriendRequestModule,
+    FriendshipModule
   ],
   controllers: [AppController],
   providers: [

@@ -11,19 +11,24 @@ export class UserService {
     return UserDB.add(createUserDto);
   }
 
-  findAll(
+  async findAll(
     where: Prisma.UserWhereInput,
     take: number,
     skip: number,
     orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
-  ): Prisma.Prisma__UserClient<Types.User[]> {
-    return UserDB.list({
-      ...where,
-      passwordHash: undefined
-    }, take, skip, orderBy);
+  ) {
+    return {
+      list: await UserDB.list({
+        ...where,
+        passwordHash: undefined
+      }, take, skip, orderBy),
+      total: await this.total(where),
+      take, skip
+
+    }
   }
 
-  findOne(idOrName: number | string): Prisma.Prisma__UserClient<Types.User | null> {
+  findOne(idOrName: number | string) {
     if (typeof idOrName == 'number') {
       return UserDB.find(idOrName);
     } else {
@@ -32,16 +37,15 @@ export class UserService {
   }
 
   update(
-    where: Prisma.UserWhereUniqueInput,
+    id: number,
     data: Prisma.UserUpdateInput,
-  ): Prisma.Prisma__UserClient<Types.User> {
+  ) {
     return UserDB.update({
-      ...where,
-      passwordHash: undefined
+      id
     }, data);
   }
 
-  remove(idOrName: number | string): Prisma.Prisma__UserClient<Types.User> {
+  remove(idOrName: number | string) {
     if (typeof idOrName == 'number') {
       return UserDB.del(idOrName);
     } else {

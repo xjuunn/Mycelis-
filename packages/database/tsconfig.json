@@ -11,7 +11,7 @@
     "skipLibCheck": true,
     "moduleResolution": "node",
     "paths": {
-      "@prisma/client": ["./node_modules/@prisma/client"]
+      "@prisma/client": ["./node_modules/@prisma/client"],
     }
   },
   "include": [
