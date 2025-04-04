@@ -30,10 +30,10 @@ export class UserController {
   @Roles("ADMIN")
   findAll(
     @Body('where') where: Prisma.UserWhereInput,
-    @Body('take') take: number,
-    @Body('skip') skip: number,
-  ): Prisma.Prisma__UserClient<Types.User[]> {
-    return this.userService.findAll(where, take, skip);
+    @Query('take') take: string = '15',
+    @Query('skip') skip: string = '0',
+  ) {
+    return this.userService.findAll(where, +take, +skip);
   }
 
   @Get('findbyid/:id')
@@ -46,28 +46,28 @@ export class UserController {
   @Public()
   findOneByName(
     @Param('name') name: string,
-  ): Prisma.Prisma__UserClient<Types.User | null> {
+  ) {
     return this.userService.findOne(name);
   }
 
   @Patch(':id')
   @Roles("ADMIN")
   update(
-    @Body('where') where: Prisma.UserWhereUniqueInput,
-    @Body('data') data: Prisma.UserUpdateInput,
-  ): Prisma.Prisma__UserClient<Types.User> {
-    return this.userService.update(where, data);
+    @Param('id') id: string,
+    @Body() data: Prisma.UserUpdateInput,
+  ) {
+    return this.userService.update(+id, data);
   }
 
   @Delete(':id')
   @Roles("ADMIN")
-  remove(@Param('id') id: string): Prisma.Prisma__UserClient<Types.User> {
+  remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
 
   @Get('search')
   @Public()
-  async search(@Query('keyword') keyword: string, @Query('take') take: string, @Query('skip') skip: string) {
+  async search(@Query('keyword') keyword: string, @Query('take') take: string = '15', @Query('skip') skip: string = '0') {
     if (!keyword?.trim()) return {
       data: [],
       total: 0,
@@ -80,12 +80,6 @@ export class UserController {
         { displayName: { contains: keyword } }
       ]
     };
-    const [data, total] = await Promise.all([
-      this.userService.findAll(where, Number(take), Number(skip)),
-      this.userService.total(where)
-    ])
-    return {
-      data, total, take, skip
-    }
+    return this.userService.findAll(where, Number(take), Number(skip))
   }
 }

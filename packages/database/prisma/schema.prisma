@@ -7,8 +7,9 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+// 用户
 model User {
-  id           Int     @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   name         String     @unique
   displayName  String?
   passwordHash String
@@ -19,14 +20,71 @@ model User {
   createAt     DateTime   @default(now())
   updateAt     DateTime   @updatedAt
   lastLoginAt  DateTime?
+
+  // 好友请求
+  sentFriendRequests     FriendRequest[] @relation("sentFriendRequests")
+  receivedFriendRequests FriendRequest[] @relation("receivedFriendRequests")
+
+  // 好友关系 - 作为发起方
+  initiatedFriendships Friendship[] @relation("userFriendships")
+  
+  // 好友关系 - 作为接收方
+  receivedFriendships Friendship[] @relation("friendUsers")
 }
 
+// 用户状态
 enum UserStatus {
   ONLINE
   OFFLINE
 }
 
+// 用户角色
 enum UserRole {
   USER
   ADMIN
+}
+
+// 好友申请
+model FriendRequest {
+  id         Int                 @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  sender     User                @relation("sentFriendRequests", fields: [senderId], references: [id])
+  receiver   User                @relation("receivedFriendRequests", fields: [receiverId], references: [id])
+  status     FriendRequestStatus
+  createAt   DateTime            @default(now())
+}
+
+// 好友申请状态
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  DELETED
+}
+
+// 好友关系
+model Friendship {
+  id        Int      @id @default(autoincrement())
+  userId    Int      // 发起好友关系的用户ID
+  friendId  Int      // 成为好友的用户ID
+  user      User     @relation("userFriendships", fields: [userId], references: [id])
+  friend    User     @relation("friendUsers", fields: [friendId], references: [id])
+  note      String?
+  createAt  DateTime @default(now())
+  
+  tags      FriendshipTag[]
+  
+  @@unique([userId, friendId])
+  @@index([userId])
+  @@index([friendId])
+}
+
+// 好友标签
+model FriendshipTag {
+  id           Int       @id @default(autoincrement())
+  friendshipId Int
+  friendship   Friendship @relation(fields: [friendshipId], references: [id])
+  tag          String
+  @@index([friendshipId])
 }
