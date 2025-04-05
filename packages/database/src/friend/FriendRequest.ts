@@ -6,7 +6,14 @@ import { Prisma, FriendRequest } from "@prisma/client";
  * @param req 好友请求
  */
 export function add(req: Prisma.FriendRequestCreateInput) {
-    return prisma.friendRequest.create({ data: req });
+    return prisma.friendRequest.create({
+        data: req, include: {
+            receiver: {
+                omit: { passwordHash: true }
+            },
+            sender: { omit: { passwordHash: true } }
+        },
+    });
 }
 
 /**
@@ -14,7 +21,34 @@ export function add(req: Prisma.FriendRequestCreateInput) {
  * @param id 好友请求ID
  */
 export function del(id: number) {
-    return prisma.friendRequest.delete({ where: { id } })
+    return prisma.friendRequest.delete({
+        where: { id }, include: {
+            receiver: {
+                omit: { passwordHash: true }
+            },
+            sender: {
+                omit: { passwordHash: true }
+            }
+        }
+    })
+}
+
+/**
+ * 删除用户的好友请求
+ * @param id 好友请求ID
+ * @param userid 用户ID
+ */
+export function delByUser(id: number, userid: number) {
+    return prisma.friendRequest.delete({
+        where: { id, senderId: userid }, include: {
+            receiver: {
+                omit: { passwordHash: true }
+            },
+            sender: {
+                omit: { passwordHash: true }
+            }
+        }
+    })
 }
 
 /**
@@ -26,7 +60,11 @@ export async function findAll(skip: number = 0, take: number = 15) {
     const [list, total] = await Promise.all([
         prisma.friendRequest.findMany({
             skip, take, orderBy: { createAt: "desc" },
-            include: { receiver: true, sender: true },
+            include: {
+                receiver: {
+                    omit: { passwordHash: true }
+                }, sender: { omit: { passwordHash: true } }
+            },
         }),
         prisma.friendRequest.count()
     ])
@@ -52,8 +90,8 @@ export async function findByUserId(id: number, skip: number = 0, take: number = 
                     }
                 },
                 sender: {
-                    omit:{
-                        passwordHash:true
+                    omit: {
+                        passwordHash: true
                     }
                 }
             }
@@ -71,8 +109,26 @@ export async function findByUserId(id: number, skip: number = 0, take: number = 
  */
 export async function findWhere(where: Prisma.FriendRequestWhereInput, skip: number = 0, take: number = 15) {
     const [list, total] = await Promise.all([
-        prisma.friendRequest.findMany({ where, skip, take }),
+        prisma.friendRequest.findMany({
+            where, skip, take, include: {
+                receiver: {
+                    omit: { passwordHash: true }
+                },
+                sender: {
+                    omit: { passwordHash: true }
+                }
+            }
+        }),
         prisma.friendRequest.count({ where })
     ])
     return { list, total, skip, take }
+}
+
+export function update(where: Prisma.FriendRequestWhereUniqueInput, data: Prisma.FriendRequestUpdateInput) {
+    return prisma.friendRequest.update({
+        where, data, include: {
+            receiver: { omit: { passwordHash: true } },
+            sender: { omit: { passwordHash: true } }
+        }
+    })
 }
