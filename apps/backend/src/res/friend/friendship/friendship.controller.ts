@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
 import { FriendshipService } from './friendship.service';
 import { Prisma } from '@mycelis/database';
 import { Token, TokenInfo } from 'src/d/token-info/token-info';
@@ -38,6 +38,21 @@ export class FriendshipController {
     return this.friendshipService.remove(+id);
   }
 
+  @Patch("/tag/self/:shipid/tag/")
+  insertMyFriendTag(@Param("shipid") id: string, @Query("tag") tag: string, @Token() tokeninfo: TokenInfo) {
+    return this.friendshipService.insertMyFriendTag(+id, tokeninfo.id, tag);
+  }
+
+  @Delete("/tag/self/:shipid/tag/:tagid")
+  removeMyFriendTag(@Param("shipid") id: string, @Param("tagid") tagid: string, @Token() tokeninfo: TokenInfo) {
+    return this.friendshipService.removeFriendTag(+id, tokeninfo.id, +tagid);
+  }
+
+  @Get("/tag/self/:shipid/tag/")
+  listMyFriendTags(@Param("shipid") shipid: string, @Query('skip') skip: string = '0', @Query('take') take: string = '15') {
+    return this.friendshipService.listFriendTags(+shipid, +skip, +take);
+  }
+
   @Post('/self/:id')
   async createByUser(@Param("id") id: string, @Token() tokeninfo: TokenInfo) {
     await this.friendshipService.create({
@@ -65,9 +80,11 @@ export class FriendshipController {
     })
   }
 
-  @Get("/self")
+  @Get("/self/list")
   findMyFriend(@Token() tokeninfo: TokenInfo, @Query('skip') skip: string = '0', @Query('take') take: string = '15') {
     return this.friendshipService.findMyFriend(tokeninfo.id, +skip, +take);
   }
+
+
 
 }

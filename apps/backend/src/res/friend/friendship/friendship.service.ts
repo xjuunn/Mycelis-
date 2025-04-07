@@ -42,7 +42,9 @@ export class FriendshipService {
           userId: id,
         }, skip, take,
         include: {
-          tags: true,
+          tags: {
+            take: 5
+          },
           friend: {
             omit: { passwordHash: true }
           }
@@ -54,6 +56,112 @@ export class FriendshipService {
     ])
     return {
       list, total, skip, take
+    }
+  }
+
+  async insertMyFriendTag(id: number, userId: number, tag: string) {
+    let tagdata = await prisma.friendshipTag.findFirst({
+      where: {
+        friendshipId: id,
+        tag
+      }
+    });
+    if (tagdata) {
+      return prisma.friendship.update({
+        where: {
+          id
+        },
+        include: {
+          friend: {
+            omit: { passwordHash: true },
+          },
+          tags: {
+            take: 10
+          }
+        },
+        data: {
+          tags: {
+            connect: {
+              id: tagdata.id
+            }
+          }
+        }
+      })
+    } else {
+      return prisma.friendship.update({
+        where: {
+          id,
+          userId
+        },
+        include: {
+          user: {
+            omit: { passwordHash: true }
+          },
+          tags: {
+            take: 10
+          }
+        },
+        data: {
+          tags: {
+            create: [{
+              tag
+            }]
+          }
+        }
+      })
+    }
+  }
+
+  async removeFriendTag(id: number, userId: number, tagId: number) {
+    return prisma.friendship.update({
+      where: {
+        id, userId
+      },
+      include: {
+        friend: {
+          omit: { passwordHash: true }
+        },
+        tags: {
+          take: 10
+        }
+      },
+      data: {
+        tags: {
+          delete: {
+            id: tagId
+          }
+        }
+      }
+    })
+  }
+
+  async listFriendTags(id: number, skip: number, take: number) {
+    const [list, total] = await Promise.all([
+      prisma.friendshipTag.findMany({
+        where: {
+          friendshipId: id
+        },
+        take, skip,
+        include: {
+          friendship: {
+            include: {
+              friend: {
+                omit: {
+                  passwordHash: true
+                }
+              }
+            }
+          }
+        }
+      }),
+      prisma.friendshipTag.count({
+        where: {
+          friendshipId: id
+        }
+      })
+    ])
+    return {
+      list, total, take, skip
     }
   }
 }
