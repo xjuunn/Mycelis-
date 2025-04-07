@@ -36,8 +36,10 @@ let skip = ref(0);
 let userList: Ref<Types.User[]> = ref([]);
 
 async function btnSearch() {
+    if (searchStr.value === '') return;
+    searchStr.value = searchStr.value.trim();
     let { data } = await search(searchStr.value, take.value, skip.value)
-    userList.value = data.data.data;
+    userList.value = data.data.list;
     let { data: currentUserdata } = await findByName(searchStr.value)
     if (currentUserdata.data) {
         userList.value = userList.value.filter(item => {

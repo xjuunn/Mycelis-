@@ -23,7 +23,7 @@ export class FriendRequestService {
     )
   }
 
-  updateReceiveRequest(id: number, userId: number, status: Prisma.EnumFriendRequestStatusFieldUpdateOperationsInput) {
+  updateReceiveRequest(id: number, userId: number, status: Types.FriendRequestStatus) {
     return FriendDB.FriendRequest.update({
       id,
       receiverId: userId,

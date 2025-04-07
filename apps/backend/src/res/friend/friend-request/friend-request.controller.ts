@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
 import { FriendRequestService } from './friend-request.service';
-import { Prisma } from '@mycelis/database';
+import { Prisma, Types } from '@mycelis/database';
 import { Token, TokenInfo } from 'src/d/token-info/token-info';
 import { Roles } from 'src/d/roles/roles.decorator';
 
@@ -10,8 +10,16 @@ export class FriendRequestController {
 
   @Post()
   @Roles("ADMIN")
-  async create(@Body() createFriendRequestDto: Prisma.FriendRequestCreateInput) {
-    return await this.friendRequestService.create(createFriendRequestDto);
+  async create(@Query('senderId') senderId: string, @Query('receiverId') receiverId: string) {
+    return await this.friendRequestService.create({
+      sender: {
+        connect: { id: +senderId }
+      },
+      receiver: {
+        connect: { id: +receiverId }
+      },
+      status: "PENDING"
+    });
   }
 
   @Get()
@@ -61,7 +69,7 @@ export class FriendRequestController {
    * @param status 状态：PENDING、ACCEPTED、REJECTED、DELETED
    */
   @Patch('/self/:id')
-  updateReceiveRequestState(@Param('id') id: string, @Query('status') status: Prisma.EnumFriendRequestStatusFieldUpdateOperationsInput, @Token() token: TokenInfo) {
+  updateReceiveRequestState(@Param('id') id: string, @Query('status') status: Types.FriendRequestStatus, @Token() token: TokenInfo) {
     return this.friendRequestService.updateReceiveRequest(+id, token.id, status)
   }
 

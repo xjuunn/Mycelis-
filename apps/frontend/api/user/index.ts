@@ -1,7 +1,6 @@
 
 import type { Types } from '@mycelis/database';
 import { Result } from '@mycelis/types';
-// let { axios } = useAxios();
 /**
  * 用户注册
  * @param name 用户名
@@ -29,7 +28,7 @@ export function search(keyword: string, take: number = 15, skip: number = 0) {
 }
 
 export interface SearchResult {
-    data: Types.User[],
+    list: Types.User[],
     total: number,
     take: number,
     skip: number
