@@ -5,7 +5,7 @@
   "scripts": {
     "cleanup": "npx nuxi cleanup",
     "build": "nuxt build",
-    "start": "nuxt dev",
+    "start": "nuxt dev --host --port 80",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"

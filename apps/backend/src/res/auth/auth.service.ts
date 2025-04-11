@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from '../user.service';
+import { UserService } from '../user/user.service';
 import { Result } from '@mycelis/types';
 import { JwtService } from '@nestjs/jwt';
 import { Crypto } from '@mycelis/utils';

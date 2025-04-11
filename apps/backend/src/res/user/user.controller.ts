@@ -13,6 +13,7 @@ import { Prisma, Types } from '@mycelis/database';
 import { Roles } from 'src/d/roles/roles.decorator';
 import { Token, TokenInfo } from 'src/d/token-info/token-info';
 import { Public } from 'src/d/public/public.decorator';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('user')
 export class UserController {

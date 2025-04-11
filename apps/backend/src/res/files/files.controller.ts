@@ -2,6 +2,7 @@ import { Controller, FileTypeValidator, MaxFileSizeValidator, ParseFilePipe, Pos
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from 'src/d/public/public.decorator';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
 @Controller('upload')
 export class FilesController {
@@ -9,6 +10,17 @@ export class FilesController {
     private readonly filesService: FilesService,
   ) { }
 
+  @ApiOperation({
+    description:"图片文件上传",summary:"图片文件上传"
+  })
+  @ApiBody({
+    schema:{
+      type:"object",
+      properties: {
+        file:{type:"file",description:"图片文件",example:"test.png"}
+      }
+    }
+  })
   @Public()
   @Post('image')
   @UseInterceptors(FileInterceptor('file'))
@@ -23,6 +35,17 @@ export class FilesController {
     return this.filesService.saveFile(file);
   }
 
+  @ApiOperation({
+    description:"头像上传",summary:"头像上传"
+  })
+  @ApiBody({
+    schema:{
+      type:"object",
+      properties: {
+        file:{type:"file",description:"头像文件",example:"test.png"}
+      }
+    }
+  })
   @Public()
   @Post('avatar')
   @UseInterceptors(FileInterceptor('file'))
