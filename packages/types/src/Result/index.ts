@@ -8,3 +8,16 @@ export class Result<T = any> {
     this.data = data;
   }
 }
+
+export class PageResult<T = any> {
+  list: T;
+  total: number;
+  skip: number;
+  take: number;
+  constructor(list: T, total: number, skip: number = 0, take: number = 15) {
+    this.list = list;
+    this.total = total;
+    this.skip = skip;
+    this.take = take;
+  }
+}

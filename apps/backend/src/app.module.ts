@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './res/user/user.module';
 import { ResultInterceptor } from './itc/result/result.interceptor';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
@@ -13,13 +12,11 @@ import { FilesModule } from './res/files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { getFileUrl } from './utils/FileUrl';
 import { join } from 'path';
-import { FriendRequestModule } from './res/friend/friend-request/friend-request.module';
-import { FriendshipModule } from './res/friend/friendship/friendship.module';
+import { UserModule } from './res/user/user.module';
 
 @Module({
   imports: [
     AuthModule,
-    UserModule,
     ConfigModule.forRoot({
       isGlobal: true,
       // envFilePath: '../../../.env'
@@ -38,8 +35,7 @@ import { FriendshipModule } from './res/friend/friendship/friendship.module';
         }];
       },
     }),
-    FriendRequestModule,
-    FriendshipModule
+    UserModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,59 +1,95 @@
-import { Prisma, UserDB, Types } from '@mycelis/database';
 import { Injectable } from '@nestjs/common';
-import { Crypto } from '@mycelis/utils';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { prisma } from '@mycelis/database';
+import { SearchUserDto } from './dto/search-user.dto';
+import { PageRequest, PageResult } from '@mycelis/types';
 
 @Injectable()
 export class UserService {
-  create(
-    createUserDto: Prisma.UserCreateInput,
-  ): Prisma.Prisma__UserClient<Types.User> {
-    createUserDto.passwordHash = Crypto.UserPasswordCrypto.hashPassword(createUserDto.passwordHash);
-    return UserDB.add(createUserDto);
+  create(createUserDto: CreateUserDto) {
+    return prisma.user.create({
+      data: createUserDto
+    });
   }
 
-  async findAll(
-    where: Prisma.UserWhereInput,
-    take: number,
-    skip: number,
-    orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
-  ) {
-    return {
-      list: await UserDB.list({
-        ...where,
-        passwordHash: undefined
-      }, take, skip, orderBy),
-      total: await this.total(where),
-      take, skip
-
-    }
+  async findAll(searchUserDto: SearchUserDto, pageReq: PageRequest) {
+    const [list, total] = await Promise.all([
+      prisma.user.findMany({
+        where: searchUserDto,
+        ...pageReq,
+        omit: {
+          passwordHash: true
+        }
+      }),
+      prisma.user.count({ where: searchUserDto })
+    ])
+    return new PageResult(list, total, pageReq.skip, pageReq.take)
   }
 
-  findOne(idOrName: number | string) {
-    if (typeof idOrName == 'number') {
-      return UserDB.find(idOrName);
-    } else {
-      return UserDB.find(idOrName);
-    }
+  findOne(id: number) {
+    return prisma.user.findUnique({
+      where: { id },
+      omit: {
+        passwordHash: true
+      }
+    });
   }
 
-  update(
-    id: number,
-    data: Prisma.UserUpdateInput,
-  ) {
-    return UserDB.update({
-      id
-    }, data);
+  update(id: number, updateUserDto: UpdateUserDto) {
+    return prisma.user.update({
+      where: {
+        id,
+      },
+      data: updateUserDto,
+      omit: {
+        passwordHash: true
+      }
+    });
   }
 
-  remove(idOrName: number | string) {
-    if (typeof idOrName == 'number') {
-      return UserDB.del(idOrName);
-    } else {
-      return UserDB.del(idOrName);
-    }
+  remove(id: number) {
+    return prisma.user.delete({
+      where: { id },
+      omit: {
+        passwordHash: true
+      }
+    });
   }
 
-  total(where: Prisma.UserWhereInput): Promise<number> {
-    return UserDB.total(where)
+  async search(keyword: string, pageInfo: PageRequest) {
+    let [list, total] = await Promise.all([
+      prisma.user.findMany({
+        where: {
+          OR: [
+            { name: { contains: keyword } },
+            { displayName: { contains: keyword } }
+          ]
+        },
+        omit: {
+          passwordHash: true
+        }
+      }),
+      prisma.user.count({
+        where: {
+          OR: [
+            { name: { contains: keyword } },
+            { displayName: { contains: keyword } }
+          ]
+        }
+      })
+    ])
+
+    // 匹配度排序
+    list = list.sort((a, b) => {
+      const aNameMatch = a.name.toLowerCase().includes(keyword.toLowerCase()) ? keyword.length / a.name.length : 0;
+      const aDisplayNameMatch = a.displayName?.toLowerCase().includes(keyword.toLowerCase()) ? keyword.length / a.displayName.length : 0;
+      const aScore = aNameMatch * 2 + aDisplayNameMatch;
+      const bNameMatch = b.name.toLowerCase().includes(keyword.toLowerCase()) ? keyword.length / b.name.length : 0;
+      const bDisplayNameMatch = b.displayName?.toLowerCase().includes(keyword.toLowerCase()) ? keyword.length / b.displayName.length : 0;
+      const bScore = bNameMatch * 2 + bDisplayNameMatch;
+      return bScore - aScore;
+    });
+    return new PageResult(list, total, pageInfo.skip, pageInfo.take)
   }
 }
