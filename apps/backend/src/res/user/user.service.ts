@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { prisma } from '@mycelis/database';
 import { SearchUserDto } from './dto/search-user.dto';
 import { PageRequest, PageResult } from '@mycelis/types';
+import { Crypto } from '@mycelis/utils';
 
 @Injectable()
 export class UserService {
@@ -37,6 +38,8 @@ export class UserService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.passwordHash)
+      updateUserDto.passwordHash = Crypto.UserPasswordCrypto.hashPassword(updateUserDto.passwordHash)
     return prisma.user.update({
       where: {
         id,

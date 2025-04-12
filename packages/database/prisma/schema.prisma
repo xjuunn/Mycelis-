@@ -51,7 +51,7 @@ model FriendRequest {
   receiverId Int
   sender     User                @relation("sentFriendRequests", fields: [senderId], references: [id])
   receiver   User                @relation("receivedFriendRequests", fields: [receiverId], references: [id])
-  status     FriendRequestStatus
+  status     FriendRequestStatus @default(PENDING)
   createAt   DateTime            @default(now())
 }
 
@@ -87,5 +87,6 @@ model FriendshipTag {
   friendship   Friendship @relation(fields: [friendshipId], references: [id])
   tag          String
   sort         Int        @default(0)
+
   @@index([friendshipId])
 }

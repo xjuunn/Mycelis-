@@ -15,7 +15,9 @@ async function bootstrap() {
     .addTag('mycelis')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('api', app, documentFactory,{
+    jsonDocumentUrl:"api/json"
+  });
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableCors();
