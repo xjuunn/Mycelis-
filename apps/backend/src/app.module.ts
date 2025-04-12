@@ -14,6 +14,7 @@ import { getFileUrl } from './utils/FileUrl';
 import { join } from 'path';
 import { UserModule } from './res/user/user.module';
 import { FriendRequestModule } from './res/friend-request/friend-request.module';
+import { FriendshipModule } from './res/friendship/friendship.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { FriendRequestModule } from './res/friend-request/friend-request.module'
     }),
     UserModule,
     FriendRequestModule,
+    FriendshipModule,
   ],
   controllers: [AppController],
   providers: [

@@ -20,7 +20,7 @@ export class FriendRequestService {
     });
   }
 
-  async findAll(search: SearchFriendRequestDto, pageinfo: PageRequest, senderId: number) {
+  async findAllSent(search: SearchFriendRequestDto, pageinfo: PageRequest, senderId: number) {
     const [list, total] = await Promise.all([
       prisma.friendRequest.findMany({
         where: {
@@ -39,9 +39,28 @@ export class FriendRequestService {
     return new PageResult(list, total, pageinfo.skip, pageinfo.take);
   }
 
-  findOne(id: number, senderId: number) {
+  async findAllReceived(search: SearchFriendRequestDto, pageinfo: PageRequest, receiverId: number) {
+    const [list, total] = await Promise.all([
+      prisma.friendRequest.findMany({
+        where: {
+          ...search,
+          receiverId
+        },
+        include: {
+          receiver: { omit: { passwordHash: true } }
+        },
+        ...pageinfo
+      }),
+      prisma.friendRequest.count({
+        where: search
+      })
+    ])
+    return new PageResult(list, total, pageinfo.skip, pageinfo.take);
+  }
+
+  findOne(id: number, receiverId: number) {
     return prisma.friendRequest.findUnique({
-      where: { id, senderId },
+      where: { id, receiverId },
       include: {
         receiver: { omit: { passwordHash: true } }
       }
