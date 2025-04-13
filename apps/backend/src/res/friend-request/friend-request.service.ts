@@ -3,7 +3,7 @@ import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { UpdateFriendRequestDto } from './dto/update-friend-request.dto';
 import { prisma } from '@mycelis/database';
 import { SearchFriendRequestDto } from './dto/search-friend-request';
-import { PageRequest, PageResult } from '@mycelis/types';
+import { PageRequest, PageResultInfo } from '@mycelis/types';
 
 @Injectable()
 export class FriendRequestService {
@@ -36,7 +36,7 @@ export class FriendRequestService {
         where: search
       })
     ])
-    return new PageResult(list, total, pageinfo.skip, pageinfo.take);
+    return new PageResultInfo(list, total, pageinfo.skip, pageinfo.take);
   }
 
   async findAllReceived(search: SearchFriendRequestDto, pageinfo: PageRequest, receiverId: number) {
@@ -55,7 +55,7 @@ export class FriendRequestService {
         where: search
       })
     ])
-    return new PageResult(list, total, pageinfo.skip, pageinfo.take);
+    return new PageResultInfo(list, total, pageinfo.skip, pageinfo.take);
   }
 
   findOne(id: number, receiverId: number) {

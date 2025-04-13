@@ -3,11 +3,12 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SearchUserDto } from './dto/search-user.dto';
-import { PageRequest, PageResult, Result } from '@mycelis/types';
+import { PageRequest, PageResultInfo, Result } from '@mycelis/types';
 import { Token, TokenInfo } from 'src/d/token-info/token-info';
 import { PageInfo } from 'src/d/pageinfo/pageinfo.decorator';
 import { ApiOperation, ApiProperty, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { Crypto } from '@mycelis/utils';
+import { Public } from 'src/d/public/public.decorator';
 
 @Controller('user')
 export class UserController {
@@ -17,23 +18,23 @@ export class UserController {
   @ApiQuery({ name: 'keyword', required: true, description: '搜索关键词', example: 'admin' })
   @ApiQuery({ name: 'take', required: false, description: '数据量', example: '15' })
   @ApiQuery({ name: 'skip', required: false, description: '跳过', example: '0' })
-  @ApiResponse({ status: 200, type: PageResult })
+  @ApiResponse({ status: 200, type: PageResultInfo })
   @Get('search')
   search(@Query("keyword") keyword: string, @PageInfo() pageinfo: PageRequest) {
     return this.userService.search(keyword, pageinfo);
   }
 
-  @ApiOperation({ summary: "创建用户" })
-  @ApiResponse({ status: 201, type: Result })
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    if (createUserDto.passwordHash)
-      createUserDto.passwordHash = Crypto.UserPasswordCrypto.hashPassword(createUserDto.passwordHash)
-    return this.userService.create(createUserDto);
-  }
+  // @ApiOperation({ summary: "创建用户" })
+  // @ApiResponse({ status: 201, type: Result })
+  // @Post()
+  // create(@Body() createUserDto: CreateUserDto) {
+  //   if (createUserDto.passwordHash)
+  //     createUserDto.passwordHash = Crypto.UserPasswordCrypto.hashPassword(createUserDto.passwordHash)
+  //   return this.userService.create(createUserDto);
+  // }
 
   @ApiOperation({ summary: "查询用户列表" })
-  @Get()
+  @Post()
   findAll(@Body() searchUserDto: SearchUserDto, @PageInfo() pageInfo: PageRequest) {
     return this.userService.findAll(searchUserDto, pageInfo);
   }

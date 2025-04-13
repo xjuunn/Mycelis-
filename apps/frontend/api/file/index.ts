@@ -1,5 +1,10 @@
 
 import type { Result } from '@mycelis/types';
+
+/**
+ * 上传图片
+ * @param file 图片文件
+ */
 export function uploadimg(file: File) {
     let formdata = new FormData();
     formdata.append('file', file);
@@ -10,6 +15,10 @@ export function uploadimg(file: File) {
     })
 }
 
+/**
+ * 上传头像
+ * @param file 图片文件
+ */
 export function uploadAvatar(file: File) {
     let formdata = new FormData();
     formdata.append('file', file);
@@ -20,6 +29,10 @@ export function uploadAvatar(file: File) {
     })
 }
 
-export function getFileUrl(file: string) {
-    return `${useAppStore().baseurl}/file/${file}`
+/**
+ * 获取完整的文件路径
+ * @param fileUrl 文件名
+ */
+export function getFileUrl(fileUrl: string) {
+    return `${useAppStore().baseurl}/file/${fileUrl}`
 }

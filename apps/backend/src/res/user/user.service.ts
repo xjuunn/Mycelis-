@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { prisma } from '@mycelis/database';
 import { SearchUserDto } from './dto/search-user.dto';
-import { PageRequest, PageResult } from '@mycelis/types';
+import { PageRequest, PageResultInfo } from '@mycelis/types';
 import { Crypto } from '@mycelis/utils';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class UserService {
       }),
       prisma.user.count({ where: searchUserDto })
     ])
-    return new PageResult(list, total, pageReq.skip, pageReq.take)
+    return new PageResultInfo(list, total, pageReq.skip, pageReq.take)
   }
 
   findOne(id: number) {
@@ -93,6 +93,6 @@ export class UserService {
       const bScore = bNameMatch * 2 + bDisplayNameMatch;
       return bScore - aScore;
     });
-    return new PageResult(list, total, pageInfo.skip, pageInfo.take)
+    return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take)
   }
 }

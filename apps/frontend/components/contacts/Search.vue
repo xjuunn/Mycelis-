@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import type { Types } from '@mycelis/database';
 import { getFileUrl } from '~/api/file/index'
-import { search, findByName } from '~/api/user'
+import { search } from '~/api/user'
 let searchStr = ref('');
 let take = ref(15);
 let skip = ref(0);
@@ -40,12 +40,5 @@ async function btnSearch() {
     searchStr.value = searchStr.value.trim();
     let { data } = await search(searchStr.value, take.value, skip.value)
     userList.value = data.data.list;
-    let { data: currentUserdata } = await findByName(searchStr.value)
-    if (currentUserdata.data) {
-        userList.value = userList.value.filter(item => {
-            return item.name !== currentUserdata.data.name
-        })
-        userList.value.unshift(currentUserdata.data)
-    }
 }
 </script>

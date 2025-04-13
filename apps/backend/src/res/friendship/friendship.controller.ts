@@ -19,7 +19,7 @@ export class FriendshipController {
   //   return this.friendshipService.create(createFriendshipDto, tokenInfo.id);
   // }
 
-  @ApiOperation({ summary: "添加好友标签" })
+  @ApiOperation({ summary: "修改好友标签" })
   @Patch(':id/tag')
   updateTag(@Body() createFriendshipTagDto: CreateFriendTagDto, @Param('id') id: string, @Token() tokenInfo: TokenInfo) {
     return this.friendshipService.updateTag(+id, createFriendshipTagDto, tokenInfo.id)
@@ -32,7 +32,7 @@ export class FriendshipController {
   }
 
   @ApiOperation({ summary: "获取好友关系列表" })
-  @Get()
+  @Post()
   findAll(@Body() search: SearchFriendshipDto, @PageInfo() pageInfo: PageRequest, @Token() tokenInfo: TokenInfo) {
     return this.friendshipService.findAll(search, pageInfo, tokenInfo.id);
   }

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { CreateFriendTagDto } from './dto/create-friend-tag.dto';
 import { UpdateFriendTagDto } from './dto/update-friend-tag.dto';
 import { Prisma, prisma } from '@mycelis/database';
-import { PageRequest, PageResult } from '@mycelis/types';
+import { PageRequest, PageResultInfo } from '@mycelis/types';
 
 @Injectable()
 export class FriendTagService {
@@ -19,7 +19,7 @@ export class FriendTagService {
         where: { userId }
       })
     ])
-    return new PageResult(list, total, pageInfo.skip, pageInfo.take);
+    return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
   }
 
   async listDetails(id: number, pageInfo: PageRequest, userId: number) {
@@ -35,7 +35,7 @@ export class FriendTagService {
         where: { tagId: id, userId }
       })
     ])
-    return new PageResult(list, total, pageInfo.skip, pageInfo.take);
+    return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
   }
 
   create(createFrienddto: CreateFriendTagDto, userId: number) {
@@ -60,7 +60,8 @@ export class FriendTagService {
           include: {
             friend: { omit: { passwordHash: true } },
             tag: true
-          }
+          },
+          take: 5
         }
       }
     })

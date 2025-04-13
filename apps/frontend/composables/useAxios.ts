@@ -6,7 +6,7 @@ export const useAxios = () => {
     const getToken = () => {
         if (token.value === '')
             token.value = localStorage.getItem('token') ?? 'no token'
-        return token.value;
+        return "Bearer " + token.value;
     };
     const initAxios = () => {
         return axios.create({

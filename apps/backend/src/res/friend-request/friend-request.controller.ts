@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, Query } from '@nestjs/common';
 import { FriendRequestService } from './friend-request.service';
 import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { UpdateFriendRequestDto } from './dto/update-friend-request.dto';
@@ -24,13 +24,13 @@ export class FriendRequestController {
 
   @ApiOperation({ summary: "获取当前账号发送的好友请求" })
   @Get("sent")
-  findAllSent(@Body() search: SearchFriendRequestDto, @PageInfo() pageInfo: PageRequest, @Token() tokeninfo: TokenInfo) {
+  findAllSent(@Query() search: SearchFriendRequestDto, @PageInfo() pageInfo: PageRequest, @Token() tokeninfo: TokenInfo) {
     return this.friendRequestService.findAllSent(search, pageInfo, tokeninfo.id);
   }
 
   @ApiOperation({ summary: "获取当前账号接收的好友请求" })
   @Get("received")
-  findAllReceived(@Body() search: SearchFriendRequestDto, @PageInfo() pageInfo: PageRequest, @Token() tokeninfo: TokenInfo) {
+  findAllReceived(@Query() search: SearchFriendRequestDto, @PageInfo() pageInfo: PageRequest, @Token() tokeninfo: TokenInfo) {
     return this.friendRequestService.findAllReceived(search, pageInfo, tokeninfo.id);
   }
 

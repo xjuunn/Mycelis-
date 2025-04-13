@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateFriendshipDto } from './dto/create-friendship.dto';
 import { UpdateFriendshipDto } from './dto/update-friendship.dto';
 import { prisma } from '@mycelis/database';
-import { PageRequest, PageResult } from '@mycelis/types';
+import { PageRequest, PageResultInfo } from '@mycelis/types';
 import { SearchFriendshipDto } from './dto/search-friendship.dto';
 import { CreateFriendTagDto } from '../friend-tag/dto/create-friend-tag.dto';
 
@@ -37,7 +37,7 @@ export class FriendshipService {
         tag: {
           connectOrCreate: {
             where: {
-              id: tag?.id
+              id: tag?.id ?? -1
             },
             create: {
               tag: createFriendshipTagDto.tag,
@@ -82,7 +82,7 @@ export class FriendshipService {
         where: search
       })
     ])
-    return new PageResult(list, total, pageInfo.skip, pageInfo.take);
+    return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
   }
 
   findOne(id: number, userId: number) {

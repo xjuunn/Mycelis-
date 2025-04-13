@@ -1,63 +1,58 @@
 import type { Types } from '@mycelis/database'
-import qs from 'qs'
-const base = "/friend-request"
+import type { PageResult, Result } from '@mycelis/types'
 
 /**
  * 创建好友请求
- * @param senderId 发送者ID
- * @param receiverId 接收者ID
+ * @param receiverId 被请求者ID
  */
-export function adminCreate(senderId: number, receiverId: number) {
-    return useAxios().axios.post(base + '?' + qs.stringify({ senderId, receiverId }))
+export function create(receiverId: number) {
+    return useAxios().axios.post<Result<Types.FriendRequest & { receiver: Types.User }>>('/friend-request', { receiverId })
 }
 
-export function adminFindAll(skip: number = 0, take: number = 15) {
-    return useAxios().axios.get(base + "?" + qs.stringify({ skip, take }))
+/**
+ * 查询发送的好友请求
+ * @param status 请求状态
+ */
+export function listSent(status: Types.FriendRequestStatus) {
+    return useAxios().axios.get<PageResult<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/sent?status=' + status)
+}
+
+/**
+ * 查询接收的好友请求
+ * @param status 请求状态
+ */
+export function listReceived(status: Types.FriendRequestStatus) {
+    return useAxios().axios.get<PageResult<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/received?status' + status)
+}
+
+/**
+ * 查询好友请求
+ * @param id 请求ID
+ */
+export function getOne(id: number) {
+    return useAxios().axios.get<Result<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/{id}/friend-request/' + id);
 }
 
 /**
  * 删除好友请求
  * @param id 请求ID
- */
-export function adminDelete(id: number) {
-    return useAxios().axios.delete(base + "/" + id)
-}
-
-/**
- * 所有的好友请求
- */
-export function list(skip: number = 0, take: number = 15) {
-    return useAxios().axios.get(base + "/self/list?" + qs.stringify({ skip, take }))
-}
-
-/**
- * 请求添加好友
- * @param id 被请求的用户ID
- */
-export function create(id: number) {
-    return useAxios().axios.post(base + '/self/' + id);
-}
-
-/**
- * 删除好友请求
- * @param id 被删除的请求ID
  */
 export function del(id: number) {
-    return useAxios().axios.delete(base + '/self/' + id);
+    return useAxios().axios.delete<Result<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/' + id);
 }
 
 /**
- * 获取接收到的好友请求
- */
-export function listReceiveReuqest(skip: number = 0, take: number = 15) {
-    return useAxios().axios.get(base + '/self/receive?' + qs.stringify({ skip, take }))
-}
-
-/**
- * 同意添加为好友
+ * 接受好友请求
  * @param id 请求ID
- * @param status 状态
  */
-export function accept(id: number, status: Types.FriendRequestStatus) {
-    return useAxios().axios.patch(base + '/self/' + id + "?" + qs.stringify({ status }))
+export function accept(id: number) {
+    return useAxios().axios.patch<Result<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/accept/' + id)
+}
+
+/**
+ * 拒绝好友请求
+ * @param id 请求ID
+ */
+export function reject(id: number) {
+    return useAxios().axios.patch<Result<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/reject/' + id);
 }
