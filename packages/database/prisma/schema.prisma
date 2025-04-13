@@ -29,7 +29,8 @@ model User {
   initiatedFriendships Friendship[] @relation("userFriendships")
 
   // 好友关系 - 作为接收方
-  receivedFriendships Friendship[] @relation("friendUsers")
+  receivedFriendships Friendship[]    @relation("friendUsers")
+  FriendshipTag       FriendshipTag[]
 }
 
 // 用户状态
@@ -65,15 +66,15 @@ enum FriendRequestStatus {
 
 // 好友关系
 model Friendship {
-  id       Int      @id @default(autoincrement())
+  id       Int            @id @default(autoincrement())
   userId   Int // 发起好友关系的用户ID
   friendId Int // 成为好友的用户ID
-  user     User     @relation("userFriendships", fields: [userId], references: [id])
-  friend   User     @relation("friendUsers", fields: [friendId], references: [id])
+  user     User           @relation("userFriendships", fields: [userId], references: [id])
+  friend   User           @relation("friendUsers", fields: [friendId], references: [id])
   note     String?
-  createAt DateTime @default(now())
-
-  tags FriendshipTag[]
+  createAt DateTime       @default(now())
+  tagId    Int?           @map("friendshipTagId")
+  tag      FriendshipTag? @relation(fields: [tagId], references: [id])
 
   @@unique([userId, friendId])
   @@index([userId])
@@ -82,11 +83,10 @@ model Friendship {
 
 // 好友标签
 model FriendshipTag {
-  id           Int        @id @default(autoincrement())
-  friendshipId Int
-  friendship   Friendship @relation(fields: [friendshipId], references: [id])
-  tag          String
-  sort         Int        @default(0)
-
-  @@index([friendshipId])
+  id         Int          @id @default(autoincrement())
+  userId     Int
+  user       User         @relation(fields: [userId], references: [id])
+  tag        String
+  sort       Int          @default(0)
+  friendship Friendship[]
 }

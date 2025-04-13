@@ -15,6 +15,7 @@ import { join } from 'path';
 import { UserModule } from './res/user/user.module';
 import { FriendRequestModule } from './res/friend-request/friend-request.module';
 import { FriendshipModule } from './res/friendship/friendship.module';
+import { FriendTagModule } from './res/friend-tag/friend-tag.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { FriendshipModule } from './res/friendship/friendship.module';
     UserModule,
     FriendRequestModule,
     FriendshipModule,
+    FriendTagModule,
   ],
   controllers: [AppController],
   providers: [
