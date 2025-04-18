@@ -6,9 +6,6 @@
 
 <script lang="ts" setup>
 definePageMeta({
-  layout: "app-main",
-  // middleware:
+  layout: "app-main"
 })
-
-
 </script>

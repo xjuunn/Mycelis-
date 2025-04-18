@@ -1,44 +1,39 @@
 <template>
-    <div class="w-screen h-screen flex flex-col">
-        <div class="h-[calc(100vh-4rem)] min-w-0">
-            <button class="btn btn-primary" @click="test">test</button>
+    <div class="w-screen h-screen flex flex-col overflow-hidden">
+        <div class="h-[calc(100vh-4rem)] min-w-0" ref="page">
             <slot></slot>
         </div>
         <div class="dock bg-base-200 border-t-base-content/10" ref="dock">
-            <ClientOnly>
-                <div v-for="(item, index) in dockItemList" :key="item.id" class="transition relative top-40"
-                    :to="{ path: item.page }"
-                    :class="item.id == useDockStore().activeDockId ? 'text-primary' : 'opacity-40'"
-                    @click="swichDock(item.id, index)">
-                    <Icon :name="item.icon" size="1.2rem"></Icon>
-                    <span class="dock-label">{{ item.name }}</span>
-                </div>
-            </ClientOnly>
+            <div v-for="(item, index) in dockItemList" :key="item.id" class="transition relative top-40"
+                :class="item.id == useDockStore().activeDockId ? 'text-primary' : 'text-base-content/20'"
+                @click="swichDock(item.id, index)">
+                <Icon :name="item.icon" size="1.2rem"></Icon>
+                <span class="dock-label">{{ item.name }}</span>
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { animate, createTimeline, stagger } from 'animejs';
+import { animate, createTimeline, stagger, utils } from 'animejs';
 let dock: Ref<HTMLElement | null> = ref(null);
+let page = ref();
 let { dockItemList, activeDockId, setActiveDockId, addEvent } = useDockStore();
-
 onMounted(() => {
     updateDockAnime(0);
     swichDock(dockItemList[0].id, 0);
+    navigateTo('/')
     addEvent('ADD', onDockAdd)
 })
 function onDockAdd() {
     setTimeout(() => {
-
         if (dock.value && dock.value.children) {
-            dockItemList.forEach((item, index) => {
-                if (item.id == useDockStore().activeDockId) {
-                    console.log(index);
-                    swichDock(useDockStore().activeDockId, index, false)
-                    return;
-                }
-            })
+            // dockItemList.forEach((item, index) => {
+            //     if (item.id == useDockStore().activeDockId) {
+            //         // swichDock(useDockStore().activeDockId, index)
+            //         return;
+            //     }
+            // })
             animate(Array.from(dock.value.children), {
                 duration: 300,
                 top: '0px',
@@ -60,12 +55,39 @@ nextTick(() => {
         }
     })
 })
-
-function swichDock(activeId: string, index: number, navigate: boolean = true) {
-    if (activeDockId === activeId) return;
-    setActiveDockId(activeId)
+let animeing = false;
+async function swichDock(activeId: string, index: number) {
+    if (useDockStore().activeDockId === activeId) return;
+    if (animeing) return;
+    let where: 'left' | 'right' = useDockStore().activeDockIndex > index ? 'left' : 'right';
     updateDockAnime(index);
-    if (navigate) navigateTo(dockItemList[index].page)
+    let duration = 100;
+    animeing = true;
+    setActiveDockId(activeId)
+    animate(page.value, {
+        x: where === 'left' ? '50vw' : '-50vw',
+        duration,
+        opacity: 0,
+        ease: 'linear',
+        onComplete: self => {
+            utils.set(page.value, {
+                x: where === 'left' ? '-50vw' : '50vw',
+                opacity: 0
+            })
+            navigateTo(dockItemList[index].page)
+        }
+    })
+    setTimeout(() => {
+        animate(page.value, {
+            x: '0vw',
+            duration,
+            opacity: 1,
+            ease: 'linear',
+            onComplete: self => {
+                animeing = false;
+            }
+        })
+    }, duration + 10);
 }
 
 function updateDockAnime(index: number) {
@@ -88,10 +110,6 @@ function updateDockAnime(index: number) {
         }, '+=20')
     }
 }
-function test() {
-    useDockStore().addDockItem('test', '/', 'solar:inbox-in-bold-duotone', 'solar:inbox-in-bold-duotone', 2);
-
-}
 </script>
 
 <style>
@@ -112,5 +130,33 @@ function test() {
     transition: 0.2s;
     transition-timing-function: ease-out;
     border-radius: 3px;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+    transition: all 2s;
+    transition-timing-function: linear;
+}
+
+.slide-left-enter-from {
+    opacity: 0;
+    transform: translate(100vw, 0);
+}
+
+.slide-left-leave-to {
+    opacity: 0;
+    transform: translate(-100vw, 0);
+}
+
+.slide-right-enter-from {
+    opacity: 0;
+    transform: translate(-100vw, 0);
+}
+
+.slide-right-leave-to {
+    opacity: 0;
+    transform: translate(100vw, 0);
 }
 </style>
