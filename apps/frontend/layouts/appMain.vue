@@ -1,25 +1,48 @@
 <template>
-    <div class="w-screen h-screen flex flex-col overflow-hidden">
-        <div class="h-[calc(100vh-4rem)] min-w-0" ref="page">
+    <div class="w-screen h-screen flex overflow-hidden" :class="isSm ? 'flex-row' : 'flex-col'">
+        <div ref="page" :class="isSm ? 'order-1 flex-1' : 'h-[calc(100vh-4rem)] min-w-0'">
             <slot></slot>
         </div>
-        <div class="dock bg-base-200 border-t-base-content/10" ref="dock">
-            <div v-for="(item, index) in dockItemList" :key="item.id" class="transition relative top-40"
-                :class="item.id == useDockStore().activeDockId ? 'text-primary' : 'text-base-content/20'"
-                @click="swichDock(item.id, index)">
-                <Icon :name="item.icon" size="1.2rem"></Icon>
-                <span class="dock-label">{{ item.name }}</span>
+        <div :class="{ 'bg-base-200 flex flex-col items-center gap-2 pt-3 border-r border-r-base-content/10': isSm }">
+            <Icon v-show="isSm" name="solar:ghost-bold" class="text-base-content/10" size="1.9rem"></Icon>
+            <div class="border-t border-base-content/10 w-3/4"></div>
+            <ul v-show="isSm !== null" class="bg-base-200 border-t-base-content/10" ref="dock"
+                :class="isSm ? 'flex-col w-fit h-fit gap-1 rounded-lg menu pl-2.5 pr-2.5' : 'dock'">
+                <li v-for="(item, index) in dockItemList" :key="item.id" class="transition relative" :class="{
+                    'text-primary': item.id == useDockStore().activeDockId,
+                    'text-base-content/20': item.id != useDockStore().activeDockId,
+                    'top-40': !isSm,
+                    'right-40 p-2 rounded-md': isSm,
+                    'bg-base-300 shadow': isSm && item.id == useDockStore().activeDockId
+                }" @click="swichDock(item.id, index)">
+                    <Icon :name="item.icon" :size="isSm ? '1.4rem' : '1.2rem'"></Icon>
+                    <span v-show="!isSm" class="dock-label">{{ item.name }}</span>
+                </li>
+            </ul>
+            <div v-show="isSm" class="flex-1">
+
+            </div>
+            <div class="mb-3">
+
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
+import { breakpointsTailwind } from '@vueuse/core';
 import { animate, createTimeline, stagger, utils } from 'animejs';
 let dock: Ref<HTMLElement | null> = ref(null);
 let page = ref();
-let { dockItemList, activeDockId, setActiveDockId, addEvent } = useDockStore();
+let { dockItemList, setActiveDockId, addEvent } = useDockStore();
+let points = useBreakpoints(breakpointsTailwind);
+let isSm: Ref<null | boolean> = ref(null);
+watch(points.sm, () => {
+    isSm.value = points.sm.value;
+})
+
 onMounted(() => {
+    isSm.value = points.sm.value;
     updateDockAnime(0);
     swichDock(dockItemList[0].id, 0);
     navigateTo('/')
@@ -28,12 +51,6 @@ onMounted(() => {
 function onDockAdd() {
     setTimeout(() => {
         if (dock.value && dock.value.children) {
-            // dockItemList.forEach((item, index) => {
-            //     if (item.id == useDockStore().activeDockId) {
-            //         // swichDock(useDockStore().activeDockId, index)
-            //         return;
-            //     }
-            // })
             animate(Array.from(dock.value.children), {
                 duration: 300,
                 top: '0px',
@@ -50,6 +67,7 @@ nextTick(() => {
             animate(Array.from(dock.value.children), {
                 duration: 300,
                 top: '0px',
+                right: '0px',
                 delay: stagger(40)
             })
         }
@@ -61,7 +79,7 @@ async function swichDock(activeId: string, index: number) {
     if (animeing) return;
     let where: 'left' | 'right' = useDockStore().activeDockIndex > index ? 'left' : 'right';
     updateDockAnime(index);
-    let duration = 100;
+    let duration = isSm.value ? 0 : 100;
     animeing = true;
     setActiveDockId(activeId)
     animate(page.value, {
@@ -92,9 +110,6 @@ async function swichDock(activeId: string, index: number) {
 
 function updateDockAnime(index: number) {
     if (dock.value && dock.value.children[index]) {
-        // 100%
-        // dock.value.style.setProperty('--dock-indicator-width', `calc( (100% - 16px) / ${dockItemList.value.length})`)
-        // dock.value.style.setProperty('--dock-indicator-left', `calc((var(--dock-indicator-width)) * ${index})`)
         dock.value.style.setProperty('--dock-indicator-width', `calc(0.5 * (100% - 16px) / ${dockItemList.length})`)
         dock.value.style.setProperty('--dock-indicator-left', `calc(2 * (var(--dock-indicator-width)) * ${index + 0.25})`)
         let t1 = createTimeline();
@@ -130,33 +145,5 @@ function updateDockAnime(index: number) {
     transition: 0.2s;
     transition-timing-function: ease-out;
     border-radius: 3px;
-}
-
-.slide-left-enter-active,
-.slide-left-leave-active,
-.slide-right-enter-active,
-.slide-right-leave-active {
-    transition: all 2s;
-    transition-timing-function: linear;
-}
-
-.slide-left-enter-from {
-    opacity: 0;
-    transform: translate(100vw, 0);
-}
-
-.slide-left-leave-to {
-    opacity: 0;
-    transform: translate(-100vw, 0);
-}
-
-.slide-right-enter-from {
-    opacity: 0;
-    transform: translate(-100vw, 0);
-}
-
-.slide-right-leave-to {
-    opacity: 0;
-    transform: translate(100vw, 0);
 }
 </style>
