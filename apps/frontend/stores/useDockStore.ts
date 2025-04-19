@@ -8,11 +8,11 @@ export const useDockStore = defineStore('dock', () => {
         page: '/'
     }, {
         id: 'd2',
-        name: '功能​',
+        name: '通讯录',
         sort: 2,
-        icon: 'solar:box-minimalistic-bold-duotone',
-        activeIcon: 'solar:box-minimalistic-bold-duotone',
-        page: '/function'
+        icon: 'solar:book-bold-duotone',
+        activeIcon: 'solar:book-bold-duotone',
+        page: '/contacts'
     }, {
         id: 'd3',
         name: '通知',

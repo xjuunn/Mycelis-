@@ -2,6 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
+  ssr: false,
   nitro: {
     output: {
       dir: "dist",
@@ -13,7 +14,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     jwt_secret: process.env.JWT_SECRET,
     public: {
-    BASE_URL:process.env.BASE_URL
+      BASE_URL: process.env.BASE_URL
     },
   },
   css: ["~/assets/app.css"],

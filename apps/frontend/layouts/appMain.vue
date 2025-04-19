@@ -5,7 +5,7 @@
         </div>
         <div :class="{ 'bg-base-200 flex flex-col items-center gap-2 pt-3 border-r border-r-base-content/10': isSm }">
             <Icon v-show="isSm" name="solar:ghost-bold" class="text-base-content/10" size="1.9rem"></Icon>
-            <div class="border-t border-base-content/10 w-3/4"></div>
+            <div v-show="isSm" class="border-t border-base-content/10 w-3/4 mt-1"></div>
             <ul v-show="isSm !== null" class="bg-base-200 border-t-base-content/10" ref="dock"
                 :class="isSm ? 'flex-col w-fit h-fit gap-1 rounded-lg menu pl-2.5 pr-2.5' : 'dock'">
                 <li v-for="(item, index) in dockItemList" :key="item.id" class="transition relative" :class="{
@@ -79,17 +79,17 @@ async function swichDock(activeId: string, index: number) {
     if (animeing) return;
     let where: 'left' | 'right' = useDockStore().activeDockIndex > index ? 'left' : 'right';
     updateDockAnime(index);
-    let duration = isSm.value ? 0 : 100;
+    let duration = 100;
     animeing = true;
     setActiveDockId(activeId)
     animate(page.value, {
-        x: where === 'left' ? '50vw' : '-50vw',
+        x: isSm.value ? 0 : where === 'left' ? '50vw' : '-50vw',
         duration,
         opacity: 0,
         ease: 'linear',
         onComplete: self => {
             utils.set(page.value, {
-                x: where === 'left' ? '-50vw' : '50vw',
+                x: isSm.value ? 0 : where === 'left' ? '-50vw' : '50vw',
                 opacity: 0
             })
             navigateTo(dockItemList[index].page)
@@ -105,7 +105,7 @@ async function swichDock(activeId: string, index: number) {
                 animeing = false;
             }
         })
-    }, duration + 10);
+    }, duration + 20);
 }
 
 function updateDockAnime(index: number) {

@@ -1,10 +1,16 @@
 <template>
-  <div class="flex items-center justify-center w-full h-full text-4xl">
-    消息
-  </div>
+  <MainListContentLayout title="消息">
+    <template #list>
+      <MainMessageList></MainMessageList>
+    </template>
+    <template #content>
+      test
+    </template>
+  </MainListContentLayout>
 </template>
 
 <script lang="ts" setup>
+import { breakpointsTailwind } from '@vueuse/core';
 definePageMeta({
   layout: "app-main"
 })

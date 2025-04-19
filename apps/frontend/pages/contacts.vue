@@ -1,6 +1,6 @@
 <template>
-    <div class="flex items-center justify-center w-full h-full text-4xl">
-        功能
+    <div class="h-full">
+        <!-- solar:book-bold-duotone -->
     </div>
 </template>
 

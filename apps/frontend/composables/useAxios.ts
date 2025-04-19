@@ -10,7 +10,9 @@ export const useAxios = () => {
     };
     const initAxios = () => {
         return axios.create({
-            baseURL: useAppStore().baseurl,
+            baseURL: useAppStore().baseurl
+                .replace('localhost', window.location.hostname)
+                .replace('127.0.0.1', window.location.hostname),
             timeout: 10000,
             headers: {
                 "Content-Type": "application/json",
