@@ -10,7 +10,6 @@
 </template>
 
 <script lang="ts" setup>
-import { breakpointsTailwind } from '@vueuse/core';
 definePageMeta({
   layout: "app-main"
 })

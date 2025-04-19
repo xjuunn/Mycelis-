@@ -40,12 +40,18 @@ let isSm: Ref<null | boolean> = ref(null);
 watch(points.sm, () => {
     isSm.value = points.sm.value;
 })
-
+let route = useRoute();
 onMounted(() => {
     isSm.value = points.sm.value;
     updateDockAnime(0);
     swichDock(dockItemList[0].id, 0);
-    navigateTo('/')
+    useDockStore().dockItemList.forEach(item => {
+        if (route.path === item.page) {
+            setActiveDockId(item.id);
+            return;
+        }
+    })
+
     addEvent('ADD', onDockAdd)
 })
 function onDockAdd() {
