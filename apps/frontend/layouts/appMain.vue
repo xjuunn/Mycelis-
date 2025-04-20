@@ -1,9 +1,10 @@
 <template>
     <div class="w-screen h-screen flex overflow-hidden" :class="isSm ? 'flex-row' : 'flex-col'">
-        <div ref="page" :class="isSm ? 'order-1 flex-1' : 'h-[calc(100vh-4rem)] min-w-0'">
+        <div ref="page" :class="isSm || useDockStore().isHidden ? 'order-1 flex-1' : 'h-[calc(100vh-4rem)] min-w-0'">
             <slot></slot>
         </div>
-        <div :class="{ 'bg-base-200 flex flex-col items-center gap-2 pt-3 border-r border-r-base-content/10': isSm }">
+        <div v-show="!useDockStore().isHidden"
+            :class="{ 'bg-base-200 flex flex-col items-center gap-2 pt-3 border-r border-r-base-content/10': isSm }">
             <Icon v-show="isSm" name="solar:ghost-bold" class="text-base-content/10" size="1.9rem"></Icon>
             <div v-show="isSm" class="border-t border-base-content/10 w-3/4 mt-1"></div>
             <ul v-show="isSm !== null" class="bg-base-200 border-t-base-content/10" ref="dock"
@@ -20,10 +21,8 @@
                 </li>
             </ul>
             <div v-show="isSm" class="flex-1">
-
             </div>
             <div class="mb-3">
-
             </div>
         </div>
     </div>
@@ -43,15 +42,14 @@ watch(points.sm, () => {
 let route = useRoute();
 onMounted(() => {
     isSm.value = points.sm.value;
-    updateDockAnime(0);
-    swichDock(dockItemList[0].id, 0);
-    useDockStore().dockItemList.forEach(item => {
+    useDockStore().dockItemList.forEach((item, index) => {
         if (route.path === item.page) {
             setActiveDockId(item.id);
+            updateDockAnime(index);
+            swichDock(item.id, index);
             return;
         }
     })
-
     addEvent('ADD', onDockAdd)
 })
 function onDockAdd() {
@@ -62,7 +60,6 @@ function onDockAdd() {
                 top: '0px',
                 delay: stagger(40)
             });
-
         }
     }, 0);
 }

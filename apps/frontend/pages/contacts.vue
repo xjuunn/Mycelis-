@@ -1,11 +1,33 @@
 <template>
-    <div class="h-full">
-        <!-- solar:book-bold-duotone -->
-    </div>
+    <MainListContentLayout title="通讯录">
+        <template #list>
+            <ul class="menu w-full">
+                <li>
+                    <NuxtLink to="/contacts/search?ui=content">
+                        <Icon name="iconamoon:search-duotone"></Icon> 搜索
+                    </NuxtLink>
+                </li>
+                <li>
+                    <a>
+                        <Icon name="solar:user-bold-duotone"></Icon> 好友
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <Icon name="solar:users-group-rounded-bold-duotone"></Icon> 群组
+                    </a>
+                </li>
+            </ul>
+        </template>
+        <template #content>
+            <NuxtPage></NuxtPage>
+        </template>
+    </MainListContentLayout>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 definePageMeta({
-    layout: "app-main"
-})
+    layout: "app-main",
+});
+
 </script>

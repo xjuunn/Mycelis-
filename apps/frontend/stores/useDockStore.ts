@@ -30,6 +30,7 @@ export const useDockStore = defineStore('dock', () => {
     }]);
     let _activeDockId = ref('');
     let _activeDockIndex = ref(0);
+    let _isHidden = ref(false);
     let _onAddEvents: Function[] = [];
     let _onRemoveEvents: Function[] = [];
     let dockItemList = computed(() => _dockItemList.value)
@@ -37,6 +38,7 @@ export const useDockStore = defineStore('dock', () => {
         if (_activeDockId.value === '' && _dockItemList.value.length) _activeDockId.value = dockItemList.value[0].id;
         return _activeDockId.value
     });
+    let isHidden = computed(() => _isHidden.value)
     let activeDockIndex = computed(() => _activeDockIndex.value)
     function addDockItem(name: string, page: string, icon: string, activeIcon?: string, sort: number = 100, callevent: boolean = true) {
         if (!activeIcon) activeIcon = icon;
@@ -65,9 +67,14 @@ export const useDockStore = defineStore('dock', () => {
         else if (type === 'REMOVE') _onRemoveEvents.push(callback);
     }
 
+    function setHidden(b: boolean) {
+        _isHidden.value = b;
+    }
+
     return {
         dockItemList, addDockItem, removeDockItem,
-        activeDockId, setActiveDockId, addEvent, activeDockIndex
+        activeDockId, setActiveDockId, addEvent, activeDockIndex,
+        isHidden,setHidden
     }
 })
 
