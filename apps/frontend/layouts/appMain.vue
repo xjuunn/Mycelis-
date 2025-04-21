@@ -41,9 +41,10 @@ watch(points.sm, () => {
 })
 let route = useRoute();
 onMounted(() => {
+
     isSm.value = points.sm.value;
     useDockStore().dockItemList.forEach((item, index) => {
-        if (route.path === item.page) {
+        if ('/' + route.path.split('/')[1] === item.page) {
             setActiveDockId(item.id);
             updateDockAnime(index);
             swichDock(item.id, index);
