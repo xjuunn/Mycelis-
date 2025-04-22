@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { UpdateFriendRequestDto } from './dto/update-friend-request.dto';
 import { prisma } from '@mycelis/database';
@@ -7,7 +7,14 @@ import { PageRequest, PageResultInfo } from '@mycelis/types';
 
 @Injectable()
 export class FriendRequestService {
-  create(createFriendRequestDto: CreateFriendRequestDto, senderId: number) {
+  async create(createFriendRequestDto: CreateFriendRequestDto, senderId: number) {
+    let check = await prisma.friendRequest.findFirst({
+      where: {
+        receiverId: createFriendRequestDto.receiverId,
+        senderId,
+      }
+    })
+    if (check) throw new BadRequestException("已存在请求记录，请勿重复请求")
     return prisma.friendRequest.create({
       data: {
         senderId,

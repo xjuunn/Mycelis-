@@ -33,6 +33,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         }
 
         message = this.translateMessage(message);
+        console.log(response);
 
         response.status(status).json({
             code: status,

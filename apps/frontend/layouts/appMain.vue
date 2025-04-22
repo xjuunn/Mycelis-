@@ -1,6 +1,6 @@
 <template>
     <div class="w-screen h-screen flex overflow-hidden" :class="isSm ? 'flex-row' : 'flex-col'">
-        <div ref="page" :class="isSm || useDockStore().isHidden ? 'order-1 flex-1' : 'h-[calc(100vh-4rem)] min-w-0'">
+        <div ref="page" :class="isSm || useDockStore().isHidden ? 'order-1 flex-1' : 'h-[calc(100vh-4rem)] min-w-0'" class="h-full">
             <slot></slot>
         </div>
         <div v-show="!useDockStore().isHidden"

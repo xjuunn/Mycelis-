@@ -19,6 +19,7 @@ export class FriendRequestController {
   @ApiOperation({ summary: "创建好友请求" })
   @Post()
   create(@Body() createFriendRequestDto: CreateFriendRequestDto, @Token() tokenInfo: TokenInfo) {
+    if (createFriendRequestDto.receiverId == tokenInfo.id) throw new BadRequestException("您不能添加自己为好友")
     return this.friendRequestService.create(createFriendRequestDto, tokenInfo.id);
   }
 
