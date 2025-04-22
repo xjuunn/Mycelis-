@@ -3,6 +3,8 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+    <div class="toast" id="ToastContainer">
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
