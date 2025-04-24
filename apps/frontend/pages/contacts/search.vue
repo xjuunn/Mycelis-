@@ -1,8 +1,5 @@
 <template>
     <div class="h-full flex flex-col">
-        <div class="min-h-13 border-b border-b-base-content/10 bg-base-200 pl-3 pr-3 flex items-center gap-3">
-            <div class="text-lg pl-3 pr-3">搜索</div>
-        </div>
         <div class="flex-1 max-h-full flex-col p-8 flex items-center">
             <form @submit.prevent="doSearch" class="join join-horizontal w-full justify-center lg:mt-10 max-w-[500px]">
                 <input v-model="searchText" type="text" class="input rounded-l-md focus-within:outline-0 flex-1"
@@ -49,7 +46,7 @@ async function initData() {
 }
 function btnAddFriend(item: Types.User) {
     Friend.FriendRequest.create(item.id).then(({ data }) => {
-        console.log(data);
+        useToast().success("请求成功")
     }).catch(({ msg }) => useToast().error(msg))
 
 

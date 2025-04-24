@@ -32,15 +32,18 @@ export class FriendRequestService {
       prisma.friendRequest.findMany({
         where: {
           senderId,
-          ...search
+          status: search.status
         },
         include: {
           receiver: { omit: { passwordHash: true } }
         },
-        ...pageinfo
+        take: +pageinfo.take,
+        skip: +pageinfo.skip
       }),
       prisma.friendRequest.count({
-        where: search
+        where: {
+          status: search.status
+        }
       })
     ])
     return new PageResultInfo(list, total, pageinfo.skip, pageinfo.take);
@@ -50,16 +53,19 @@ export class FriendRequestService {
     const [list, total] = await Promise.all([
       prisma.friendRequest.findMany({
         where: {
-          ...search,
+          status: search.status,
           receiverId
         },
         include: {
-          receiver: { omit: { passwordHash: true } }
+          sender: { omit: { passwordHash: true } }
         },
-        ...pageinfo
+        take: +pageinfo.take,
+        skip: +pageinfo.skip
       }),
       prisma.friendRequest.count({
-        where: search
+        where: {
+          status: search.status
+        }
       })
     ])
     return new PageResultInfo(list, total, pageinfo.skip, pageinfo.take);

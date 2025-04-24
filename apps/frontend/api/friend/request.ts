@@ -1,5 +1,6 @@
 import type { Types } from '@mycelis/database'
-import type { PageResult, Result } from '@mycelis/types'
+import type { PageRequest, PageResult, Result } from '@mycelis/types'
+import qs from 'qs';
 
 /**
  * 创建好友请求
@@ -13,16 +14,16 @@ export function create(receiverId: number) {
  * 查询发送的好友请求
  * @param status 请求状态
  */
-export function listSent(status: Types.FriendRequestStatus) {
-    return useAxios().axios.get<PageResult<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/sent?status=' + status)
+export function listSent(status: Types.FriendRequestStatus, pageInfo: PageRequest = { skip: 0, take: 15 }) {
+    return useAxios().axios.get<PageResult<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/sent?status=' + status + '&' + qs.stringify(pageInfo))
 }
 
 /**
  * 查询接收的好友请求
  * @param status 请求状态
  */
-export function listReceived(status: Types.FriendRequestStatus) {
-    return useAxios().axios.get<PageResult<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/received?status' + status)
+export function listReceived(status: Types.FriendRequestStatus, pageInfo: PageRequest = { skip: 0, take: 15 }) {
+    return useAxios().axios.get<PageResult<Types.FriendRequest & { sender: Types.User }>>('/friend-request/received?status=' + status + '&' + qs.stringify(pageInfo))
 }
 
 /**

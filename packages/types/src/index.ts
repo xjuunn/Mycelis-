@@ -3,3 +3,4 @@ export interface APP {
 }
 export * from './Result/index'
 export * from './Request/index'
+export * from './Notification/index'

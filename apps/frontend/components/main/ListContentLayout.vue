@@ -8,12 +8,17 @@
 
                 </div>
             </div>
-            <div class="h-full overflow-y-scroll min-h-0">
+            <div class="flex-1 overflow-y-scroll min-h-0">
                 <slot name="list"></slot>
             </div>
         </div>
-        <div class="flex-1" v-if="isShowContent">
-            <slot name="content"></slot>
+        <div class="flex-1 flex flex-col" v-if="isShowContent">
+            <div class="h-14 bg-base-200 border-b border-b-base-content/10">
+                <slot name="contentTop"></slot>
+            </div>
+            <div class="flex-1">
+                <slot name="content"></slot>
+            </div>
         </div>
     </div>
 </template>
