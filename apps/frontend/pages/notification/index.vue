@@ -1,7 +1,4 @@
 <template>
-    <!-- <div v-for="(item, index) in listData" :key="item.id">
-        <div>{{ item }}</div>
-    </div> -->
     <div class="h-full flex flex-col items-center p-2 lg:pt-10">
         <div class="max-w-[500px] w-full">
             <div v-for="(item, index) in listData" :key="item.id"
@@ -33,7 +30,7 @@ import * as Friend from '~/api/friend'
 import type { PageRequest } from '@mycelis/types';
 import { AppNotification, AppNotificationLevel, AppNotificationOrigin } from '@mycelis/types';
 import type { Types } from '@mycelis/database';
-let pageInfo: PageRequest = { skip: 0, take: 15 }
+let pageInfo: Ref<PageRequest> = ref({ skip: 0, take: 15 });
 let listData: Ref<AppNotification<Types.FriendRequest & { sender: Types.User }>[]> = ref([])
 onMounted(() => {
     initList();
@@ -44,7 +41,7 @@ async function initList() {
     listFriendRequest();
 }
 async function listFriendRequest() {
-    let { data } = await Friend.FriendRequest.listReceived('PENDING', pageInfo)
+    let { data } = await Friend.FriendRequest.listReceived('PENDING', pageInfo.value)
     data.data.list.forEach(item => {
         listData.value.push({
             id: 'friendRequest' + item.id,

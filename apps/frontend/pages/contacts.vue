@@ -8,9 +8,9 @@
                     </NuxtLink>
                 </li>
                 <li>
-                    <a>
+                    <NuxtLink to="/contacts/friends?ui=content">
                         <Icon name="solar:user-bold-duotone"></Icon> 好友
-                    </a>
+                    </NuxtLink>
                 </li>
                 <li>
                     <a>
