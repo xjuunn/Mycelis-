@@ -9,7 +9,7 @@
                 <div class="h-fit flex flex-1">
                     <div class="flex-1">
                         <div class="font-bold">{{ item.friend.displayName ?? item.friend.name }}</div>
-                        <div class="text-sm text-base-content/80">
+                        <div class="text-sm text-base-content/80"> 
                             {{ item.friend.name }}
                         </div>
                     </div>

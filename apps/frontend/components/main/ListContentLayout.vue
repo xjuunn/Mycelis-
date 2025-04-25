@@ -13,7 +13,10 @@
             </div>
         </div>
         <div class="flex-1 flex flex-col" v-if="isShowContent">
-            <div class="h-14 bg-base-200 border-b border-b-base-content/10">
+            <div class="h-14 bg-base-200 border-b border-b-base-content/10 flex items-center">
+                <div class=" h-full sm:hidden flex items-center hover:text-primary p-2" @click="btnBack">
+                    <Icon name="solar:alt-arrow-left-line-duotone" size="1.3rem"></Icon>
+                </div>
                 <slot name="contentTop"></slot>
             </div>
             <div class="flex-1">
@@ -51,6 +54,9 @@ function checkUI() {
     } else {
         isShowContent.value = false;
     }
+}
+function btnBack() {
+    window.history.back()
 }
 
 </script>

@@ -14,7 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.8.0",
+  "packageManager": "pnpm@10.9.0",
   "dependencies": {
     "@types/node": "^22.10.7",
     "class-transformer": "^0.5.1",

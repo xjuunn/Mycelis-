@@ -3,7 +3,7 @@
         <div class="w-full h-fit flex hover:bg-base-200 transition border-b border-b-base-content/10">
             <div class="avatar">
                 <div class="w-10 h-10 m-2.5 rounded-full">
-                    <img src="http://192.168.37.133:8080/file/avatars/1743145702559-tx2.jpg" alt="tx">
+                    <img src="http://localhost:8080/file/avatars/1743145702559-tx2.jpg" alt="tx">
                 </div>
             </div>
             <div class="w-full p-2">

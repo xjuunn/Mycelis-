@@ -16,6 +16,7 @@ import { UserModule } from './res/user/user.module';
 import { FriendRequestModule } from './res/friend-request/friend-request.module';
 import { FriendshipModule } from './res/friendship/friendship.module';
 import { FriendTagModule } from './res/friend-tag/friend-tag.module';
+import { MessageModule } from './res/message/message.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { FriendTagModule } from './res/friend-tag/friend-tag.module';
     FriendRequestModule,
     FriendshipModule,
     FriendTagModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [
