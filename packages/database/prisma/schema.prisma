@@ -31,6 +31,10 @@ model User {
   // 好友关系 - 作为接收方
   receivedFriendships Friendship[]    @relation("friendUsers")
   FriendshipTag       FriendshipTag[]
+
+  sentMessage Message[] @relation("sentMessages")
+
+  receivedMessage Message[] @relation("receivedMessages")
 }
 
 // 用户状态
@@ -91,4 +95,50 @@ model FriendshipTag {
   friendship Friendship[]
 
   @@unique([userId, tag])
+}
+
+// 消息表
+model Message {
+  id         Int           @id @default(autoincrement()) // ID
+  senderId   Int // 发送者 ID
+  sender     User          @relation("sentMessages", fields: [senderId], references: [id]) // 发送者
+  receiverId Int // 接收者 ID
+  receiver   User          @relation("receivedMessages", fields: [receiverId], references: [id]) // 接收者
+  message    String        @default("hello") // 消息
+  type       MessageType   @default(Text) // 消息类型
+  origin     MessageOrigin @default(System) // 消息源
+  status     MessageStatus @default(Sent) // 消息状态
+  replyTo    Int? // 回复消息ID
+  extra      Json? // 额外信息
+  isPinned   Boolean       @default(false) // 是否置顶
+  createAt   DateTime      @default(now()) // 创建时间
+  updateAt   DateTime?     @updatedAt() // 更新时间
+  readAt     DateTime? // 阅读时间
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([createAt])
+}
+
+// 消息状态
+enum MessageStatus {
+  Sent
+  Delivered
+  Read
+  Modified
+  Deleted
+  Failed
+}
+
+// 消息源
+enum MessageOrigin {
+  User
+  System
+}
+
+// 消息类型
+enum MessageType {
+  Text
+  Image
+  File
 }
