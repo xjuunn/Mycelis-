@@ -17,6 +17,7 @@ import { FriendRequestModule } from './res/friend-request/friend-request.module'
 import { FriendshipModule } from './res/friendship/friendship.module';
 import { FriendTagModule } from './res/friend-tag/friend-tag.module';
 import { MessageModule } from './res/message/message.module';
+import { TestGateway } from './ga/test/test.gateway';
 
 @Module({
   imports: [
@@ -29,14 +30,16 @@ import { MessageModule } from './res/message/message.module';
     ServeStaticModule.forRootAsync({
       useFactory: async () => {
         const rootPath = join(await getFileUrl(), '');
-        return [{
-          rootPath,
-          serveRoot: '/file',
-          serveStaticOptions: {
-            index: false,
-            cacheControl: true,
+        return [
+          {
+            rootPath,
+            serveRoot: '/file',
+            serveStaticOptions: {
+              index: false,
+              cacheControl: true,
+            },
           },
-        }];
+        ];
       },
     }),
     UserModule,
@@ -51,14 +54,17 @@ import { MessageModule } from './res/message/message.module';
     AppService,
     {
       provide: APP_GUARD,
-      useClass: AuthGuard
-    }, {
+      useClass: AuthGuard,
+    },
+    {
       provide: APP_GUARD,
-      useClass: RoleGuard
-    }, {
+      useClass: RoleGuard,
+    },
+    {
       provide: APP_INTERCEPTOR,
       useClass: ResultInterceptor,
-    }
+    },
+    TestGateway,
   ],
 })
-export class AppModule { }
+export class AppModule {}

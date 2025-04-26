@@ -21,12 +21,16 @@ export class MessageService {
         isPinned: createMessageDto.isPinned,
       },
       include: {
-        receiver: { omit: { passwordHash: true } }
-      }
+        receiver: { omit: { passwordHash: true } },
+      },
     });
   }
 
-  async findSentMessageList(searchMessageDto: SearchMessageDto, senderId: number, pageInfo: PageRequest) {
+  async findSentMessageList(
+    searchMessageDto: SearchMessageDto,
+    senderId: number,
+    pageInfo: PageRequest,
+  ) {
     const where = {
       id: searchMessageDto.id,
       senderId,
@@ -40,22 +44,26 @@ export class MessageService {
       createAt: searchMessageDto.createAt,
       updateAt: searchMessageDto.updateAt,
       readAt: searchMessageDto.readAt,
-    }
+    };
     const [list, total] = await Promise.all([
       prisma.message.findMany({
         where,
         include: {
-          receiver: { omit: { passwordHash: true } }
+          receiver: { omit: { passwordHash: true } },
         },
         skip: pageInfo.skip,
-        take: pageInfo.take
+        take: pageInfo.take,
       }),
-      prisma.message.count({ where })
-    ])
+      prisma.message.count({ where }),
+    ]);
     return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
   }
 
-  async findReceivedMessageList(searchMessageDto: SearchMessageDto, receiverId: number, pageInfo: PageRequest) {
+  async findReceivedMessageList(
+    searchMessageDto: SearchMessageDto,
+    receiverId: number,
+    pageInfo: PageRequest,
+  ) {
     const where = {
       id: searchMessageDto.id,
       senderId: searchMessageDto.senderId,
@@ -69,18 +77,18 @@ export class MessageService {
       createAt: searchMessageDto.createAt,
       updateAt: searchMessageDto.updateAt,
       readAt: searchMessageDto.readAt,
-    }
+    };
     const [list, total] = await Promise.all([
       prisma.message.findMany({
         where,
         include: {
-          receiver: { omit: { passwordHash: true } }
+          receiver: { omit: { passwordHash: true } },
         },
         skip: pageInfo.skip,
-        take: pageInfo.take
+        take: pageInfo.take,
       }),
-      prisma.message.count({ where })
-    ])
+      prisma.message.count({ where }),
+    ]);
     return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
   }
 
@@ -88,11 +96,8 @@ export class MessageService {
     return prisma.message.findUnique({
       where: {
         id,
-        OR: [
-          { senderId: userId },
-          { receiverId: userId }
-        ]
-      }
+        OR: [{ senderId: userId }, { receiverId: userId }],
+      },
     });
   }
 
@@ -100,31 +105,31 @@ export class MessageService {
     return prisma.message.update({
       where: {
         id,
-        senderId: userId
+        senderId: userId,
       },
       data: {
         message: updateMessageDto.message,
-        isPinned: updateMessageDto.isPinned
+        isPinned: updateMessageDto.isPinned,
       },
       include: {
         receiver: {
-          omit: { passwordHash: true }
-        }
-      }
-    })
+          omit: { passwordHash: true },
+        },
+      },
+    });
   }
 
   remove(id: number, userId: number) {
     return prisma.message.delete({
       where: {
         id,
-        senderId: userId
+        senderId: userId,
       },
       include: {
         receiver: {
-          omit: { passwordHash: true }
-        }
-      }
-    })
+          omit: { passwordHash: true },
+        },
+      },
+    });
   }
 }

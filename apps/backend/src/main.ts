@@ -6,6 +6,7 @@ import { AllExceptionsFilter } from './f/AllExceptionsFilter';
 import { ValidationPipe } from '@nestjs/common';
 
 config();
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
@@ -15,12 +16,13 @@ async function bootstrap() {
     .addTag('mycelis')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory,{
-    jsonDocumentUrl:"api/json"
+  SwaggerModule.setup('api', app, documentFactory, {
+    jsonDocumentUrl: 'api/json',
   });
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableCors();
   await app.listen(process.env.PORT ?? 8080);
 }
+
 bootstrap();

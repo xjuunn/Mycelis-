@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateFriendTagDto } from './dto/create-friend-tag.dto';
 import { UpdateFriendTagDto } from './dto/update-friend-tag.dto';
 import { Prisma, prisma } from '@mycelis/database';
@@ -6,19 +10,18 @@ import { PageRequest, PageResultInfo } from '@mycelis/types';
 
 @Injectable()
 export class FriendTagService {
-
   async list(pageInfo: PageRequest, userId: number) {
     const [list, total] = await Promise.all([
       prisma.friendshipTag.findMany({
         where: {
-          userId
+          userId,
         },
         ...pageInfo,
       }),
       prisma.friendshipTag.count({
-        where: { userId }
-      })
-    ])
+        where: { userId },
+      }),
+    ]);
     return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
   }
 
@@ -27,14 +30,14 @@ export class FriendTagService {
       prisma.friendship.findMany({
         where: {
           tagId: id,
-          userId
+          userId,
         },
-        ...pageInfo
+        ...pageInfo,
       }),
       prisma.friendship.count({
-        where: { tagId: id, userId }
-      })
-    ])
+        where: { tagId: id, userId },
+      }),
+    ]);
     return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
   }
 
@@ -43,8 +46,8 @@ export class FriendTagService {
       data: {
         tag: createFrienddto.tag,
         sort: createFrienddto.sort,
-        userId
-      }
+        userId,
+      },
     });
   }
 
@@ -53,26 +56,26 @@ export class FriendTagService {
       where: { id, userId },
       data: {
         sort: updateFriendTagDto.sort,
-        tag: updateFriendTagDto.tag
+        tag: updateFriendTagDto.tag,
       },
       include: {
         friendship: {
           include: {
             friend: { omit: { passwordHash: true } },
-            tag: true
+            tag: true,
           },
-          take: 5
-        }
-      }
-    })
+          take: 5,
+        },
+      },
+    });
   }
 
   remove(id: number, userId: number) {
     return prisma.friendshipTag.delete({
       where: {
         id,
-        userId
-      }
-    })
+        userId,
+      },
+    });
   }
 }

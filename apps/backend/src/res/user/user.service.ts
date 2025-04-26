@@ -10,7 +10,7 @@ import { Crypto } from '@mycelis/utils';
 export class UserService {
   create(createUserDto: CreateUserDto) {
     return prisma.user.create({
-      data: createUserDto
+      data: createUserDto,
     });
   }
 
@@ -20,34 +20,36 @@ export class UserService {
         where: searchUserDto,
         ...pageReq,
         omit: {
-          passwordHash: true
-        }
+          passwordHash: true,
+        },
       }),
-      prisma.user.count({ where: searchUserDto })
-    ])
-    return new PageResultInfo(list, total, pageReq.skip, pageReq.take)
+      prisma.user.count({ where: searchUserDto }),
+    ]);
+    return new PageResultInfo(list, total, pageReq.skip, pageReq.take);
   }
 
   findOne(id: number) {
     return prisma.user.findUnique({
       where: { id },
       omit: {
-        passwordHash: true
-      }
+        passwordHash: true,
+      },
     });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
     if (updateUserDto.passwordHash)
-      updateUserDto.passwordHash = Crypto.UserPasswordCrypto.hashPassword(updateUserDto.passwordHash)
+      updateUserDto.passwordHash = Crypto.UserPasswordCrypto.hashPassword(
+        updateUserDto.passwordHash,
+      );
     return prisma.user.update({
       where: {
         id,
       },
       data: updateUserDto,
       omit: {
-        passwordHash: true
-      }
+        passwordHash: true,
+      },
     });
   }
 
@@ -55,8 +57,8 @@ export class UserService {
     return prisma.user.delete({
       where: { id },
       omit: {
-        passwordHash: true
-      }
+        passwordHash: true,
+      },
     });
   }
 
@@ -66,33 +68,45 @@ export class UserService {
         where: {
           OR: [
             { name: { contains: keyword } },
-            { displayName: { contains: keyword } }
-          ]
+            { displayName: { contains: keyword } },
+          ],
         },
         omit: {
-          passwordHash: true
-        }
+          passwordHash: true,
+        },
       }),
       prisma.user.count({
         where: {
           OR: [
             { name: { contains: keyword } },
-            { displayName: { contains: keyword } }
-          ]
-        }
-      })
-    ])
+            { displayName: { contains: keyword } },
+          ],
+        },
+      }),
+    ]);
 
     // 匹配度排序
     list = list.sort((a, b) => {
-      const aNameMatch = a.name.toLowerCase().includes(keyword.toLowerCase()) ? keyword.length / a.name.length : 0;
-      const aDisplayNameMatch = a.displayName?.toLowerCase().includes(keyword.toLowerCase()) ? keyword.length / a.displayName.length : 0;
+      const aNameMatch = a.name.toLowerCase().includes(keyword.toLowerCase())
+        ? keyword.length / a.name.length
+        : 0;
+      const aDisplayNameMatch = a.displayName
+        ?.toLowerCase()
+        .includes(keyword.toLowerCase())
+        ? keyword.length / a.displayName.length
+        : 0;
       const aScore = aNameMatch * 2 + aDisplayNameMatch;
-      const bNameMatch = b.name.toLowerCase().includes(keyword.toLowerCase()) ? keyword.length / b.name.length : 0;
-      const bDisplayNameMatch = b.displayName?.toLowerCase().includes(keyword.toLowerCase()) ? keyword.length / b.displayName.length : 0;
+      const bNameMatch = b.name.toLowerCase().includes(keyword.toLowerCase())
+        ? keyword.length / b.name.length
+        : 0;
+      const bDisplayNameMatch = b.displayName
+        ?.toLowerCase()
+        .includes(keyword.toLowerCase())
+        ? keyword.length / b.displayName.length
+        : 0;
       const bScore = bNameMatch * 2 + bDisplayNameMatch;
       return bScore - aScore;
     });
-    return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take)
+    return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
   }
 }

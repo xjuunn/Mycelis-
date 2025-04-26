@@ -7,4 +7,4 @@ import { FriendshipService } from '../friendship/friendship.service';
   controllers: [FriendRequestController],
   providers: [FriendRequestService, FriendshipService],
 })
-export class FriendRequestModule { }
+export class FriendRequestModule {}

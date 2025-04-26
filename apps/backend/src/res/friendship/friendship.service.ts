@@ -8,46 +8,49 @@ import { CreateFriendTagDto } from '../friend-tag/dto/create-friend-tag.dto';
 
 @Injectable()
 export class FriendshipService {
-
   create(createFriendshipDto: CreateFriendshipDto, userId: number) {
     return prisma.friendship.create({
       data: {
         userId,
         friendId: createFriendshipDto.friendId,
-        note: createFriendshipDto.note
+        note: createFriendshipDto.note,
       },
       include: {
         friend: { omit: { passwordHash: true } },
-        tag: true
-      }
+        tag: true,
+      },
     });
   }
 
-  async updateTag(id: number, createFriendshipTagDto: CreateFriendTagDto, userId: number) {
-    let tag = await prisma.friendshipTag.findFirst({
-      where: { userId, tag: createFriendshipTagDto.tag }
-    })
+  async updateTag(
+    id: number,
+    createFriendshipTagDto: CreateFriendTagDto,
+    userId: number,
+  ) {
+    const tag = await prisma.friendshipTag.findFirst({
+      where: { userId, tag: createFriendshipTagDto.tag },
+    });
     return prisma.friendship.update({
       where: { id, userId },
       include: {
         friend: { omit: { passwordHash: true } },
-        tag: true
+        tag: true,
       },
       data: {
         tag: {
           connectOrCreate: {
             where: {
-              id: tag?.id ?? -1
+              id: tag?.id ?? -1,
             },
             create: {
               tag: createFriendshipTagDto.tag,
               sort: createFriendshipTagDto.sort,
-              userId
-            }
-          }
-        }
-      }
-    })
+              userId,
+            },
+          },
+        },
+      },
+    });
   }
 
   removeTag(id: number, userId: number) {
@@ -55,33 +58,37 @@ export class FriendshipService {
       where: { id, userId },
       include: {
         friend: { omit: { passwordHash: true } },
-        tag: true
+        tag: true,
       },
       data: {
         tag: {
-          disconnect: true
-        }
-      }
-    })
+          disconnect: true,
+        },
+      },
+    });
   }
 
-  async findAll(search: SearchFriendshipDto, pageInfo: PageRequest, userId: number) {
+  async findAll(
+    search: SearchFriendshipDto,
+    pageInfo: PageRequest,
+    userId: number,
+  ) {
     const [list, total] = await Promise.all([
       prisma.friendship.findMany({
         where: {
           userId,
-          ...search
+          ...search,
         },
         ...pageInfo,
         include: {
           friend: { omit: { passwordHash: true } },
-          tag: true
-        }
+          tag: true,
+        },
       }),
       prisma.friendship.count({
-        where: search
-      })
-    ])
+        where: search,
+      }),
+    ]);
     return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
   }
 
@@ -90,8 +97,8 @@ export class FriendshipService {
       where: { id, userId },
       include: {
         friend: { omit: { passwordHash: true } },
-        tag: true
-      }
+        tag: true,
+      },
     });
   }
 
@@ -100,8 +107,8 @@ export class FriendshipService {
       where: { id, userId },
       include: {
         friend: { omit: { passwordHash: true } },
-        tag: true
-      }
-    })
+        tag: true,
+      },
+    });
   }
 }
