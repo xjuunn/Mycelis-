@@ -5,7 +5,7 @@
 <script lang="ts" setup>
 import {io} from 'socket.io-client';
 
-const socket = io("ws://localhost:8081");
+const socket = io("ws://localhost:8080");
 onMounted(() => {
   socket.on("connect", () => {
     console.log("connected");
@@ -13,7 +13,7 @@ onMounted(() => {
   socket.on("disconnect", () => {
     console.log("disconnected");
   })
-  socket.on("message", (e) => {
+  socket.on("createTest", (e) => {
     console.log(e, 0);
   })
 
@@ -21,7 +21,7 @@ onMounted(() => {
 })
 
 function test() {
-  socket.emit("message", {test: 1}, (e) => {
+  socket.emit("createTest", {test: 1}, (e: any) => {
     console.log(e)
   });
 }

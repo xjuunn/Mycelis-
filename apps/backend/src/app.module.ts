@@ -17,7 +17,7 @@ import { FriendRequestModule } from './res/friend-request/friend-request.module'
 import { FriendshipModule } from './res/friendship/friendship.module';
 import { FriendTagModule } from './res/friend-tag/friend-tag.module';
 import { MessageModule } from './res/message/message.module';
-import { TestGateway } from './ga/test/test.gateway';
+import { SocketClientModule } from './res/socket-client/socket-client.module';
 
 @Module({
   imports: [
@@ -47,6 +47,7 @@ import { TestGateway } from './ga/test/test.gateway';
     FriendshipModule,
     FriendTagModule,
     MessageModule,
+    SocketClientModule,
   ],
   controllers: [AppController],
   providers: [
@@ -64,7 +65,6 @@ import { TestGateway } from './ga/test/test.gateway';
       provide: APP_INTERCEPTOR,
       useClass: ResultInterceptor,
     },
-    TestGateway,
   ],
 })
 export class AppModule {}

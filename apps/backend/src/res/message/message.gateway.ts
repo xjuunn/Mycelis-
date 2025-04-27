@@ -5,7 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { MessageService } from './message.service';
 
-@WebSocketGateway(8081, { cors: true })
+@WebSocketGateway({ cors: true })
 export class MessageGateway {
   constructor(private readonly messageService: MessageService) {}
 

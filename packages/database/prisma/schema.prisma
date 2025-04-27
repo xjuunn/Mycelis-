@@ -29,12 +29,44 @@ model User {
   initiatedFriendships Friendship[] @relation("userFriendships")
 
   // 好友关系 - 作为接收方
-  receivedFriendships Friendship[]    @relation("friendUsers")
-  FriendshipTag       FriendshipTag[]
+  receivedFriendships Friendship[] @relation("friendUsers")
 
-  sentMessage Message[] @relation("sentMessages")
+  // 好友标签
+  FriendshipTag FriendshipTag[]
 
+  sentMessage     Message[] @relation("sentMessages")
   receivedMessage Message[] @relation("receivedMessages")
+
+  // 用户设备列表
+  userDevice UserDevice[]
+}
+
+// 用户设备
+model UserDevice {
+  id             Int         @id @default(autoincrement())
+  userId         Int
+  user           User        @relation(fields: [userId], references: [id])
+  socketId       String?     @unique @default(uuid(7))
+  name           String?     @default(uuid(4))
+  os             DeviceType? @default(Unknow)
+  isOnline       Boolean     @default(false)
+  connectedAt    DateTime?
+  disconnectedAt DateTime?
+  createAt       DateTime    @default(now())
+
+  @@unique([userId, name])
+  @@index([userId])
+  @@index([isOnline])
+}
+
+enum DeviceType {
+  Browser
+  Android
+  IOS
+  MacOS
+  Linux
+  Windows
+  Unknow
 }
 
 // 用户状态
