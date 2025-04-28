@@ -8,8 +8,8 @@ import { PageRequest, PageResultInfo } from '@mycelis/types';
 export class SocketClientService {
   private socketList = new Map<string, Socket>();
 
-  constructor() {
-    prisma.userDevice.updateMany({
+  async onApplicationBootstrap() {
+    await prisma.userDevice.updateMany({
       data: {
         isOnline: false,
       },
@@ -42,9 +42,11 @@ export class SocketClientService {
     if (!device.socketId) throw new BadRequestException('无效的SocketId');
     this.addSocket(device.socketId, socket);
     await this.setOnline(device.id, userId, true);
-    socket.on('disconnect', async () => {
+    socket.once('disconnect', async () => {
       await this.setOnline(device.id, userId, false);
     });
+    console.log(this.socketList.keys());
+    console.log('=================', this.socketList.size);
     return device;
   }
 

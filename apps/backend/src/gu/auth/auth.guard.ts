@@ -37,7 +37,9 @@ export class AuthGuard implements CanActivate {
       }
     } else if (context.getType() === 'ws') {
       const client = context.switchToWs().getClient();
-      const token = client.handshake.headers.authorization;
+      const token = this.extractTokenFromHeader(
+        client.handshake.headers.authorization,
+      );
       if (!token) throw new UnauthorizedException();
       try {
         const payload = await this.jwtService.verifyAsync(token, {
