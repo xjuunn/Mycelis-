@@ -11,26 +11,31 @@ import { CreateDeviceDTO } from './types/CreateDeviceDTO';
 import { Token, TokenInfo } from '../../d/token-info/token-info';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../../gu/auth/auth.guard';
+import { prisma } from '@mycelis/database';
 
 @UseGuards(AuthGuard)
 @WebSocketGateway()
 export class SocketClientGateway {
-  constructor(private readonly socketClientService: SocketClientService) { }
+  constructor(private readonly socketClientService: SocketClientService) {}
+
+  async onApplicationBootstrap() {
+    await prisma.userDevice.updateMany({ data: { isOnline: false } });
+    await prisma.user.updateMany({ data: { status: 'OFFLINE' } });
+  }
 
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('client/Connect')
+  @SubscribeMessage('client:connect')
   connect(
     @MessageBody() message: CreateDeviceDTO,
     @ConnectedSocket() client: Socket,
     @Token() tokenInfo: TokenInfo,
   ) {
-    return this.socketClientService.upsertDevice(message, tokenInfo.id, client);
-  }
-
-  @SubscribeMessage("client/getAll")
-  getAll() {
-    return this.server.sockets.sockets
+    return this.socketClientService.deviceConnect(
+      message,
+      tokenInfo.id,
+      client,
+    );
   }
 }

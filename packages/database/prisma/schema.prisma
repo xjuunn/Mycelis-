@@ -46,7 +46,7 @@ model UserDevice {
   id             Int         @id @default(autoincrement())
   userId         Int
   user           User        @relation(fields: [userId], references: [id])
-  socketId       String?     @unique @default(uuid(7))
+  socketId       String?     @unique
   name           String?     @default(uuid(4))
   os             DeviceType? @default(Unknow)
   isOnline       Boolean     @default(false)
