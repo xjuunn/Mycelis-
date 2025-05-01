@@ -10,8 +10,6 @@ export class CreateMessageDto {
   type: Types.MessageType = 'Text';
   @ApiProperty({ description: '消息源', enum: Types.MessageOrigin })
   origin: Types.MessageOrigin = 'System';
-  @ApiProperty({ description: '消息状态', enum: Types.MessageStatus })
-  status: Types.MessageStatus = 'Sent';
   @ApiProperty({ description: '回复消息ID' })
   replyTo?: number;
   @ApiProperty({ description: '额外JSON消息' })

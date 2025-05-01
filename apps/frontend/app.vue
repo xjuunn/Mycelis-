@@ -5,7 +5,7 @@
     </NuxtLayout>
     <div class="toast" id="ToastContainer">
     </div>
-    <div class="toast h-0 z-[-1] overflow-hidden" >
+    <div class="toast h-0 z-[-1] overflow-hidden">
       <div class="alert alert-error"></div>
       <div class="alert alert-info"></div>
       <div class="alert alert-success"></div>
@@ -27,6 +27,7 @@ onMounted(() => {
   document.getElementsByTagName('body')[0].addEventListener('contextmenu', (e) => {
     e.preventDefault();
   })
+  useCheck().check();
 })
 </script>
 <style lang="css">

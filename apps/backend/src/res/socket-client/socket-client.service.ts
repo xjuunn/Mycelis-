@@ -60,7 +60,7 @@ export class SocketClientService {
         },
       });
     } else {
-      const device = await prisma.userDevice.update({
+      const device = await prisma.userDevice.updateMany({
         where: { id: deviceId, userId },
         data: {
           isOnline: false,

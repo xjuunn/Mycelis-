@@ -16,7 +16,7 @@ export class MessageService {
         message: createMessageDto.message,
         type: createMessageDto.type,
         origin: createMessageDto.origin,
-        status: createMessageDto.status,
+        status: 'Delivered',
         replyTo: createMessageDto.replyTo,
         isPinned: createMessageDto.isPinned,
       },

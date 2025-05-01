@@ -18,6 +18,7 @@ import { FriendshipModule } from './res/friendship/friendship.module';
 import { FriendTagModule } from './res/friend-tag/friend-tag.module';
 import { MessageModule } from './res/message/message.module';
 import { SocketClientModule } from './res/socket-client/socket-client.module';
+import { UserService } from './res/user/user.service';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { SocketClientModule } from './res/socket-client/socket-client.module';
   providers: [
     JwtService,
     AppService,
+    UserService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
@@ -67,4 +69,4 @@ import { SocketClientModule } from './res/socket-client/socket-client.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

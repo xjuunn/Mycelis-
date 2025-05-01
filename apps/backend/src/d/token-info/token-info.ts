@@ -2,7 +2,6 @@ import {
   BadRequestException,
   createParamDecorator,
   ExecutionContext,
-  SetMetadata,
 } from '@nestjs/common';
 
 export const Token = createParamDecorator(

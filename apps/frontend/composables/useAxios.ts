@@ -40,6 +40,7 @@ export const useAxios = () => {
     return {
         axios: axiosInstance.value,
         refreshAxios,
-        updateToken
+        updateToken,
+        getToken
     };
 };
