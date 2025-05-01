@@ -4,7 +4,6 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsException,
 } from '@nestjs/websockets';
 import { SocketClientService } from './socket-client.service';
 import { Server, Socket } from 'socket.io';
@@ -14,7 +13,6 @@ import { UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '../../gu/auth/auth.guard';
 import { prisma } from '@mycelis/database';
 import { ResultInterceptor } from 'src/itc/result/result.interceptor';
-import { Result } from '@mycelis/types';
 import { randomUUID } from 'crypto';
 
 @UseGuards(AuthGuard)
@@ -28,7 +26,6 @@ export class SocketClientGateway {
     await prisma.user.updateMany({ data: { status: 'OFFLINE' } });
     this.server.on('connection', (socket) => {
       console.log("connection:", socket.id);
-
     })
   }
 
@@ -43,6 +40,8 @@ export class SocketClientGateway {
   ) {
     if (!deviceDTO.os) deviceDTO.os = "Unknow";
     if (!deviceDTO.name) deviceDTO.name = randomUUID();
+    client.data['userId'] = tokenInfo.id;
+    client.join('user:' + tokenInfo.id);
     return this.socketClientService.deviceConnect(
       deviceDTO,
       tokenInfo.id,

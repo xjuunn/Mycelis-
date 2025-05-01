@@ -3,16 +3,18 @@ import {
   SubscribeMessage,
   MessageBody,
   WebSocketServer,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Token, TokenInfo } from '../../d/token-info/token-info';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '../../gu/auth/auth.guard';
 import { Socket } from 'socket.io';
-import { prisma } from '@mycelis/database';
+import { ResultInterceptor } from 'src/itc/result/result.interceptor';
 
 @UseGuards(AuthGuard)
+@UseInterceptors(ResultInterceptor)
 @WebSocketGateway({ cors: true })
 export class MessageGateway {
   constructor(private readonly messageService: MessageService) { }
@@ -24,15 +26,9 @@ export class MessageGateway {
   async sendMessage(
     @MessageBody() msg: CreateMessageDto,
     @Token() tokenInfo: TokenInfo,
+    @ConnectedSocket() client: Socket
   ) {
-    const devices = await prisma.userDevice.findMany({
-      where: {
-        isOnline: true,
-        userId: msg.receiverId
-      },
-      select: { socketId: true }
-    });
-    devices.forEach(device => { this.socket.to(String(device.socketId ?? "")).emit('message:receive', msg) })
+    client.to('user:' + msg.receiverId).emit('message:receive', msg);
     return this.messageService.create(msg, tokenInfo.id);
   }
 }
