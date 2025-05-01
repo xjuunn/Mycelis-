@@ -22,12 +22,8 @@ import { UserService } from './res/user/user.service';
 
 @Module({
   imports: [
-    AuthModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-      // envFilePath: '../../../.env'
-    }),
-    FilesModule,
+    AuthModule, FilesModule,
+    ConfigModule.forRoot({ isGlobal: true, }),
     ServeStaticModule.forRootAsync({
       useFactory: async () => {
         const rootPath = join(await getFileUrl(), '');
@@ -52,21 +48,10 @@ import { UserService } from './res/user/user.service';
   ],
   controllers: [AppController],
   providers: [
-    JwtService,
-    AppService,
-    UserService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RoleGuard,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ResultInterceptor,
-    },
+    JwtService, AppService, UserService,
+    { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: RoleGuard },
+    { provide: APP_INTERCEPTOR, useClass: ResultInterceptor },
   ],
 })
 export class AppModule { }

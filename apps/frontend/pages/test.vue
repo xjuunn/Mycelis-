@@ -3,10 +3,8 @@
 </template>
 
 <script lang="ts" setup>
+async function test() {
 
-let { socket } = useSocket()
-function test() {
-  console.log(socket);
 
 }
 </script>

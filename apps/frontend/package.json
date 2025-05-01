@@ -12,26 +12,27 @@
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
-    "@iconify/json": "^2.2.319",
+    "@iconify/json": "^2.2.333",
     "@mycelis/database": "workspace:^",
     "@mycelis/types": "workspace:^",
     "@nuxt/icon": "1.11.0",
     "@nuxtjs/color-mode": "3.5.2",
+    "@nuxtjs/device": "3.2.4",
     "@pinia/nuxt": "^0.10.1",
-    "@tailwindcss/postcss": "^4.0.15",
-    "@tailwindcss/vite": "^4.0.15",
+    "@tailwindcss/postcss": "^4.1.5",
+    "@tailwindcss/vite": "^4.1.5",
     "@types/axios": "^0.14.4",
-    "@vueuse/core": "^13.0.0",
+    "@vueuse/core": "^13.1.0",
     "@vueuse/nuxt": "13.0.0",
-    "animejs": "^4.0.1",
-    "axios": "^1.8.4",
-    "daisyui": "^5.0.9",
-    "nuxt": "^3.16.1",
-    "pinia": "^3.0.1",
+    "animejs": "^4.0.2",
+    "axios": "^1.9.0",
+    "daisyui": "^5.0.35",
+    "nuxt": "^3.17.1",
+    "pinia": "^3.0.2",
     "qs": "^6.14.0",
     "socket.io-client": "^4.8.1",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@iconify/vue": "^4.3.0",
@@ -39,6 +40,6 @@
     "@tailwindcss/typography": "^0.5.16",
     "@types/qs": "^6.9.18",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.0.15"
+    "tailwindcss": "^4.1.5"
   }
 }

@@ -36,6 +36,18 @@ export class SocketClientService {
     return device;
   }
 
+  // 修改设备名称
+  async updateDeviceName(userId: number, deviceId: number, name: string) {
+    return prisma.userDevice.update({
+      where: {
+        id: deviceId, userId
+      },
+      data: {
+        name
+      }
+    })
+  }
+
   // 移除设备
   async removeDevice(deviceId: number, userId: number) {
     return prisma.userDevice.delete({

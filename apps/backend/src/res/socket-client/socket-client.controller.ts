@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Query } from '@nestjs/common';
 import { SocketClientService } from './socket-client.service';
 import { Token, TokenInfo } from '../../d/token-info/token-info';
 import { PageInfo } from '../../d/pageinfo/pageinfo.decorator';
@@ -7,12 +7,18 @@ import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('socket-client')
 export class SocketClientController {
-  constructor(private readonly socketClientService: SocketClientService) {}
+  constructor(private readonly socketClientService: SocketClientService) { }
 
   @ApiOperation({ summary: '移除设备' })
   @Delete(':id')
   removeDevice(@Param('id') id: string, @Token() tokenInfo: TokenInfo) {
     return this.socketClientService.removeDevice(+id, tokenInfo.id);
+  }
+
+  @ApiOperation({ summary: "修改设备名称" })
+  @Patch(':id')
+  updateDeviceName(@Param('id') id: string, @Token() tokenInfo: TokenInfo, @Query('name') name: string) {
+    return this.socketClientService.updateDeviceName(tokenInfo.id, +id, name);
   }
 
   @ApiOperation({ summary: '获取当前用户设备列表' })

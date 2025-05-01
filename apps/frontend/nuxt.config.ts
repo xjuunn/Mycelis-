@@ -24,5 +24,6 @@ export default defineNuxtConfig({
     "@formkit/auto-animate/nuxt",
     "@vueuse/nuxt",
     "@nuxtjs/color-mode",
+    "@nuxtjs/device",
   ],
 });

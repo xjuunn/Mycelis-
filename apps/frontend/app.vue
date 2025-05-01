@@ -23,11 +23,15 @@ useHead({
     }
   ]
 })
+// 初始化 Socket 客户端
+useSocket();
+// 检查客户端状态
+useCheck().check();
 onMounted(() => {
   document.getElementsByTagName('body')[0].addEventListener('contextmenu', (e) => {
     e.preventDefault();
   })
-  useCheck().check();
+
 })
 </script>
 <style lang="css">
