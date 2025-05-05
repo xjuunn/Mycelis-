@@ -1,5 +1,5 @@
 <template>
-  <div class="font-mono select-none h-screen">
+  <div class="font-mono select-none h-[100dvh]">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -23,15 +23,16 @@ useHead({
     }
   ]
 })
+
+// TODO 暂时禁用初始化
 // 初始化 Socket 客户端
-useSocket();
+// useSocket();
 // 检查客户端状态
-useCheck().check();
+// useCheck().check();
 onMounted(() => {
   document.getElementsByTagName('body')[0].addEventListener('contextmenu', (e) => {
     e.preventDefault();
   })
-
 })
 </script>
 <style lang="css">

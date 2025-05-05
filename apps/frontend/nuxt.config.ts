@@ -2,11 +2,16 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
-  ssr: false,
+  ssr: true,
   nitro: {
     output: {
       dir: "dist",
     },
+  },
+  icon: {
+    size: '1.3rem',
+    mode: 'css',
+    cssLayer: 'base',
   },
   vite: {
     plugins: [tailwindcss()],
@@ -25,5 +30,6 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxtjs/color-mode",
     "@nuxtjs/device",
+    '@vueuse/motion/nuxt'
   ],
 });

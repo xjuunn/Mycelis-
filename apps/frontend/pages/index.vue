@@ -1,12 +1,7 @@
 <template>
-  <MainListContentLayout title="消息">
-    <template #list>
-      <MainMessageList></MainMessageList>
-    </template>
-    <template #content>
-      test
-    </template>
-  </MainListContentLayout>
+  <div>
+    index
+  </div>
 </template>
 
 <script lang="ts" setup>

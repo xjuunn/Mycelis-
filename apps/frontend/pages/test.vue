@@ -1,16 +1,15 @@
 <template>
-  <button class="btn btn-accent" @click="test">getAll</button>
+  <div class="">
+    <!-- <button class="btn btn-primary" @click="test">test</button> -->
+    test
+  </div>
 </template>
 
-<script lang="ts" setup>
-import * as Message from '~/api/message'
-async function test() {
-  let { data } = await Message.send({
-    receiverId: 22,
-    message: "hello"
-  });
-  console.log(data);
-
-
+<script setup lang="ts">
+definePageMeta({
+  layout: "app-main"
+})
+function test() {
+  console.log("test");
 }
 </script>

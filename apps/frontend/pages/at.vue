@@ -1,10 +1,10 @@
 <template>
     <div>
-        notification
+        at
     </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 definePageMeta({
     layout: "app-main"
 })
