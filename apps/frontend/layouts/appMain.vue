@@ -1,15 +1,26 @@
 <template>
     <div class="h-full w-full flex overflow-hidden">
-        <!-- 大屏DOCK -->
-        <div class="">
-            test
-        </div>
-        <div class="h-[calc(100%-4rem)] sm:h-full transition-[height] flex-1 overflow-y-auto">
-            <slot></slot>
-        </div>
-        <!-- DOCK -->
         <ClientOnly>
-            <div class="dock" v-if="!sm" v-motion-slide-bottom>
+            <!-- 大屏 DOCK -->
+            <div class="w-15 border-r border-r-base-content/10 flex items-center flex-col" v-if="sm"
+                v-motion-slide-left>
+                <div class="m-3 mt-4 opacity-30">
+                    <Icon name="solar:ghost-bold" size="1.7rem"></Icon>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <button v-for="(item, index) in dockList" :key="item.name"
+                        class="btn btn-ghost flex items-center p-2 cursor-pointer rounded-md hover:bg-base-content/10"
+                        :class="activeDockIndex === index ? 'btn-primary btn-soft' : ''"
+                        @click="btnSwitchDock(item, index, $event.currentTarget)">
+                        <Icon :class="activeDockIndex === index ? 'text-primary' : 'text-base-content/40'"
+                            class="transition" :name="activeDockIndex === index ? item.activeIcon : item.defaultIcon"
+                            size="1.4rem">
+                        </Icon>
+                    </button>
+                </div>
+            </div>
+            <!-- 小屏 DOCK -->
+            <div class="dock bg-base-200" v-if="!sm" v-motion-slide-bottom>
                 <button v-for="(item, index) in dockList" :key="item.name"
                     @click="btnSwitchDock(item, index, $event.currentTarget)">
                     <Icon :class="activeDockIndex === index ? 'text-primary' : 'text-base-content/40'"
@@ -19,6 +30,10 @@
                 </button>
             </div>
         </ClientOnly>
+
+        <div class="h-[calc(100%-4rem)] sm:h-full transition-[height] flex-1 overflow-y-auto m-0">
+            <slot></slot>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>

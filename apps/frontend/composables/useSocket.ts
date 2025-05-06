@@ -3,7 +3,7 @@ import type { Result } from '@mycelis/types';
 import { io, type Socket } from 'socket.io-client';
 let socket: Socket | null = null;
 export const useSocket = () => {
-    if (socket === null) {
+    if (socket === null && import.meta.client) {
         // 初始化socket
         socket = io(useAppStore().baseurl,
             { extraHeaders: { 'Authorization': useAxios().getToken() } });
