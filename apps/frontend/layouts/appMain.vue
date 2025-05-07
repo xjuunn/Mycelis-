@@ -31,7 +31,7 @@
             </div>
         </ClientOnly>
 
-        <div class="h-[calc(100%-4rem)] sm:h-full transition-[height] flex-1 overflow-y-auto m-0">
+        <div class="h-[calc(100%-4rem)] sm:h-full transition-[height] flex-1 m-0">
             <slot></slot>
         </div>
     </div>

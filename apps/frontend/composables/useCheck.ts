@@ -2,6 +2,8 @@ import * as APPAPI from '~/api/app'
 export const useCheck = () => {
 
     async function check() {
+        if (import.meta.server) return;
+
         // 连接性检查
         try {
             await APPAPI.checkConnect();

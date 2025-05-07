@@ -7,8 +7,8 @@
 
 <script setup lang="ts">
 definePageMeta({
-  layout: "app-main"
-})
+  layout: "app-main",
+});
 function test() {
   console.log("test");
 }

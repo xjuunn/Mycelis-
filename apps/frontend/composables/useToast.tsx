@@ -4,7 +4,7 @@ export const useToast = () => {
     let container = document.getElementById('ToastContainer');
     function create(content: string, type: "error" | "info" | "success" | "warning", icon: string) {
         let iconVnode = h(Icon, { icon, width: 22 });
-        let alert = <div class={['alert', 'font-extrabold','w-fit','place-self-end', `alert-${type}`]}>
+        let alert = <div class={['alert', 'font-extrabold', 'w-fit', 'place-self-end', `alert-${type}`]}>
             {iconVnode} {content}
         </div>
         const mountNode = document.createElement('div')
