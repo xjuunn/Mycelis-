@@ -1,13 +1,14 @@
 <template>
   <div class="flex h-full">
     <ClientOnly>
-      <div class="flex-1 min-h-full sm:max-w-[300px] sm:border-r sm:border-r-base-content/10 flex flex-col">
-        <div class="navbar min-h-12">
+      <div v-if="sm || $route.query.ui !== 'content'"
+        class="flex-1 flex min-h-full sm:max-w-[300px] sm:border-r sm:border-r-base-content/10 flex-col">
+        <div class="navbar border-b border-b-base-content/10">
           <div class="navbar-start pl-2">消 息</div>
-          <div class="navbar-end pr-1">
-            <button class="btn btn-ghost">
+          <div class="navbar-end">
+            <NuxtLink to="/search?ui=content" class="btn btn-sm btn-ghost opacity-60 hover:opacity-100">
               <Icon name="mingcute:search-2-line"></Icon>
-            </button>
+            </NuxtLink>
           </div>
         </div>
         <div class="flex-1 flex flex-col min-h-0">
@@ -24,7 +25,7 @@
               <div class="ml-3 flex-1">
                 <div class="text-md flex w-full items-center">
                   <div class="font-bold flex-1 line-clamp-1">
-                    {{ useAppStore().user?.displayName }}
+                    {{ useAppStore().user?.displayName ?? useAppStore().user?.name }}
                   </div>
                   <div class="text-xs opacity-40">刚刚</div>
                 </div>
@@ -37,7 +38,9 @@
           </div>
         </div>
       </div>
-      <div v-if="sm">content</div>
+      <div v-if="sm || $route.query.ui == 'content'" class="flex-1">
+        <NuxtPage></NuxtPage>
+      </div>
     </ClientOnly>
   </div>
 </template>

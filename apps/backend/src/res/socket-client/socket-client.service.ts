@@ -61,7 +61,10 @@ export class SocketClientService {
       // 将用户设置为在线状态
       await prisma.user.update({
         where: { id: userId },
-        data: { status: 'ONLINE' },
+        data: {
+          status: 'ONLINE',
+          lastLoginAt: new Date()
+        },
       });
       // 将设备设置为在线状态
       return prisma.userDevice.update({

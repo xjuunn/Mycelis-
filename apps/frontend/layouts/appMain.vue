@@ -20,7 +20,7 @@
                 </div>
             </div>
             <!-- 小屏 DOCK -->
-            <div class="dock bg-base-200" v-if="!sm" v-motion-slide-bottom>
+            <div class="dock bg-base-200" v-if="!sm && $route.query.ui !== 'content'" v-motion-slide-bottom>
                 <button v-for="(item, index) in dockList" :key="item.name"
                     @click="btnSwitchDock(item, index, $event.currentTarget)">
                     <Icon :class="activeDockIndex === index ? 'text-primary' : 'text-base-content/40'"
@@ -29,17 +29,17 @@
                     </Icon>
                 </button>
             </div>
+            <div class="sm:h-full transition-[height] flex-1 m-0"
+                :class="(!sm && $route.query.ui !== 'content') ? 'h-[calc(100%-4rem)]' : 'h-full'">
+                <slot></slot>
+            </div>
         </ClientOnly>
-
-        <div class="h-[calc(100%-4rem)] sm:h-full transition-[height] flex-1 m-0">
-            <slot></slot>
-        </div>
     </div>
 </template>
 <script lang="ts" setup>
 import { breakpointsTailwind } from '@vueuse/core';
 import { animate } from 'animejs';
-const { sm } = useBreakpoints(breakpointsTailwind)
+const { sm } = useBreakpoints(breakpointsTailwind);
 const dockList = ref([
     {
         name: "Message",

@@ -6,7 +6,7 @@ import { prisma, Prisma, Types } from '@mycelis/database';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
   async signIn(name: string, password: string) {
     const user = await prisma.user.findUnique({ where: { name } });
     if (!user) throw new UnauthorizedException('用户名不存在');
