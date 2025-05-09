@@ -24,12 +24,13 @@
                         <div class="font-bold">{{ item.displayName ?? item.name }}</div>
                         <div class="text-sm">
                             <span class="text-base-content/60 text-xs" v-if="item.status == 'ONLINE'">[在线]</span>
-                            <span v-else>{{ item.lastLoginAt }}</span>
+                            <span v-else class="text-base-content/60 text-xs">{{ lastLogin(item.lastLoginAt) }}</span>
                             <span v-show="item.displayName">{{ item.name }}</span>
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <button class="btn btn-primary btn-sm btn-soft">加好友</button>
+                        <button v-show="useAppStore().user?.id !== item.id" class="btn btn-primary btn-sm btn-soft"
+                            @click="btnAddFriend(item.id)">加好友</button>
                     </div>
                 </div>
             </div>
@@ -40,17 +41,14 @@
 <script lang="ts" setup>
 import type { Types } from '@mycelis/database';
 import * as User from '~/api/user';
-import * as File from '~/api/file'
+import * as File from '~/api/file';
+import * as Friend from '~/api/friend'
 const searchValue = ref('');
 const pageInfo = ref({
     skip: 0, take: 15
 })
 const listData: Ref<Types.User[]> = ref([]);
 const isLoading = ref(false);
-onMounted(() => {
-    searchValue.value = '1';
-    onSubmit()
-})
 async function onSubmit() {
     if (searchValue.value.length <= 0) return;
     isLoading.value = true;
@@ -58,5 +56,35 @@ async function onSubmit() {
     listData.value = data.data.list;
     isLoading.value = false;
 }
+const lastLogin = (time: Date | null) => {
+    if (time == null)
+        return '';
+    return timeSince(time)
+}
 
+// 计算时间差
+function timeSince(date: Date) {
+    date = new Date(date)
+    const now = new Date();
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + "年前";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + "个月前";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + "天前";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + "小时前";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + "分钟前";
+    return Math.floor(seconds) + "秒前";
+}
+
+async function btnAddFriend(userId: number) {
+    Friend.FriendRequest.create(userId).then(({ data }) => {
+        useToast().success(data.msg);
+    }).catch((e) => {
+        useToast().error(e.msg);
+    })
+} 
 </script>
