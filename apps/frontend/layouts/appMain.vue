@@ -49,18 +49,18 @@ const dockList = ref([
         path: '/'
     },
     {
+        name: "Contacts",
+        description: "通讯录",
+        defaultIcon: "mingcute:contacts-2-line",
+        activeIcon: "mingcute:contacts-2-fill",
+        path: '/contacts'
+    },
+    {
         name: "At",
         description: "功能",
         defaultIcon: "mingcute:at-line",
         activeIcon: "mingcute:at-fill",
         path: '/at'
-    },
-    {
-        name: "Notification",
-        description: "通知",
-        defaultIcon: "mingcute:notification-line",
-        activeIcon: "mingcute:notification-fill",
-        path: '/notification'
     },
     {
         name: "User",
@@ -74,7 +74,7 @@ let activeDockIndex = ref(-1);
 onMounted(() => {
     const route = useRoute();
     dockList.value.forEach((item, index) => {
-        if (item.path === route.path) {
+        if (item.path === `/${route.path.split('/')[1]}`) {
             activeDockIndex.value = index;
             return;
         }

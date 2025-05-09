@@ -90,7 +90,7 @@ export class SocketClientService {
       if (count <= 0) {
         await prisma.user.update({
           where: { id: userId },
-          data: { status: 'OFFLINE' },
+          data: { status: 'OFFLINE', lastLoginAt: new Date() },
         });
       }
       return device;

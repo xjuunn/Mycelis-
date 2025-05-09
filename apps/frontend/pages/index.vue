@@ -1,17 +1,13 @@
 <template>
-  <div class="flex h-full">
+  <div class="h-full">
     <ClientOnly>
-      <div v-if="sm || $route.query.ui !== 'content'"
-        class="flex-1 flex min-h-full sm:max-w-[300px] sm:border-r sm:border-r-base-content/10 flex-col">
-        <div class="navbar border-b border-b-base-content/10">
-          <div class="navbar-start pl-2">消 息</div>
-          <div class="navbar-end">
-            <NuxtLink to="/search?ui=content" class="btn btn-sm btn-ghost opacity-60 hover:opacity-100">
-              <Icon name="mingcute:search-2-line"></Icon>
-            </NuxtLink>
-          </div>
-        </div>
-        <div class="flex-1 flex flex-col min-h-0">
+      <BaseLayoutLR title="消 息">
+        <template #title-right>
+          <NuxtLink to="/search?ui=content" class="btn btn-sm btn-ghost opacity-60 hover:opacity-100">
+            <Icon name="mingcute:search-2-line"></Icon>
+          </NuxtLink>
+        </template>
+        <template #list>
           <div role="tablist" class="tabs tabs-border">
             <a role="tab" class="transition tab tab-active">全部</a>
             <a role="tab" class="transition tab">重要消息</a>
@@ -36,11 +32,11 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div v-if="sm || $route.query.ui == 'content'" class="flex-1">
-        <NuxtPage></NuxtPage>
-      </div>
+        </template>
+        <template #content>
+          <NuxtPage></NuxtPage>
+        </template>
+      </BaseLayoutLR>
     </ClientOnly>
   </div>
 </template>
@@ -48,6 +44,4 @@
 <script lang="ts" setup>
 definePageMeta({ layout: "app-main", });
 import * as Files from "~/api/file";
-import { breakpointsTailwind } from "@vueuse/core";
-const { sm } = useBreakpoints(breakpointsTailwind);
 </script>

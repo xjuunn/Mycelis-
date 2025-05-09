@@ -21,11 +21,13 @@
                         </div>
                     </div>
                     <div class="ml-2 flex-1">
-                        <div class="font-bold">{{ item.displayName ?? item.name }}</div>
+                        <div class="font-bold">{{ item.displayName ?? item.name }}
+                            <span class="text-xs opacity-60" v-show="item.displayName">
+                                ({{ item.name }})</span>
+                        </div>
                         <div class="text-sm">
                             <span class="text-base-content/60 text-xs" v-if="item.status == 'ONLINE'">[在线]</span>
                             <span v-else class="text-base-content/60 text-xs">{{ lastLogin(item.lastLoginAt) }}</span>
-                            <span v-show="item.displayName">{{ item.name }}</span>
                         </div>
                     </div>
                     <div class="flex items-center">
@@ -77,7 +79,7 @@ function timeSince(date: Date) {
     if (interval > 1) return Math.floor(interval) + "小时前";
     interval = seconds / 60;
     if (interval > 1) return Math.floor(interval) + "分钟前";
-    return Math.floor(seconds) + "秒前";
+    return '刚刚';
 }
 
 async function btnAddFriend(userId: number) {

@@ -76,6 +76,7 @@ export class FriendRequestService {
       prisma.friendRequest.count({
         where: {
           status: search.status,
+          receiverId: receiverId
         },
       }),
     ]);
