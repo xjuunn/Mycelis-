@@ -86,7 +86,10 @@ export class FriendshipService {
         },
       }),
       prisma.friendship.count({
-        where: search,
+        where: {
+          ...search,
+          userId
+        },
       }),
     ]);
     return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
