@@ -9,7 +9,7 @@ import { ref, onMounted, onBeforeUnmount, watch, nextTick, type Ref } from 'vue'
 import Quill, { type Delta, type QuillOptions } from 'quill'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-
+const { isMobile } = useDevice()
 type ToolbarOption =
     | string
     | { header?: number | boolean }
@@ -41,6 +41,7 @@ interface EditorProps {
     modules?: EditorModules
     readOnly?: boolean
     toolbar?: boolean | ToolbarOption[]
+    isKeyboardOpen?: boolean
 }
 
 const props = withDefaults(defineProps<EditorProps>(), {
@@ -58,7 +59,7 @@ interface EditorEmits {
     (e: 'change', value: string, delta: Delta, source: 'api' | 'user' | 'silent'): void
     (e: 'focusin'): void
     (e: 'focusout'): void
-
+    (e: 'update:isKeyboardOpen', value: boolean): void
 }
 
 
@@ -106,8 +107,23 @@ const updateReadOnly = (readOnly: boolean): void => {
         quillInstance.value.enable(!readOnly)
     }
 }
-
+let originalHeight = 0;
+function onResize() {
+    const currentHeight = window.visualViewport?.height ?? 0
+    if (currentHeight === originalHeight && isMobile) {
+        quillInstance.value?.blur()
+    }
+}
+function closeKeyboard() {
+    quillInstance.value?.blur()
+}
+function openKeyboard() {
+    quillInstance.value?.focus()
+}
+watch(() => props.isKeyboardOpen, (value) => { value ? openKeyboard() : closeKeyboard() })
 onMounted(() => {
+    originalHeight = window.visualViewport?.height ?? 0
+    window.addEventListener('resize', onResize)
     nextTick(() => {
         initEditor()
         editorContainer.value?.addEventListener('focusin', onFocusIn);
@@ -115,10 +131,17 @@ onMounted(() => {
     })
 
 })
-const onFocusIn = () => emit('focusin');
-const onFocusOut = () => emit('focusout');
+const onFocusIn = () => {
+    emit('focusin');
+    emit('update:isKeyboardOpen', true);
+};
+const onFocusOut = () => {
+    emit('focusout');
+    emit('update:isKeyboardOpen', false);
+};
 
 onBeforeUnmount(() => {
+    window.removeEventListener('resize', onResize)
     if (quillInstance.value) {
         quillInstance.value.off('text-change')
     }
