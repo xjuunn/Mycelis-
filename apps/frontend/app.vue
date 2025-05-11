@@ -1,5 +1,6 @@
 <template>
   <div class="font-mono select-none h-[100dvh] bg-base-300">
+    <div id="appTop"></div>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -11,6 +12,7 @@
       <div class="alert alert-success"></div>
       <div class="alert alert-warning"></div>
     </div>
+    <div id="appBottom"></div>
   </div>
 </template>
 <script lang="ts" setup>
