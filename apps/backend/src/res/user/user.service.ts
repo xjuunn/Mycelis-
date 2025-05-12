@@ -37,6 +37,15 @@ export class UserService {
     });
   }
 
+  findOneByName(name: string) {
+    return prisma.user.findUnique({
+      where: { name },
+      omit: {
+        passwordHash: true
+      }
+    })
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     if (updateUserDto.passwordHash)
       updateUserDto.passwordHash = Crypto.UserPasswordCrypto.hashPassword(

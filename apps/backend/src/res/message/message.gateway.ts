@@ -28,7 +28,7 @@ export class MessageGateway {
     @Token() tokenInfo: TokenInfo,
     @ConnectedSocket() client: Socket
   ) {
-    client.to('user:' + msg.receiverId).emit('message:receive', msg);
+    client.to('user:' + msg.receiverId).emit('message:receive', { ...msg, sender: tokenInfo.id });
     return this.messageService.create(msg, tokenInfo.id);
   }
 }

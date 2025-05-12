@@ -1,8 +1,9 @@
 import type { Types } from "@mycelis/database";
+import { Result } from "@mycelis/types";
 
 /** 发送消息 */
 export function send(dto: CreateMessageDto) {
-    return useSocket().emit('message:send', dto);
+    return useSocket()?.emit('message:send', dto) ?? new Result({}, 900, 'useSocket() 为null');
 }
 
 // 创建消息类

@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount, watch, nextTick, type Ref } from 'vue'
-import Quill, { type Delta, type QuillOptions } from 'quill'
+import Quill, { Range, type Delta, type QuillOptions } from 'quill'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 const { isMobile } = useDevice()
@@ -82,7 +82,7 @@ const initEditor = (): void => {
         modules: mergedModules.value
     }
 
-    const editor = new Quill(editorElement.value, options)
+    const editor = markRaw(new Quill(editorElement.value, options));
     quillInstance.value = editor
 
     if (props.modelValue) {
@@ -118,7 +118,9 @@ function closeKeyboard() {
     quillInstance.value?.blur()
 }
 function openKeyboard() {
-    quillInstance.value?.focus()
+    try {
+        if (quillInstance.value) quillInstance.value.focus()
+    } catch { }
 }
 watch(() => props.isKeyboardOpen, (value) => { value ? openKeyboard() : closeKeyboard() })
 onMounted(() => {

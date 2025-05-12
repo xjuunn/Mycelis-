@@ -16,8 +16,9 @@
                     </ul>
                     <!-- 好友列表 -->
                     <div class="mt-1 p-3">
-                        <div v-for="item in listData" :key="item.id" class="flex rounded-lg p-2 hover:bg-base-200 mt-1"
-                            @click="onClickFriendItem(item)">
+                        <NuxtLink v-for="item in listData" :key="item.id"
+                            :to="`/message/${item.friend.name}?ui=content`"
+                            class="flex rounded-lg p-2 hover:bg-base-200 mt-1" @click="onClickFriendItem(item)">
                             <div class="indicator">
                                 <span v-show="item.friend.status === 'ONLINE'"
                                     class="indicator-item status status-success transform-[translate(-4px,4px)]"></span>
@@ -36,7 +37,7 @@
                                     <span v-else>{{ timeSince(item.friend.lastLoginAt) }}</span>
                                 </div>
                             </div>
-                        </div>
+                        </NuxtLink>
                     </div>
                 </div>
             </template>

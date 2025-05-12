@@ -26,7 +26,7 @@ import { Public } from 'src/d/public/public.decorator';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @ApiOperation({ summary: '用户搜索' })
   @ApiQuery({
@@ -72,9 +72,15 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '查询用户', description: '通过ID查询用户' })
-  @Get(':id')
+  @Get('/id/:id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
+  }
+
+  @ApiOperation({ summary: "查询用户(通过name)" })
+  @Get('/name/:name')
+  findOneByName(@Param('name') name: string) {
+    return this.userService.findOneByName(name);
   }
 
   @ApiOperation({ summary: '修改当前用户信息' })

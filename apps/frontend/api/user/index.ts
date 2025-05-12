@@ -41,8 +41,13 @@ export function del() {
 }
 
 export function find(id: number) {
-    return useAxios().axios.get('/user/' + id);
+    return useAxios().axios.get<Result<Types.User>>('/user/id/' + id);
 }
+
+export function findByName(name: string) {
+    return useAxios().axios.get<Result<Types.User>>('/user/name/' + name);
+}
+
 
 export interface UpdateForm {
     name: string;

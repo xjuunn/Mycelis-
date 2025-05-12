@@ -71,14 +71,23 @@ const dockList = ref([
     }
 ])
 let activeDockIndex = ref(-1);
-onMounted(() => {
+function setDock() {
     const route = useRoute();
-    dockList.value.forEach((item, index) => {
-        if (item.path === `/${route.path.split('/')[1]}`) {
+    for (let index = 0; index < dockList.value.length; index++) {
+        const item = dockList.value[index];
+        if (item.path === '/') continue;
+        if (route.path, item.path, route.path.indexOf(item.path) === 0) {
             activeDockIndex.value = index;
             return;
         }
-    })
+    }
+    activeDockIndex.value = 0;
+}
+watch(() => useRoute().path, () => {
+    setDock();
+})
+onMounted(() => {
+    setDock();
 })
 function btnSwitchDock(item: any, index: number, dom: any) {
     if (activeDockIndex.value === index) return;
