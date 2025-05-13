@@ -5,10 +5,10 @@
                 <div class="navbar-start ml-2 font-bold">{{ username }}</div>
             </div>
             <div class="flex-1 overflow-y-auto">
-                <MessageList></MessageList>
+                <MessageList ref="messageList" :userid="userData?.id ?? -1"></MessageList>
             </div>
 
-            <div class="absolute bottom-0 left-0 w-full p-2 flex bg-base-200 items-end">
+            <div class="w-full p-2 flex bg-base-200 items-end">
                 <button class="btn btn-ghost" @click.prevent="btnTest">
                     <Icon name="mingcute:mic-fill"></Icon>
                 </button>
@@ -30,6 +30,7 @@ import * as User from '~/api/user';
 import * as Message from '~/api/message';
 import * as Friend from '~/api/friend';
 const { username } = useRoute().params;
+const messageList = useTemplateRef('messageList');
 const isKeyboardOpen = ref(false);
 const messageText = ref('')
 const userData = ref<Types.User>()
@@ -43,6 +44,7 @@ function focusin() {
 onMounted(() => {
     initData();
 })
+
 async function initData() {
     if (!username) return;
     let { data } = await User.findByName(username + '');
@@ -64,8 +66,9 @@ async function btnSend() {
     })
     messageText.value = '';
     console.log(data);
+    messageList.value?.scrollToBottom(true);
 }
 function btnTest() {
-
+    messageList.value?.scrollToBottom(true);
 }
 </script>

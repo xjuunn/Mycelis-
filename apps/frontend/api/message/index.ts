@@ -1,6 +1,6 @@
 import type { Types } from "@mycelis/database";
-import { PageResult, Result } from "@mycelis/types";
-
+import { PageRequest, PageResult, Result } from "@mycelis/types";
+import qs from 'qs';
 /** 发送消息 Socket */
 export function send(dto: CreateMessageDto) {
     return useSocket()?.emit('message:send', dto) ?? new Result({}, 900, 'useSocket() 为null');
@@ -25,7 +25,7 @@ export type CreateMessageDto = {
 }
 
 /** 创建消息 */
-function create(dto: CreateDto) {
+export function create(dto: CreateDto) {
     return useAxios().axios.post<Result<Types.Message>>('/message/create', dto);
 }
 
@@ -54,27 +54,27 @@ export class SearchDto {
 }
 
 /** 发送的消息列表 */
-function sentlist(dto: SearchDto, pageInfo: PageResult) {
-    return useAxios().axios.post<PageResult<Types.Message[]>>('/message/sentlist', { ...dto, ...pageInfo });
+export function sentlist(dto: SearchDto, pageInfo: PageRequest) {
+    return useAxios().axios.post<PageResult<Types.Message>>('/message/sentlist?' + qs.stringify(pageInfo), dto);
 }
 
 /** 接收的消息列表 */
-function receivedlist(dto: SearchDto, pageInfo: PageResult) {
-    return useAxios().axios.post<PageResult<Types.Message[]>>('/message/receivedlist', { ...dto, ...pageInfo });
+export function receivedlist(dto: SearchDto, pageInfo: PageRequest) {
+    return useAxios().axios.post<PageResult<Types.Message>>('/message/receivedlist?' + qs.stringify(pageInfo), dto);
 }
 
 /** 和某人的消息列表 */
-function listByFriend(dto: SearchDto, pageInfo: PageResult) {
-    return useAxios().axios.post<PageResult<Types.Message[]>>('/message/listbyfriend', { ...dto, ...pageInfo });
+export function listByFriend(dto: SearchDto, pageInfo: PageRequest) {
+    return useAxios().axios.post<PageResult<Types.Message>>('/message/listbyfriend?' + qs.stringify(pageInfo), dto);
 }
 
 /** 搜索单条消息 */
-function findOne(id: number) {
+export function findOne(id: number) {
     return useAxios().axios.get<Result<Types.Message>>('/find/' + id);
 }
 
 /** 更新消息 */
-function update(id: number, dto: UpdateDto) {
+export function update(id: number, dto: UpdateDto) {
     return useAxios().axios.patch<Result<Types.Message>>('/message/' + id, dto);
 }
 
@@ -85,6 +85,6 @@ export class UpdateDto {
 }
 
 /** 删除消息 */
-function del(id: number) {
+export function del(id: number) {
     return useAxios().axios.delete<Result<Types.Message>>('/message/' + id);
 }

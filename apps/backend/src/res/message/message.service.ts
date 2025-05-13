@@ -51,6 +51,9 @@ export class MessageService {
         include: {
           receiver: { omit: { passwordHash: true } },
         },
+        orderBy: {
+          createAt: 'desc'
+        },
         skip: pageInfo.skip,
         take: pageInfo.take,
       }),
@@ -84,6 +87,9 @@ export class MessageService {
         include: {
           receiver: { omit: { passwordHash: true } },
         },
+        orderBy: {
+          createAt: 'desc'
+        },
         skip: pageInfo.skip,
         take: pageInfo.take,
       }),
@@ -105,14 +111,19 @@ export class MessageService {
       updateAt: searchMessageDto.updateAt,
       readAt: searchMessageDto.readAt,
     }
+
     let yourid = searchMessageDto.senderId === myId ? searchMessageDto.receiverId : searchMessageDto.senderId;
-    if (!yourid) throw new BadRequestException("请设置目标好友ID(sender.id或receiver.id)")
+    if (yourid && yourid < 0) throw new BadRequestException("请设置目标好友ID(sender.id或receiver.id)")
     const [list, total] = await Promise.all([
       prisma.message.findMany({
         where: {
           OR: [{ ...where, senderId: myId, receiverId: yourid }, { ...where, senderId: yourid, receiverId: myId, }]
         },
-        ...pageInfo
+        orderBy: {
+          createAt: 'desc'
+        },
+        take: pageInfo.take,
+        skip: pageInfo.skip
       }),
       prisma.message.count({
         where: {
