@@ -18,7 +18,7 @@ import { UpdateMessageDto } from './dto/update-message.dto';
 
 @Controller('message')
 export class MessageController {
-  constructor(private readonly messageService: MessageService) {}
+  constructor(private readonly messageService: MessageService) { }
 
   @ApiOperation({ summary: '创建消息' })
   @Post('/create')
@@ -55,6 +55,15 @@ export class MessageController {
       tokenInfo.id,
       pageInfo,
     );
+  }
+
+  @ApiOperation({ summary: "获取和某人的消息列表" })
+  @Post('/listbyfriend')
+  findMessageListByFriend(
+    @Body() searchMessageDto: SearchMessageDto,
+    @Token() tokienInfo: TokenInfo,
+    @PageInfo() pageInfo: PageRequest) {
+    return this.messageService.listByFriend(searchMessageDto, tokienInfo.id, pageInfo);
   }
 
   @ApiOperation({ summary: '获取单条消息记录' })

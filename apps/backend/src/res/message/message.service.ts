@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { prisma } from '@mycelis/database';
@@ -89,6 +89,37 @@ export class MessageService {
       }),
       prisma.message.count({ where }),
     ]);
+    return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
+  }
+
+  async listByFriend(searchMessageDto: SearchMessageDto, myId: number, pageInfo: PageRequest) {
+    const where = {
+      id: searchMessageDto.id,
+      message: searchMessageDto.message,
+      type: searchMessageDto.type,
+      origin: searchMessageDto.origin,
+      status: searchMessageDto.status,
+      replyTo: searchMessageDto.replyTo,
+      isPinned: searchMessageDto.isPinned,
+      createAt: searchMessageDto.createAt,
+      updateAt: searchMessageDto.updateAt,
+      readAt: searchMessageDto.readAt,
+    }
+    let yourid = searchMessageDto.senderId === myId ? searchMessageDto.receiverId : searchMessageDto.senderId;
+    if (!yourid) throw new BadRequestException("请设置目标好友ID(sender.id或receiver.id)")
+    const [list, total] = await Promise.all([
+      prisma.message.findMany({
+        where: {
+          OR: [{ ...where, senderId: myId, receiverId: yourid }, { ...where, senderId: yourid, receiverId: myId, }]
+        },
+        ...pageInfo
+      }),
+      prisma.message.count({
+        where: {
+          OR: [{ ...where, senderId: myId, receiverId: yourid }, { ...where, senderId: yourid, receiverId: myId, }]
+        }
+      })
+    ])
     return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
   }
 

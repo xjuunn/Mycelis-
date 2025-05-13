@@ -5,25 +5,11 @@
                 <div class="navbar-start ml-2 font-bold">{{ username }}</div>
             </div>
             <div class="flex-1 overflow-y-auto">
-                <br>
-                <div class="chat chat-start">
-                    <div class="chat-bubble bg-base-100">
-                        It's over Anakin,
-                        <br />
-                        I have the high ground.
-                    </div>
-                </div>
-                <div class="chat chat-end">
-                    <div class="chat-bubble bg-base-100">You underestimate my power!</div>
-                </div>
-                <br>
-                <br>
-                <br>
-                <br>
+                <MessageList></MessageList>
             </div>
 
             <div class="absolute bottom-0 left-0 w-full p-2 flex bg-base-200 items-end">
-                <button class="btn btn-ghost">
+                <button class="btn btn-ghost" @click.prevent="btnTest">
                     <Icon name="mingcute:mic-fill"></Icon>
                 </button>
                 <Editor v-model="messageText" v-model:is-keyboard-open="isKeyboardOpen"
@@ -42,10 +28,12 @@
 import type { Types } from '@mycelis/database';
 import * as User from '~/api/user';
 import * as Message from '~/api/message';
+import * as Friend from '~/api/friend';
 const { username } = useRoute().params;
 const isKeyboardOpen = ref(false);
 const messageText = ref('')
 const userData = ref<Types.User>()
+const isFriend = ref<boolean>();
 
 function focusin() {
     setTimeout(() => {
@@ -59,9 +47,14 @@ async function initData() {
     if (!username) return;
     let { data } = await User.findByName(username + '');
     userData.value = data.data;
+    let { data: data2 } = await Friend.Friendship.list({ friendId: data.data.id }, { take: 0, skip: 0 })
+    isFriend.value = data2.data.total > 0;
 }
 
 async function btnSend() {
+    nextTick(() => {
+        isKeyboardOpen.value = true;
+    })
     console.log(messageText.value);
     let { data } = await Message.send({
         message: messageText.value,
@@ -71,7 +64,8 @@ async function btnSend() {
     })
     messageText.value = '';
     console.log(data);
-
+}
+function btnTest() {
 
 }
 </script>

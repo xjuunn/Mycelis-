@@ -122,7 +122,9 @@ function openKeyboard() {
         if (quillInstance.value) quillInstance.value.focus()
     } catch { }
 }
-watch(() => props.isKeyboardOpen, (value) => { value ? openKeyboard() : closeKeyboard() })
+watch(() => props.isKeyboardOpen, (value) => {
+    value ? openKeyboard() : closeKeyboard()
+})
 onMounted(() => {
     originalHeight = window.visualViewport?.height ?? 0
     window.addEventListener('resize', onResize)
