@@ -12,7 +12,6 @@ import { UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '../../gu/auth/auth.guard';
 import { Socket } from 'socket.io';
 import { ResultInterceptor } from 'src/itc/result/result.interceptor';
-import { prisma } from '@mycelis/database';
 
 @UseGuards(AuthGuard)
 @UseInterceptors(ResultInterceptor)

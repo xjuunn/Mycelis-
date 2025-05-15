@@ -60,6 +60,7 @@ interface EditorEmits {
     (e: 'focusin'): void
     (e: 'focusout'): void
     (e: 'update:isKeyboardOpen', value: boolean): void
+    (e: 'enter'): void
 }
 
 
@@ -98,8 +99,17 @@ const initEditor = (): void => {
         emit('update:modelValue', html)
         emit('change', html, delta, source)
     })
-
+    editor.root.addEventListener('keydown', handlerKeyDown)
     emit('ready', editor)
+}
+function handlerKeyDown(e: KeyboardEvent) {
+    // 回车
+    if (e.key === 'Enter') {
+        if (e.shiftKey) return;
+        if (isMobile) return;
+        quillInstance.value?.setText(quillInstance.value?.getText().slice(0, -2))
+        emit('enter')
+    }
 }
 
 const updateReadOnly = (readOnly: boolean): void => {

@@ -13,7 +13,8 @@
                     <Icon name="mingcute:mic-fill"></Icon>
                 </button>
                 <Editor v-model="messageText" v-model:is-keyboard-open="isKeyboardOpen"
-                    class="flex-1 max-h-20 overflow-y-auto" :toolbar="false" theme="bubble" @focusin="focusin">
+                    class="flex-1 max-h-20 overflow-y-auto" :toolbar="false" theme="bubble" @focusin="focusin"
+                    @enter="btnSend">
                 </Editor>
                 <button class="btn btn-ghost" @click="btnSend">
                     <Icon name="mingcute:send-fill"></Icon>
@@ -56,6 +57,9 @@ async function initData() {
 async function btnSend() {
     nextTick(() => {
         isKeyboardOpen.value = true;
+        setTimeout(() => {
+            messageList.value?.scrollToBottom(true);
+        }, 100);
     })
     let { data } = await Message.send({
         message: messageText.value,
@@ -64,7 +68,6 @@ async function btnSend() {
         origin: 'User'
     })
     messageText.value = '';
-    console.log(data);
     messageList.value?.scrollToBottom(true);
     messageList.value?.addMessageItem(data)
 }
