@@ -1,30 +1,41 @@
 <template>
-    <div class="chat" :class="{
+    <div class="chat pl-2 pr-2" :class="{
         'chat-start transform-[translateX(-50px)] ': type === 'left',
         'chat-end transform-[translateX(50px)] ': type === 'right',
-    }" ref="item" v-motion-fade-visible-once>
+        'bg-base-100': isSelected
+    }" ref="item" @dblclick="$emit('dbclick')" @click="$emit('click')" v-motion-fade-visible>
         <div class="chat-image avatar sticky bottom-0">
-            <div class="w-10 rounded-full">
+            <div class="w-9 rounded-full">
                 <img alt="头像" :src="File.getFileUrl(user?.avatarUrl ?? '')" />
             </div>
         </div>
         <div class="chat-header">
             <span :class="type === 'right' ? 'order-2' : ''">{{ user?.displayName ?? user?.name }}</span>
-            <time class="text-xs opacity-50">{{ createTime }}</time>
+            <time class="text-xs opacity-0" :class="{ 'opacity-50': isSelected || isLastItem }">{{
+                timeSince(msg.createAt) }} {{ createTime }}</time>
         </div>
-        <div class="chat-bubble bg-base-100" v-html="msg.message"></div>
-        <div class="chat-footer opacity-50">{{ msgStatus }}</div>
+        <div class="chat-bubble text-sm bg-base-100" :class="{ 'bg-base-200': isSelected }" v-html="msg.message">
+        </div>
+        <div class="chat-footer opacity-0" :class="{ 'opacity-50': isSelected || (isLastItem && type == 'right') }">{{
+            msgStatus }}</div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import type { Types } from '@mycelis/database';
 import * as File from '~/api/file';
+import timeSince from '~/utils/time/timeSince';
 const item = useTemplateRef('item');
+const emits = defineEmits<{
+    dbclick: void,
+    click: void
+}>()
 const props = defineProps<{
     msg: Types.Message,
     user: Types.User | undefined,
-    type: 'left' | 'right'
+    type: 'left' | 'right',
+    isSelected?: boolean,
+    isLastItem?: boolean
 }>();
 const createTime = computed(() => {
     if (new Date().toLocaleDateString() === new Date(props.msg.createAt).toLocaleDateString())

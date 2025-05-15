@@ -1,5 +1,5 @@
 // It will be available as randomEntry() (camelCase of file name without extension)
-export default function (date: Date | null | undefined) {
+export default function (date: Date | null | undefined | string) {
     if (date === undefined || date === null) return '';
     date = new Date(date)
     const now = new Date();

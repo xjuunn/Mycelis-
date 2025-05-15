@@ -1,0 +1,32 @@
+{
+	"folders": [
+		{
+			"name": "✨ mycelis",
+			"path": "."
+		},
+		{
+			"name": "🚀 @mycelis/backend",
+			"path": "apps/backend"
+		},
+		{
+			"name": "🚀 @mycelis/frontend",
+			"path": "apps/frontend"
+		},
+		{
+			"name": "📦 @mycelis/database",
+			"path": "packages/database"
+		},
+		{
+			"name": "📦 @mycelis/types",
+			"path": "packages/types"
+		},
+		{
+			"name": "📦 @mycelis/utils",
+			"path": "packages/utils"
+		}
+	],
+	"settings": {
+		"npm-scripts.showStartNotification": false,
+		"commentTranslate.hover.enabled": true
+	}
+}

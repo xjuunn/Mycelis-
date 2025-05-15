@@ -7,7 +7,6 @@ import {
 
 export const PageInfo = createParamDecorator(
   (_: unknown, ctx: ExecutionContext): PageRequest => {
-    console.log("==================", ctx.switchToHttp().getRequest());
     const { skip, take } = ctx.switchToHttp().getRequest().query;
     return new PageRequest(Number(skip ?? 0), Number(take ?? 15));
   },

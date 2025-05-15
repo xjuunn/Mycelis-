@@ -6,6 +6,13 @@ export function send(dto: CreateMessageDto) {
     return useSocket()?.emit('message:send', dto) ?? new Result({}, 900, 'useSocket() 为null');
 }
 
+export function onReceived(listener: (msg: Types.Message) => void) {
+    useSocket()?.socket?.on('message:receive', data => {
+        listener(data);
+    })
+    onUnmounted(() => useSocket()?.socket?.off('message:receive', listener))
+}
+
 // 创建消息类
 export type CreateMessageDto = {
     // 接收者ID
@@ -88,3 +95,4 @@ export class UpdateDto {
 export function del(id: number) {
     return useAxios().axios.delete<Result<Types.Message>>('/message/' + id);
 }
+

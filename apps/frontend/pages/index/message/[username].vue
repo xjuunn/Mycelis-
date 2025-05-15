@@ -57,7 +57,6 @@ async function btnSend() {
     nextTick(() => {
         isKeyboardOpen.value = true;
     })
-    console.log(messageText.value);
     let { data } = await Message.send({
         message: messageText.value,
         receiverId: userData.value?.id ?? -1,
@@ -67,6 +66,7 @@ async function btnSend() {
     messageText.value = '';
     console.log(data);
     messageList.value?.scrollToBottom(true);
+    messageList.value?.addMessageItem(data)
 }
 function btnTest() {
     messageList.value?.scrollToBottom(true);

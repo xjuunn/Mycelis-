@@ -22,6 +22,7 @@ export class MessageService {
       },
       include: {
         receiver: { omit: { passwordHash: true } },
+        sender: { omit: { passwordHash: true } }
       },
     });
   }

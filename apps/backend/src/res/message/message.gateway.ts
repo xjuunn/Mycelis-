@@ -12,6 +12,7 @@ import { UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '../../gu/auth/auth.guard';
 import { Socket } from 'socket.io';
 import { ResultInterceptor } from 'src/itc/result/result.interceptor';
+import { prisma } from '@mycelis/database';
 
 @UseGuards(AuthGuard)
 @UseInterceptors(ResultInterceptor)
@@ -28,7 +29,9 @@ export class MessageGateway {
     @Token() tokenInfo: TokenInfo,
     @ConnectedSocket() client: Socket
   ) {
-    client.to('user:' + msg.receiverId).emit('message:receive', { ...msg, sender: tokenInfo.id });
-    return this.messageService.create(msg, tokenInfo.id);
+    const message = await this.messageService.create(msg, tokenInfo.id);
+    client.to('user:' + msg.receiverId).emit('message:receive', message);
+    client.to('user:' + tokenInfo.id).emit('message:receive', message);
+    return message;
   }
 }

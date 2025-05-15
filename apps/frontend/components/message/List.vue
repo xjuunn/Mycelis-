@@ -26,11 +26,12 @@
             <div class="chat-bubble skeleton w-8/12"></div>
         </div>
     </div>
-    <div class="p-2" >
-        <MessageItem v-for="item in listData" :key="item.id" :msg="item"
-            :user="item.senderId === myData?.id ? myData : friendData"
+    <div class="">
+        <MessageItem v-for="(item, index) in listData" :key="item.id" :msg="item" @dbclick="onDbclientItem(item.id)"
+            :is-last-item="index === listData.length - 1" @click="onClickItem(item.id)"
+            :user="item.senderId === myData?.id ? myData : friendData" :is-selected="item.id === selectedId"
             :type="item.senderId === myData?.id ? 'right' : 'left'"></MessageItem>
-        <div ref="bottom" id="messagebottom"></div>
+        <div ref="bottom" class="h-2 mt-20" id="messagebottom"></div>
     </div>
 </template>
 
@@ -43,18 +44,31 @@ const props = defineProps<{
     userid: number
 }>()
 const bottom = useTemplateRef('bottom');
+const bottomVisibility = useElementVisibility(bottom)
 const pageInfo = ref<PageRequest>({ take: 30, skip: 0 })
 const listData: Ref<Types.Message[]> = ref([]);
 const friendData = ref<Types.User>();
 const myData = ref<Types.User>();
+const selectedId = ref(-1);
 const isloading = ref(true);
+
 watch(() => props.userid, () => {
     initList();
 })
 onMounted(() => {
     initList();
-
+    initListener();
 })
+async function initListener() {
+    Message.onReceived((msg) => {
+        addMessageItem(msg)
+    })
+}
+
+function addMessageItem(msg: Types.Message) {
+    listData.value.push(msg);
+    if (bottomVisibility.value) nextTick(scrollToBottom);
+}
 
 async function initList() {
     isloading.value = true;
@@ -70,14 +84,18 @@ async function initList() {
 }
 
 const scrollToBottom = (isSmooth: boolean = true) => {
-    console.log("滚动到底部", isSmooth);
-
     bottom.value?.scrollIntoView({
         behavior: isSmooth ? 'smooth' : 'auto'
     })
 }
 defineExpose({
-    scrollToBottom
+    scrollToBottom, addMessageItem
 })
 
+function onDbclientItem(id: number) {
+    selectedId.value = id;
+}
+function onClickItem(id: number) {
+    selectedId.value = -1;
+}
 </script>
