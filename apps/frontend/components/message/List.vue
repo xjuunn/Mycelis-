@@ -61,7 +61,8 @@ onMounted(() => {
 })
 async function initListener() {
     Message.onReceived((msg) => {
-        addMessageItem(msg)
+        if (props.userid === msg.senderId)
+            addMessageItem(msg)
     })
 }
 
