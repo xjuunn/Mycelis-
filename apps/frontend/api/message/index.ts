@@ -96,3 +96,7 @@ export function del(id: number) {
     return useAxios().axios.delete<Result<Types.Message>>('/message/' + id);
 }
 
+/** 获取消息用户列表 */
+export function getFriendList(pageInfo: PageRequest) {
+    return useAxios().axios.get<PageResult<Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number }>>('/message/friendlist?' + qs.stringify(pageInfo));
+}

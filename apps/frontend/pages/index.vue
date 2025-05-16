@@ -14,23 +14,7 @@
             <a role="tab" class="transition tab">私信</a>
           </div>
           <div class="overflow-y-scroll">
-            <div class="min-h-16 flex p-2.5 hover:bg-base-200 transition">
-              <div class="avatar ring-2 ring-primary w-10 h-10 rounded-full overflow-hidden m-1">
-                <img :src="Files.getFileUrl(useAppStore().user?.avatarUrl ?? '')" alt="tx" />
-              </div>
-              <div class="ml-3 flex-1">
-                <div class="text-md flex w-full items-center">
-                  <div class="font-bold flex-1 line-clamp-1">
-                    {{ useAppStore().user?.displayName ?? useAppStore().user?.name }}
-                  </div>
-                  <div class="text-xs opacity-40">刚刚</div>
-                </div>
-                <div class="flex mt-1">
-                  <div class="flex-1 text-xs opacity-60 line-clamp-1">你好</div>
-                  <div class="badge badge-xs badge-primary">1</div>
-                </div>
-              </div>
-            </div>
+            <MessageUserList></MessageUserList>
           </div>
         </template>
         <template #content>

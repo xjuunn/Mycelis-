@@ -43,6 +43,12 @@ export class MessageController {
     );
   }
 
+  @ApiOperation({ summary: "获取消息好友列表" })
+  @Get("/friendlist")
+  getFriendList(@Token() tokenInfo: TokenInfo, @PageInfo() pageInfo: PageRequest) {
+    return this.messageService.getFriendList(tokenInfo.id, pageInfo)
+  }
+
   @ApiOperation({ summary: '获取接收的消息列表' })
   @Post('/receivedlist')
   findReceivedMessageList(

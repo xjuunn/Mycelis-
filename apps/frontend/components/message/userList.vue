@@ -1,0 +1,57 @@
+<template>
+    <div @click="btnClickFriendItem(item)" class="min-h-16 flex p-2.5 hover:bg-base-200 transition"
+        v-for="(item, index) in listData" :key="item.id">
+        <div class="avatar w-10 h-10 rounded-full overflow-hidden m-1">
+            <img :src="File.getFileUrl((asSender(item) ? item.sender.avatarUrl : item.receiver.avatarUrl) ?? '')"
+                alt="tx" />
+        </div>
+        <div class="ml-3 flex-1">
+            <div class="text-md flex w-full items-center">
+                <div class="font-bold flex-1 line-clamp-1">
+                    {{ (asSender(item) ? item.sender.displayName : item.receiver.displayName) ??
+                        (asSender(item) ? item.sender.name : item.receiver.name) }}
+                </div>
+                <div class="text-xs opacity-40">{{ timeSinceOrDate(item.createAt) }}</div>
+            </div>
+            <div class="flex mt-1">
+                <div class="flex-1 text-xs opacity-60 line-clamp-1" v-html="item.message"></div>
+                <div class="badge badge-xs badge-primary" v-show="Number(item.unReadnum) > 0">{{ item.unReadnum }}</div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script lang="ts" setup>
+import type { Types } from '@mycelis/database';
+import type { PageRequest } from '@mycelis/types';
+import * as File from '~/api/file';
+import * as Message from '~/api/message';
+import timeSinceOrDate from '~/utils/time/timeSinceOrDate';
+const isloading = ref(true);
+const pageInfo = ref<PageRequest>({
+    skip: 0,
+    take: 50
+})
+const total = ref(0);
+const listData = ref<(Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number })[]>([])
+onMounted(() => {
+    initList();
+})
+async function initList() {
+    isloading.value = true;
+    let { data } = await Message.getFriendList(pageInfo.value)
+    listData.value = data.data.list;
+    total.value = data.data.total;
+    isloading.value = false;
+}
+function btnClickFriendItem(msg: Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number }) {
+    if (useAppStore().user?.id == msg.senderId) {
+        navigateTo(`/message/${msg.receiver.name}?ui=content`)
+    } else {
+        navigateTo(`/message/${msg.sender.name}?ui=content`)
+    }
+}
+function asSender(msg: Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number }): boolean {
+    return useAppStore().user?.id !== msg.senderId;
+}
+</script>

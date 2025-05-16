@@ -2,7 +2,7 @@
     <ClientOnly>
         <div class="h-full flex flex-col relative">
             <div class="navbar border-b border-base-content/10">
-                <div class="navbar-start ml-2 font-bold">{{ username }}</div>
+                <div class="navbar-start ml-2 font-bold">{{ userData?.displayName ?? userData?.name ?? username }}</div>
             </div>
             <div class="flex-1 overflow-y-auto">
                 <MessageList ref="messageList" :userid="userData?.id ?? -1"></MessageList>
@@ -12,7 +12,7 @@
                 <button class="btn btn-ghost" @click.prevent="btnTest">
                     <Icon name="mingcute:mic-fill"></Icon>
                 </button>
-                <Editor v-model="messageText" v-model:is-keyboard-open="isKeyboardOpen"
+                <Editor ref="editor" v-model="messageText" v-model:is-keyboard-open="isKeyboardOpen"
                     class="flex-1 max-h-20 overflow-y-auto" :toolbar="false" theme="bubble" @focusin="focusin"
                     @enter="btnSend">
                 </Editor>
@@ -32,6 +32,7 @@ import * as Message from '~/api/message';
 import * as Friend from '~/api/friend';
 const { username } = useRoute().params;
 const messageList = useTemplateRef('messageList');
+const editor = useTemplateRef('editor');
 const isKeyboardOpen = ref(false);
 const messageText = ref('')
 const userData = ref<Types.User>()
@@ -55,6 +56,7 @@ async function initData() {
 }
 
 async function btnSend() {
+    if (editor.value && editor.value?.getText().length <= 1) return;
     nextTick(() => {
         isKeyboardOpen.value = true;
         setTimeout(() => {

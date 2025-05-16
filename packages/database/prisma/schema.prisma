@@ -157,9 +157,9 @@ enum MessageStatus {
   Sent
   Delivered
   Read
-  Modified
+  // Modified
   Deleted
-  Failed
+  // Failed
 }
 
 // 消息源

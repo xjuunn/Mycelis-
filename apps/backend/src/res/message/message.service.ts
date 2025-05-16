@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
-import { prisma } from '@mycelis/database';
+import { prisma, Types } from '@mycelis/database';
 import { PageRequest, PageResult, PageResultInfo } from '@mycelis/types';
 import { SearchMessageDto } from './dto/search-message.dto';
 import { take } from 'rxjs';
@@ -174,5 +174,62 @@ export class MessageService {
         },
       },
     });
+  }
+
+  async getFriendList(userid: number, pageInfo: PageRequest) {
+    const [list] = await Promise.all([
+      prisma.message.findMany({
+        where: {
+          OR: [
+            { receiverId: userid },
+            { senderId: userid }
+          ]
+        },
+        distinct: ['senderId', 'receiverId'],
+        orderBy: [
+          { createAt: 'desc' }
+        ],
+        ...pageInfo,
+        include: {
+          sender: {
+            omit: { passwordHash: true }
+          },
+          receiver: {
+            omit: { passwordHash: true }
+          }
+        },
+      })
+    ])
+    const uniqueList = new Map<any, Types.Message>();
+    list.forEach(item => {
+      const key = [item.senderId, item.receiverId].sort().toString();
+      if (uniqueList.has(key)) return;
+      uniqueList.set(key, item);
+    })
+
+    const list2 = await Promise.all(
+      [...uniqueList.values()].map(async (item) => {
+        if (item.senderId === userid) {
+          return { ...item, unReadnum: 0 };
+        }
+        if (item.status === 'Delivered') {
+          const unReadnum = await this.getUnreadNum(item.senderId, userid);
+          return { ...item, unReadnum };
+        }
+        const unReadnum = await this.getUnreadNum(item.senderId, userid);
+        return { ...item, unReadnum };
+      })
+    );
+    return new PageResultInfo(list2, -1, pageInfo.skip, pageInfo.take);
+  }
+
+  async getUnreadNum(friendId: number, userId: number) {
+    return prisma.message.count({
+      where: {
+        senderId: friendId,
+        receiverId: userId,
+        status: 'Delivered'
+      }
+    })
   }
 }

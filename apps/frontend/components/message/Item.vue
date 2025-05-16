@@ -11,8 +11,7 @@
         </div>
         <div class="chat-header">
             <span :class="type === 'right' ? 'order-2' : ''">{{ user?.displayName ?? user?.name }}</span>
-            <time class="text-xs opacity-0" :class="{ 'opacity-50': isSelected || isLastItem }">{{
-                timeSince(msg.createAt) }} {{ createTime }}</time>
+            <time class="text-xs opacity-0" :class="{ 'opacity-50': isSelected || isLastItem }"> {{ createTime }}</time>
         </div>
         <div class="chat-bubble text-sm bg-base-100" :class="{ 'bg-base-200': isSelected }" v-html="msg.message">
         </div>
@@ -38,6 +37,7 @@ const props = defineProps<{
     isLastItem?: boolean
 }>();
 const createTime = computed(() => {
+    if (Date.now() - new Date(props.msg.createAt).getTime() <= 36000000) return timeSince(props.msg.createAt);
     if (new Date().toLocaleDateString() === new Date(props.msg.createAt).toLocaleDateString())
         return new Date(props.msg.createAt).toLocaleTimeString();
     else return new Date(props.msg.createAt).toLocaleString();

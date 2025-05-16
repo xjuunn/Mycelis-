@@ -194,8 +194,9 @@ interface EditorExpose {
     focus: () => void
 }
 
-defineExpose<EditorExpose>({
+defineExpose({
     getEditor: () => quillInstance.value,
+    getText: () => quillInstance.value?.getText() || '',
     getContent: () => quillInstance.value?.root.innerHTML || '',
     setContent: (content: string) => {
         if (quillInstance.value) {
