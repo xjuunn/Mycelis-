@@ -15,7 +15,9 @@
         </div>
         <div class="chat-bubble text-sm bg-base-100" :class="{ 'bg-base-200': isSelected }" v-html="msg.message">
         </div>
-        <div class="chat-footer opacity-0" :class="{ 'opacity-50': isSelected || (isLastItem && type == 'right') }">{{
+        <div class="chat-footer opacity-0" :class="{
+            'opacity-50': (isSelected && type == 'right') || (isLastItem && type == 'right'),
+        }">{{
             msgStatus }}</div>
     </div>
 </template>

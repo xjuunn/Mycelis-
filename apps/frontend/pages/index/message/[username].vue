@@ -53,6 +53,8 @@ async function initData() {
     userData.value = data.data;
     let { data: data2 } = await Friend.Friendship.list({ friendId: data.data.id }, { take: 0, skip: 0 })
     isFriend.value = data2.data.total > 0;
+    Message.setAllRead(userData.value.id);
+
 }
 
 async function btnSend() {
@@ -71,7 +73,7 @@ async function btnSend() {
     })
     messageText.value = '';
     messageList.value?.scrollToBottom(true);
-    messageList.value?.addMessageItem(data)
+    messageList.value?.addMessageItem(data);
 }
 function btnTest() {
     messageList.value?.scrollToBottom(true);

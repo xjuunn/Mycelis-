@@ -15,10 +15,18 @@ import { SearchMessageDto } from './dto/search-message.dto';
 import { PageInfo } from 'src/d/pageinfo/pageinfo.decorator';
 import { PageRequest } from '@mycelis/types';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { WebSocketServer } from '@nestjs/websockets';
+import { Socket } from 'socket.io';
+import { MessageGateway } from './message.gateway';
 
 @Controller('message')
 export class MessageController {
-  constructor(private readonly messageService: MessageService) { }
+  constructor(private readonly messageService: MessageService,
+    private readonly messageGatewey: MessageGateway
+  ) { }
+
+  @WebSocketServer()
+  socket: Socket;
 
   @ApiOperation({ summary: '创建消息' })
   @Post('/create')
@@ -69,6 +77,8 @@ export class MessageController {
     @Body() searchMessageDto: SearchMessageDto,
     @Token() tokienInfo: TokenInfo,
     @PageInfo() pageInfo: PageRequest) {
+    const friendId = searchMessageDto.senderId == tokienInfo.id ? +(searchMessageDto.receiverId ?? 0) : +(searchMessageDto.senderId ?? 0);
+    this.messageGatewey.doReadAll(tokienInfo.id, friendId);
     return this.messageService.listByFriend(searchMessageDto, tokienInfo.id, pageInfo);
   }
 
@@ -92,5 +102,17 @@ export class MessageController {
   @Delete('/:id')
   remove(@Param('id') id: string, @Token() tokenInfo: TokenInfo) {
     return this.messageService.remove(+id, tokenInfo.id);
+  }
+
+  @ApiOperation({ summary: "设置好友的所有消息为已读" })
+  @Get('/read/:friendId')
+  readAll(@Param('friendId') friendId: string, @Token() tokenInfo: TokenInfo) {
+    return this.messageService.setAllRead(+friendId, tokenInfo.id);
+  }
+
+  @ApiOperation({ summary: "设置好友的一条消息为已读" })
+  @Get('/read/:friendId/:id')
+  readFriendMessage(@Param('friendId') friendId: string, @Param('id') id: string, @Token() tokenInfo: TokenInfo) {
+    return this.messageService.setItemRead(+id, +friendId, tokenInfo.id);
   }
 }

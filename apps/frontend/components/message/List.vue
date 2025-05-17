@@ -61,8 +61,16 @@ onMounted(() => {
 })
 async function initListener() {
     Message.onReceived((msg) => {
-        if (props.userid === msg.senderId)
+        if (props.userid === msg.senderId) {
             addMessageItem(msg)
+            Message.read(props.userid)
+        }
+    })
+    Message.onRead((userId: number) => {
+        if (friendData.value?.id !== userId) return;
+        listData.value.forEach(item => {
+            item.status = 'Read';
+        })
     })
 }
 

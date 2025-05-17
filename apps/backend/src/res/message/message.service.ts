@@ -232,4 +232,31 @@ export class MessageService {
       }
     })
   }
+
+  async setAllRead(friendId: number, userId: number) {
+    return prisma.message.updateMany({
+      where: {
+        senderId: friendId,
+        receiverId: userId,
+        status: "Delivered",
+      },
+      data: {
+        status: 'Read'
+      }
+    })
+  }
+
+  async setItemRead(id: number, friendId: number, userId: number) {
+    return prisma.message.update({
+      where: {
+        id,
+        senderId: friendId,
+        receiverId: userId,
+        status: "Delivered"
+      },
+      data: {
+        status: 'Read'
+      }
+    })
+  }
 }

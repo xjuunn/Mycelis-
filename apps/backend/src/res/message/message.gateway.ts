@@ -33,4 +33,14 @@ export class MessageGateway {
     client.to('user:' + tokenInfo.id).emit('message:receive', message);
     return message;
   }
+
+  @SubscribeMessage('message:userreadAll')
+  readAll(@MessageBody() userId: string, @Token() tokenInfo: TokenInfo) {
+    return this.doReadAll(tokenInfo.id, +userId)
+  }
+
+  doReadAll(userId: number, friendId: number) {
+    this.messageService.setAllRead(friendId, userId);
+    return this.socket.to('user:' + friendId).emit('message:readall', userId);
+  }
 }

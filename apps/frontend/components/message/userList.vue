@@ -1,9 +1,13 @@
 <template>
     <div @click="btnClickFriendItem(item)" class="min-h-16 flex p-2.5 hover:bg-base-200 transition"
         v-for="(item, index) in listData" :key="item.id">
-        <div class="avatar w-10 h-10 rounded-full overflow-hidden m-1">
-            <img :src="File.getFileUrl((asSender(item) ? item.sender.avatarUrl : item.receiver.avatarUrl) ?? '')"
-                alt="tx" />
+        <div class="indicator">
+            <span v-show="(asSender(item) ? item.sender : item.receiver).status === 'ONLINE'"
+                class="indicator-item status status-success transform-[translate(-9px,9px)]"></span>
+            <div class="avatar w-10 h-10 rounded-full overflow-hidden m-1">
+                <img :src="File.getFileUrl((asSender(item) ? item.sender.avatarUrl : item.receiver.avatarUrl) ?? '')"
+                    alt="tx" />
+            </div>
         </div>
         <div class="ml-3 flex-1">
             <div class="text-md flex w-full items-center">
@@ -34,9 +38,25 @@ const pageInfo = ref<PageRequest>({
 })
 const total = ref(0);
 const listData = ref<(Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number })[]>([])
+defineExpose({
+    setMessageItem
+})
 onMounted(() => {
     initList();
+    initListener();
 })
+function initListener() {
+    Message.onReceived(msg => setMessageItem(msg))
+    Message.onSend(msg => setMessageItem(msg))
+}
+function setMessageItem(msg: Types.Message & { sender: Types.User, receiver: Types.User }) {
+    let num = 0;
+    listData.value = listData.value.filter(item => {
+        if (msg.senderId !== useAppStore().user?.id) num = item.unReadnum + 1
+        return item.senderId != msg.senderId && item.receiverId !== msg.senderId
+    })
+    listData.value.unshift({ ...msg, unReadnum: num > 0 ? num : 0 });
+}
 async function initList() {
     isloading.value = true;
     let { data } = await Message.getFriendList(pageInfo.value)

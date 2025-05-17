@@ -1,16 +1,46 @@
 import type { Types } from "@mycelis/database";
 import { PageRequest, PageResult, Result } from "@mycelis/types";
 import qs from 'qs';
+
+export type MessageANDSenderReceiver = Types.Message & { sender: Types.User, receiver: Types.User };
+
 /** 发送消息 Socket */
-export function send(dto: CreateMessageDto) {
-    return useSocket()?.emit('message:send', dto) ?? new Result({}, 900, 'useSocket() 为null');
+export async function send(dto: CreateMessageDto) {
+    const msg = await useSocket()?.emit('message:send', dto) ?? new Result({}, 900, 'useSocket() 为null');
+    useEmitt().emitter.emit('message:send', msg.data);
+    return msg;
+}
+/** 已读 */
+export async function read(friendId: number) {
+    return await useSocket()?.emit('message:userreadAll', friendId);
 }
 
-export function onReceived(listener: (msg: Types.Message) => void) {
-    useSocket()?.socket?.on('message:receive', data => {
-        listener(data);
-    })
-    onUnmounted(() => useSocket()?.socket?.off('message:receive', listener))
+/** 当接收消息 */
+export function onReceived(listener: (msg: MessageANDSenderReceiver) => void) {
+    const handler = (data: unknown) => {
+        listener(data as MessageANDSenderReceiver);
+    }
+    useSocket()?.socket?.on('message:receive', handler)
+    onUnmounted(() => useSocket()?.socket?.off('message:receive', handler))
+}
+
+/** 当发送消息 */
+export function onSend(listener: (msg: MessageANDSenderReceiver) => void) {
+    const handler = (msg: unknown) => {
+        listener(msg as MessageANDSenderReceiver)
+    }
+    useEmitt().emitter.on('message:send', handler);
+    onUnmounted(() => { useEmitt().emitter.off('message:send', handler) })
+}
+
+/** 当好友读取信息 */
+export function onRead(listener: (userId: number) => void) {
+    const handler = (data: unknown) => {
+        listener(data as number)
+    }
+    useSocket()?.socket?.on('message:readall', handler);
+    onUnmounted(() => { useSocket()?.socket?.off('message:readll', handler) })
+
 }
 
 // 创建消息类
@@ -100,3 +130,18 @@ export function del(id: number) {
 export function getFriendList(pageInfo: PageRequest) {
     return useAxios().axios.get<PageResult<Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number }>>('/message/friendlist?' + qs.stringify(pageInfo));
 }
+
+/** 设置好友的所有消息为已读 */
+export function setAllRead(friendId: number) {
+    return useAxios().axios.get<Result>('/message/read/' + friendId);
+}
+
+/**
+ * 设置一条好友的消息为已读
+ * @param friendId 好友Id
+ * @param id 消息ID
+ */
+export function setItemRead(friendId: number, id: number) {
+    useAxios().axios.get(`/message/read/${friendId}/${id}`)
+}
+

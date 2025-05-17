@@ -27,5 +27,5 @@
 
 <script lang="ts" setup>
 definePageMeta({ layout: "app-main", });
-import * as Files from "~/api/file";
+
 </script>
