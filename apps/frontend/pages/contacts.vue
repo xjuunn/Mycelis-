@@ -86,6 +86,7 @@ const form = ref<Friend.Friendship.ListForm>({
 })
 onMounted(() => {
     initData();
+    initListener();
 })
 async function initData() {
     isLoading.value = true;
@@ -96,6 +97,17 @@ async function initData() {
         console.log(e);
     })
     isLoading.value = false;
+}
+async function initListener() {
+    Friend.Friendship.onFriendStatusChange(status => {
+        listData.value.forEach(item => {
+            if (status.userId === item.friendId) {
+                item.friend.status = status.isOnline ? 'ONLINE' : 'OFFLINE';
+                item.friend.lastLoginAt = status.time;
+                return;
+            }
+        })
+    })
 }
 
 function onClickFriendItem(friendShip: (Types.Friendship & { friend: Types.User })) {

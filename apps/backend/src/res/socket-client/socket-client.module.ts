@@ -7,12 +7,14 @@ import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { RoleGuard } from '../../gu/role/role.guard';
 import { ResultInterceptor } from '../../itc/result/result.interceptor';
+import { SayOnlineGateway } from './say-online.gateway';
 
 @Module({
   providers: [
-    SocketClientGateway,
     SocketClientService,
+    SocketClientGateway,
     JwtService,
+    SayOnlineGateway,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
@@ -27,6 +29,6 @@ import { ResultInterceptor } from '../../itc/result/result.interceptor';
     },
   ],
   controllers: [SocketClientController],
-  imports: [],
+  exports: [SocketClientGateway, SayOnlineGateway]
 })
-export class SocketClientModule {}
+export class SocketClientModule { }

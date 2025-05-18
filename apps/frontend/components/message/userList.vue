@@ -2,18 +2,18 @@
     <div @click="btnClickFriendItem(item)" class="min-h-16 flex p-2.5 hover:bg-base-200 transition"
         v-for="(item, index) in listData" :key="item.id">
         <div class="indicator">
-            <span v-show="(asSender(item) ? item.sender : item.receiver).status === 'ONLINE'"
+            <span v-show="(asReceiver(item) ? item.sender : item.receiver).status === 'ONLINE'"
                 class="indicator-item status status-success transform-[translate(-9px,9px)]"></span>
             <div class="avatar w-10 h-10 rounded-full overflow-hidden m-1">
-                <img :src="File.getFileUrl((asSender(item) ? item.sender.avatarUrl : item.receiver.avatarUrl) ?? '')"
+                <img :src="File.getFileUrl((asReceiver(item) ? item.sender.avatarUrl : item.receiver.avatarUrl) ?? '')"
                     alt="tx" />
             </div>
         </div>
         <div class="ml-3 flex-1">
             <div class="text-md flex w-full items-center">
                 <div class="font-bold flex-1 line-clamp-1">
-                    {{ (asSender(item) ? item.sender.displayName : item.receiver.displayName) ??
-                        (asSender(item) ? item.sender.name : item.receiver.name) }}
+                    {{ (asReceiver(item) ? item.sender.displayName : item.receiver.displayName) ??
+                        (asReceiver(item) ? item.sender.name : item.receiver.name) }}
                 </div>
                 <div class="text-xs opacity-40">{{ timeSinceOrDate(item.createAt) }}</div>
             </div>
@@ -30,6 +30,7 @@ import type { Types } from '@mycelis/database';
 import type { PageRequest } from '@mycelis/types';
 import * as File from '~/api/file';
 import * as Message from '~/api/message';
+import * as Friend from '~/api/friend';
 import timeSinceOrDate from '~/utils/time/timeSinceOrDate';
 const isloading = ref(true);
 const pageInfo = ref<PageRequest>({
@@ -48,6 +49,24 @@ onMounted(() => {
 function initListener() {
     Message.onReceived(msg => setMessageItem(msg))
     Message.onSend(msg => setMessageItem(msg))
+    Friend.Friendship.onFriendStatusChange((status) => {
+
+        listData.value.forEach(item => {
+            const imSender = !asReceiver(item);
+            const friendId = imSender ? item.receiverId : item.senderId;
+            if (status.userId === friendId) {
+                if (imSender) {
+                    item.receiver.status = status.isOnline ? 'ONLINE' : 'OFFLINE';
+                    item.receiver.lastLoginAt = status.time;
+                } else {
+                    item.sender.status = status.isOnline ? 'ONLINE' : 'OFFLINE';
+                    item.sender.lastLoginAt = status.time;
+                }
+                return;
+            }
+        })
+    })
+
 }
 function setMessageItem(msg: Types.Message & { sender: Types.User, receiver: Types.User }) {
     let num = 0;
@@ -81,7 +100,7 @@ function btnClickFriendItem(msg: Types.Message & { sender: Types.User, receiver:
         navigateTo(`/message/${msg.sender.name}?ui=content`)
     }
 }
-function asSender(msg: Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number }): boolean {
+function asReceiver(msg: Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number }): boolean {
     return useAppStore().user?.id !== msg.senderId;
 }
 </script>

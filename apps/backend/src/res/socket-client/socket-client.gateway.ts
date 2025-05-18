@@ -48,4 +48,9 @@ export class SocketClientGateway {
       client,
     );
   }
+
+  hello() {
+    console.log("hello");
+
+  }
 }

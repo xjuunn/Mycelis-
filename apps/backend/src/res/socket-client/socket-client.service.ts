@@ -1,11 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateDeviceDTO } from './types/CreateDeviceDTO';
 import { prisma } from '@mycelis/database';
 import { Socket } from 'socket.io';
 import { PageRequest, PageResultInfo } from '@mycelis/types';
+import { SocketClientGateway } from './socket-client.gateway';
+import { SayOnlineGateway } from './say-online.gateway';
 
 @Injectable()
 export class SocketClientService {
+
+  constructor(
+    private readonly sayOnlineGateway: SayOnlineGateway
+  ) { }
+
   // 新增或修改设备
   async deviceConnect(
     createDeviceDTO: CreateDeviceDTO,
@@ -66,6 +73,7 @@ export class SocketClientService {
           lastLoginAt: new Date()
         },
       });
+      this.sayOnlineGateway.broadcastFriendIsOnline(userId, true);
       // 将设备设置为在线状态
       return prisma.userDevice.update({
         where: { id: deviceId, userId },
@@ -92,6 +100,7 @@ export class SocketClientService {
           where: { id: userId },
           data: { status: 'OFFLINE', lastLoginAt: new Date() },
         });
+        this.sayOnlineGateway.broadcastFriendIsOnline(userId, false);
       }
       return device;
     }

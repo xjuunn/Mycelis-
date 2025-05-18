@@ -54,3 +54,12 @@ export function getOne(id: number) {
 export function del(id: number) {
     return useAxios().axios.delete<Result<Types.Friendship & { friend: Types.User, tag?: Types.FriendshipTag }>>("/friendship/" + id);
 }
+
+/** 当好友状态发生改变 */
+export function onFriendStatusChange(listener: (status: { userId: number, isOnline: boolean, time: Date }) => void) {
+    const handler = (status: { userId: number, isOnline: boolean, time: Date }) => {
+        listener(status);
+    }
+    useSocket()?.socket?.on('user:online', handler)
+    onUnmounted(() => useSocket()?.socket?.off('user:online', handler));
+}
