@@ -52,8 +52,17 @@ function initListener() {
 function setMessageItem(msg: Types.Message & { sender: Types.User, receiver: Types.User }) {
     let num = 0;
     listData.value = listData.value.filter(item => {
-        if (msg.senderId !== useAppStore().user?.id) num = item.unReadnum + 1
-        return item.senderId != msg.senderId && item.receiverId !== msg.senderId
+        const myId = useAppStore().user?.id ?? -1;
+        const friendId = msg.senderId == myId ? msg.receiverId : msg.senderId;
+        if (msg.senderId !== myId && (item.senderId === friendId || item.receiverId === friendId)) {
+            const { username } = useRoute().params;
+            if (item.sender.name === username || item.receiver.name === username) {
+                num = 0;
+            } else {
+                num = item.unReadnum + 1;
+            }
+        }
+        return item.senderId != friendId && item.receiverId !== friendId
     })
     listData.value.unshift({ ...msg, unReadnum: num > 0 ? num : 0 });
 }
@@ -65,6 +74,7 @@ async function initList() {
     isloading.value = false;
 }
 function btnClickFriendItem(msg: Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number }) {
+    msg.unReadnum = 0;
     if (useAppStore().user?.id == msg.senderId) {
         navigateTo(`/message/${msg.receiver.name}?ui=content`)
     } else {

@@ -54,7 +54,6 @@ async function initData() {
     let { data: data2 } = await Friend.Friendship.list({ friendId: data.data.id }, { take: 0, skip: 0 })
     isFriend.value = data2.data.total > 0;
     Message.setAllRead(userData.value.id);
-
 }
 
 async function btnSend() {
