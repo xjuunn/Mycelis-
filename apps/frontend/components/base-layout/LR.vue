@@ -3,7 +3,7 @@
         <ClientOnly>
             <div v-if="sm || $route.query.ui !== 'content'"
                 class="flex-1 flex min-h-full sm:max-w-[300px] sm:border-r sm:border-r-base-content/10 flex-col">
-                <div class="navbar border-b border-b-base-content/10">
+                <div class="navbar border-b border-b-base-content/10" v-if="$props.isShowTitle">
                     <div class="navbar-start pl-2">{{ props.title }}</div>
                     <div class="navbar-end">
                         <slot name="title-right"></slot>
@@ -23,7 +23,19 @@
 <script lang="ts" setup>
 import { breakpointsTailwind } from "@vueuse/core";
 const { sm } = useBreakpoints(breakpointsTailwind);
-const props = defineProps<{
-    title: string
-}>()
+// const props = defineProps<{
+//     title?: string,
+//     isShowTitle?: boolean
+// }>();
+
+const props = defineProps({
+    title: {
+        type: String,
+        default: ''
+    },
+    isShowTitle: {
+        type: Boolean,
+        default: true
+    }
+})
 </script>

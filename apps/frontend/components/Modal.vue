@@ -15,4 +15,7 @@
 
 <script lang="ts" setup>
 const props = defineProps(['isShow', 'title'])
+defineEmits<{
+    onBackdropClick: () => void
+}>()
 </script>
