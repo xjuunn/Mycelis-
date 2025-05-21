@@ -1,5 +1,5 @@
 <template>
-  <div class="font-mono select-none h-[100dvh] bg-base-300">
+  <div class="font-mono select-none h-[100dvh] bg-base-300 text-base-content/90">
     <div id="appTop"></div>
     <NuxtLayout>
       <NuxtPage />

@@ -1,7 +1,7 @@
 <template>
     <div class="h-full flex justify-center">
-        <div class="w-full max-w-[1200px] h-full flex overflow-y-auto">
-            <div class="w-full sm:w-60 min-w-0">
+        <div class="w-full max-w-[1000px] h-full flex overflow-y-auto sm:pl-5 sm:pr-5">
+            <div class="w-full sm:w-60 min-w-0" v-if="sm || !isShowContent" v-motion-slide-left>
                 <div class="h-28 bg-cover flex relative w-full">
                     <div class="w-28 sm:w-20 place-content-end">
                         <div
@@ -28,9 +28,11 @@
                 <div class="mt-2 p-4 sm:p-0">
                     <div v-for="group in listData" :key="group.groupName" class="mt-4">
                         <span class="font-bold text-sm opacity-50 p-2">{{ group.groupName }}</span>
-                        <div class="p-2 bg-base-200/60 sm:bg-inherit rounded-lg text-sm">
-                            <div v-for="item in group.list" :key="item.name" class="p-3 hover:bg-base-100 rounded-sm">
-                                <span>{{ item.name }}</span>
+                        <div
+                            class="p-2 bg-base-200/60 sm:bg-inherit rounded-lg text-sm border border-base-content/10 sm:border-0">
+                            <div v-for="item in group.list" :key="item.name" @click="() => { navigateTo(item.path) }"
+                                class="p-3 hover:bg-base-100 rounded-sm cursor-pointer">
+                                <span class="text-base-content/90">{{ item.name }}</span>
                             </div>
                         </div>
                     </div>
@@ -40,7 +42,7 @@
                     </button>
                 </div>
             </div>
-            <div class="flex-1 border h-full" v-show="sm">
+            <div class="flex-1 h-full" v-if="sm || isShowContent" v-motion-slide-right>
                 <NuxtPage></NuxtPage>
             </div>
         </div>
@@ -65,6 +67,7 @@ const { sm } = useBreakpoints(breakpointsTailwind)
 import { breakpointsTailwind } from '@vueuse/core';
 import * as File from '~/api/file';
 const isShowLogoutModal = ref(false);
+const isShowContent = ref(false);
 type ListItem = {
     name: string,
     path: string,
@@ -81,17 +84,17 @@ const listData = ref<ListGroup[]>([
         list: [
             {
                 name: '账户和信息',
-                path: '',
+                path: '/user?ui=content',
                 icon: 'mingcute:user-4-fill',
             },
             {
                 name: '其他设备',
-                path: '',
+                path: '/user',
                 icon: 'mingcute:device-fill',
             },
             {
                 name: '连接',
-                path: '',
+                path: '/user',
                 icon: 'mingcute:link-2-fill',
             },
         ]
@@ -100,17 +103,17 @@ const listData = ref<ListGroup[]>([
         list: [
             {
                 name: '主题外观',
-                path: '',
+                path: '/user',
                 icon: 'mingcute:device-fill',
             },
             {
                 name: '通知',
-                path: '',
+                path: '/user',
                 icon: 'mingcute:notification-fill',
             },
             {
                 name: '高级设置',
-                path: '',
+                path: '/user',
                 icon: 'mingcute:notification-fill',
             },
         ]
@@ -119,7 +122,7 @@ const listData = ref<ListGroup[]>([
         list: [
             {
                 name: '支持我',
-                path: '',
+                path: '/user',
                 icon: 'mingcute:github-2-fill',
                 info: '给个Star~',
             }
@@ -140,5 +143,16 @@ function logout() {
     });
     navigateTo('/auth/signin')
 }
+
+watch(() => useRoute().query, ({ ui }) => {
+    if (ui === 'content') {
+        isShowContent.value = true;
+    } else {
+        isShowContent.value = false;
+    }
+
+}, {
+    immediate: true
+})
 
 </script>
