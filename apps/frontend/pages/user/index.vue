@@ -8,7 +8,7 @@
                 <span>账户和信息</span>
             </div>
         </div>
-        <div class="p-4 ">
+        <div class="p-4 text-sm">
             <div
                 class="p-4 mt-1 flex place-items-center bg-base-200 rounded-lg border border-base-content/10 hover:border-base-content/20 transition">
                 <div class="flex-1">

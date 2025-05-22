@@ -29,7 +29,7 @@
                     </Icon>
                 </button>
             </div>
-            <div class="sm:h-full transition-[height] flex-1 m-0"
+            <div class="sm:h-full transition-[height] flex-1 m-0" ref="page"
                 :class="(!sm && $route.query.ui !== 'content') ? 'h-[calc(100%-4rem)]' : 'h-full'">
                 <slot></slot>
             </div>
@@ -38,8 +38,9 @@
 </template>
 <script lang="ts" setup>
 import { breakpointsTailwind } from '@vueuse/core';
-import { animate } from 'animejs';
+import { animate, createTimeline } from 'animejs';
 const { sm } = useBreakpoints(breakpointsTailwind);
+const page = useTemplateRef('page');
 const dockList = ref([
     {
         name: "Message",
@@ -83,21 +84,70 @@ function setDock() {
     }
     activeDockIndex.value = 0;
 }
-watch(() => useRoute().path, () => {
+watch(() => useRoute().path, (newValue, oldValue) => {
     setDock();
+    // console.log(getDockIndex(newValue));
+    // slideAnimation(getDockIndex(newValue) > getDockIndex(oldValue) ? 'rightroleft' : 'lefttoright')
+
 })
+function getDockIndex(path: string): number {
+    for (let index = 0; index < dockList.value.length; index++) {
+        const item = dockList.value[index];
+        if (item.path === ('/' + path.split('/')[1])) {
+            return index;
+        }
+    }
+    return -1;
+}
+
 onMounted(() => {
     setDock();
 })
+let lastPath = '';
 function btnSwitchDock(item: any, index: number, dom: any) {
     if (activeDockIndex.value === index) return;
     activeDockIndex.value = index;
-    navigateTo(item.path);
+    // navigateTo(item.path);
+    slideAnimation(getDockIndex(item.path) < getDockIndex(lastPath) ? 'lefttoright' : 'rightroleft', item.path)
     animate(dom, {
         y: '-2px',
         alternate: true,
         loop: 1,
         duration: 90
     })
+    lastPath = item.path;
+}
+
+function slideAnimation(type: 'lefttoright' | 'rightroleft', path: string) {
+    if (!page.value) return;
+    let t1 = createTimeline()
+    if (!sm.value) {
+        t1.add(page.value, {
+            duration: 100,
+            opacity: 0,
+            x: type === 'lefttoright' ? '30%' : '-30%'
+
+        }).set(page.value, {
+            x: type === 'lefttoright' ? '-30%' : '30%',
+            onBegin: () => {
+                navigateTo(path);
+            }
+        }).add(page.value, {
+            duration: 100,
+            opacity: 1,
+            x: 0
+        }, '+=50')
+    } else {
+        t1.add(page.value, {
+            duration: 120,
+            opacity: 0,
+            onComplete: () => {
+                navigateTo(path)
+            }
+        }).add(page.value, {
+            duration: 120,
+            opacity: 1,
+        },'+=50')
+    }
 }
 </script>

@@ -3,7 +3,7 @@
         <div class="navbar border-b border-b-base-content/10">
 
         </div>
-        <div class="flex-1 overflow-y-auto flex flex-col items-center" v-motion-pop-visible>
+        <div class="flex-1 overflow-y-auto flex flex-col items-center">
             <form @submit.prevent="onSubmit" class="join mt-10 w-9/12 lg:w-96 max-w-full flex">
                 <input v-model="searchValue" type="search" class="input join-item focus-within:outline-0 flex-1">
                 <button class="btn btn-primary join-item">搜索</button>

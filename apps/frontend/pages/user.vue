@@ -1,7 +1,7 @@
 <template>
     <div class="h-full flex justify-center">
         <div class="w-full max-w-[1000px] h-full flex overflow-y-auto sm:pl-5 sm:pr-5">
-            <div class="w-full sm:w-60 min-w-0" v-if="sm || !isShowContent" v-motion-slide-left>
+            <div class="w-full sm:w-60 min-w-0" v-if="sm || !isShowContent" v-motion="listMotion">
                 <div class="h-28 bg-cover flex relative w-full">
                     <div class="w-28 sm:w-20 place-content-end">
                         <div
@@ -42,7 +42,7 @@
                     </button>
                 </div>
             </div>
-            <div class="flex-1 h-full" v-if="sm || isShowContent" v-motion-slide-right>
+            <div class="flex-1 h-full" v-if="sm || isShowContent" v-motion="contentMotion">
                 <NuxtPage></NuxtPage>
             </div>
         </div>
@@ -68,6 +68,21 @@ import { breakpointsTailwind } from '@vueuse/core';
 import * as File from '~/api/file';
 const isShowLogoutModal = ref(false);
 const isShowContent = ref(false);
+const contentMotion = ref({
+    initial: { x: 100, opacity: 0 },
+    enter: { x: 0, opacity: 1, transition: { duration: 0 } },
+    delay: 20
+})
+const listMotion = ref({
+    initial: { x: -100, opacity: 0 },
+    enter: { x: 0, opacity: 1, transition: { duration: 0 } },
+    delay: 20
+})
+onMounted(() => {
+    listMotion.value.enter.transition.duration = 200
+    contentMotion.value.enter.transition.duration = 200
+})
+
 type ListItem = {
     name: string,
     path: string,
@@ -150,7 +165,6 @@ watch(() => useRoute().query, ({ ui }) => {
     } else {
         isShowContent.value = false;
     }
-
 }, {
     immediate: true
 })
