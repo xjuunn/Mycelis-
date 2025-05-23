@@ -98,7 +98,7 @@
 
                     </div>
                     <div class="text-end pr-6">
-                        <button class="btn btn-primary btn-soft btn-sm " @click="btnUpdatePassword">修改</button>
+                        <button class="btn btn-primary btn-soft btn-sm" v-show="!isBtnUpdatePasswordLoading" @click="btnUpdatePassword">修改</button>
                     </div>
                 </div>
             </div>
@@ -188,6 +188,10 @@ const name = ref(useAppStore().user?.name ?? '');
 const isBtnUpdateNameLoading = ref(false);
 async function btnUpdateName() {
     if (isBtnUpdateNameLoading.value) return;
+    if (name.value === (useAppStore().user?.name ?? '')) {
+        useToast().error('请修改用户名');
+        return;
+    }
     isBtnUpdateNameLoading.value = true;
     User.update({
         name: name.value
@@ -198,16 +202,20 @@ async function btnUpdateName() {
         } else {
             useToast().error(res.data.msg);
         }
+        isBtnUpdateNameLoading.value = false;
     }).catch((err) => {
         useToast().error(err.msg);
+        isBtnUpdateNameLoading.value = false;
     })
-    isBtnUpdateNameLoading.value = false;
+
 }
 
 const oldpassword = ref('');
 const newpassword1 = ref('');
 const newpassword2 = ref('');
+const isBtnUpdatePasswordLoading = ref(false);
 function btnUpdatePassword() {
+    if (isBtnUpdatePasswordLoading.value) return;
     if (!oldpassword.value || !newpassword1.value || !newpassword2.value) {
         useToast().error('请填写完整信息');
         return;
@@ -216,6 +224,7 @@ function btnUpdatePassword() {
         useToast().error('两次密码不一致');
         return;
     }
+    isBtnUpdatePasswordLoading.value = true;
     User.update({
         oldPassword: oldpassword.value,
         newPassword: newpassword1.value
@@ -230,7 +239,9 @@ function btnUpdatePassword() {
         } else {
             useToast().error(res.data.msg);
         }
+        isBtnUpdatePasswordLoading.value = false;
     }).catch((err) => {
+        isBtnUpdatePasswordLoading.value = false;
         useToast().error(err.msg);
     })
 
