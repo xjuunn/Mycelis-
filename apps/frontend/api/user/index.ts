@@ -50,11 +50,12 @@ export function findByName(name: string) {
 
 
 export interface UpdateForm {
-    name: string;
-    passwordHash: string;
-    displayName: string;
-    avatarUrl: string;
-    status: Types.UserStatus;
+    name?: string;
+    oldPassword?: string;
+    newPassword?: string;
+    displayName?: string;
+    avatarUrl?: string;
+    status?: Types.UserStatus;
 }
 
 export interface ListForm {

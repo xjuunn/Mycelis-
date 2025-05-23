@@ -1,14 +1,16 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 import { Types } from '@mycelis/database';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto{
   @ApiProperty()
   name?: string;
   @ApiProperty()
   displayName?: string;
   @ApiProperty()
-  passwordHash?: string;
+  oldPassword?: string;
+  @ApiProperty()
+  newPassword?: string;
   @ApiProperty()
   avatarUrl?: string;
   @ApiProperty({ enum: Types.UserStatus })

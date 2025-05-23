@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { prisma } from '@mycelis/database';
@@ -46,16 +46,25 @@ export class UserService {
     })
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    if (updateUserDto.passwordHash)
-      updateUserDto.passwordHash = Crypto.UserPasswordCrypto.hashPassword(
-        updateUserDto.passwordHash,
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.newPassword) {
+      if (!updateUserDto.oldPassword) throw new BadRequestException("请输入旧密码");
+      const userData = await prisma.user.findUnique({ where: { id } });
+      if (!userData) throw new NotFoundException("未找到用户信息");
+      if (Crypto.UserPasswordCrypto.verifyPassword(userData.passwordHash, updateUserDto.oldPassword))
+        throw new UnauthorizedException("旧密码输入正确");
+      updateUserDto.newPassword = Crypto.UserPasswordCrypto.hashPassword(
+        updateUserDto.newPassword,
       );
+    }
     return prisma.user.update({
       where: {
         id,
       },
-      data: updateUserDto,
+      data: {
+        ...updateUserDto,
+        passwordHash: updateUserDto.newPassword
+      },
       omit: {
         passwordHash: true,
       },
