@@ -51,18 +51,27 @@ export class UserService {
       if (!updateUserDto.oldPassword) throw new BadRequestException("请输入旧密码");
       const userData = await prisma.user.findUnique({ where: { id } });
       if (!userData) throw new NotFoundException("未找到用户信息");
-      if (Crypto.UserPasswordCrypto.verifyPassword(userData.passwordHash, updateUserDto.oldPassword))
-        throw new UnauthorizedException("旧密码输入正确");
+      if (!Crypto.UserPasswordCrypto.verifyPassword(userData.passwordHash, updateUserDto.oldPassword))
+        throw new UnauthorizedException("旧密码输入不正确");
       updateUserDto.newPassword = Crypto.UserPasswordCrypto.hashPassword(
         updateUserDto.newPassword,
       );
+    }
+    if (updateUserDto.name) {
+      const user = await prisma.user.findUnique({
+        where: { name: updateUserDto.name }
+      })
+      if (user) throw new BadRequestException("当前用户名已存在")
     }
     return prisma.user.update({
       where: {
         id,
       },
       data: {
-        ...updateUserDto,
+        name: updateUserDto.name,
+        displayName: updateUserDto.displayName,
+        avatarUrl: updateUserDto.avatarUrl,
+        status: updateUserDto.status,
         passwordHash: updateUserDto.newPassword
       },
       omit: {

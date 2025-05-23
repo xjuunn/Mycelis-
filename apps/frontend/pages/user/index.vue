@@ -46,7 +46,12 @@
                     昵称： {{ useAppStore().user?.displayName }}
                 </div>
                 <div class="collapse-content">
-                    test2
+                    <div class="join">
+                        <input v-model="displayName" type="text" class="join-item input focus-within:outline-0 input-sm"
+                            placeholder="输入昵称">
+                        <button class="btn btn-primary btn-soft join-item btn-sm"
+                            @click="btnUpdateDisplayName">修改</button>
+                    </div>
                 </div>
             </div>
             <div
@@ -56,7 +61,17 @@
                     用户名： {{ useAppStore().user?.name }}
                 </div>
                 <div class="collapse-content">
-                    test3
+                    <div class="join">
+                        <input type="text" v-model="name" class="join-item input focus-within:outline-0 input-sm"
+                            placeholder="输入用户名">
+                        <button class="btn btn-primary btn-soft join-item btn-sm" @click="btnUpdateName">
+                            <span v-show="!isBtnUpdateNameLoading">修改</span>
+                            <span class="loading loading-sm" v-show="isBtnUpdateNameLoading"></span>
+                        </button>
+                    </div>
+                    <div class="text-xs p-1 flex items-center">
+                        <span v-show="isBtnUpdateNameLoading" class="loading loading-xs"></span>
+                    </div>
                 </div>
             </div>
             <div
@@ -66,7 +81,25 @@
                     修改密码： *******
                 </div>
                 <div class="collapse-content">
-                    test4
+                    <div class="flex flex-col gap-2 w-full p-4">
+                        <label class="input focus-within:outline-0 input-sm flex items-center">
+                            <span class="label w-32">旧密码</span>
+                            <input autocomplete="new-password" v-model="oldpassword" type="password"
+                                placeholder="输入旧密码" />
+                        </label>
+                        <label class="input focus-within:outline-0 input-sm flex items-center">
+                            <span class="label w-32">新密码</span>
+                            <input autocomplete="off" v-model="newpassword1" type="password" placeholder="输入新密码" />
+                        </label>
+                        <label class="input focus-within:outline-0 input-sm flex items-center">
+                            <span class="label w-32">重复新密码</span>
+                            <input autocomplete="off" v-model="newpassword2" type="password" placeholder="输入新密码" />
+                        </label>
+
+                    </div>
+                    <div class="text-end pr-6">
+                        <button class="btn btn-primary btn-soft btn-sm " @click="btnUpdatePassword">修改</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -138,4 +171,74 @@ async function btnUpdateAvatar() {
     avatarFile.value = undefined;
     isBtnUpdateAvatarLoading.value = false;
 }
+
+const displayName = ref(useAppStore().user?.displayName ?? '');
+async function btnUpdateDisplayName() {
+    const { data } = await User.update({
+        displayName: displayName.value
+    })
+    if (data.code === 200) {
+        useAppStore().setUser(data.data);
+    } else {
+        useToast().error(data.msg);
+    }
+}
+
+const name = ref(useAppStore().user?.name ?? '');
+const isBtnUpdateNameLoading = ref(false);
+async function btnUpdateName() {
+    if (isBtnUpdateNameLoading.value) return;
+    isBtnUpdateNameLoading.value = true;
+    User.update({
+        name: name.value
+    }).then((res) => {
+        if (res.data.code === 200) {
+            useAppStore().setUser(res.data.data);
+            useToast().success('修改成功');
+        } else {
+            useToast().error(res.data.msg);
+        }
+    }).catch((err) => {
+        useToast().error(err.msg);
+    })
+    isBtnUpdateNameLoading.value = false;
+}
+
+const oldpassword = ref('');
+const newpassword1 = ref('');
+const newpassword2 = ref('');
+function btnUpdatePassword() {
+    if (!oldpassword.value || !newpassword1.value || !newpassword2.value) {
+        useToast().error('请填写完整信息');
+        return;
+    }
+    if (newpassword1.value !== newpassword2.value) {
+        useToast().error('两次密码不一致');
+        return;
+    }
+    User.update({
+        oldPassword: oldpassword.value,
+        newPassword: newpassword1.value
+    }).then((res) => {
+        if (res.data.code === 200) {
+            useToast().success('修改成功');
+            oldpassword.value = '';
+            newpassword1.value = '';
+            newpassword2.value = '';
+            console.log(res.data);
+
+        } else {
+            useToast().error(res.data.msg);
+        }
+    }).catch((err) => {
+        useToast().error(err.msg);
+    })
+
+}
+
+
+
+
+
+
 </script>
