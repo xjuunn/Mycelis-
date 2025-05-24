@@ -30,9 +30,15 @@
                         <span class="font-bold text-sm opacity-50 p-2">{{ group.groupName }}</span>
                         <div
                             class="p-2 bg-base-200/60 sm:bg-inherit rounded-lg text-sm border border-base-content/10 sm:border-0">
-                            <div v-for="item in group.list" :key="item.name" @click="() => { navigateTo(item.path) }"
-                                class="p-3 hover:bg-base-100 rounded-sm cursor-pointer">
-                                <span class="text-base-content/90">{{ item.name }}</span>
+                            <div v-for="item in group.list" :key="item.name"
+                                @click="() => { navigateTo(item.path); item.onClick && item.onClick() }"
+                                class="p-3 hover:bg-base-100 rounded-sm cursor-pointer flex gap-2">
+                                <Icon :name="item.icon" class="opacity-50"></Icon>
+                                <span class="text-base-content/90 flex-1">{{ item.name }}</span>
+                                <span v-if="item.info" class="text-base-content/50 text-sm opacity-70">
+                                    {{ typeof item.info === 'function' ? item.info() : item.info }}
+                                </span>
+                                <Icon name="mingcute:right-line" class="opacity-50 sm:hidden"></Icon>
                             </div>
                         </div>
                     </div>
@@ -42,7 +48,7 @@
                     </button>
                 </div>
             </div>
-            <div class="flex-1 h-full" v-if="sm || isShowContent" v-motion="contentMotion">
+            <div class="flex-1 h-full overflow-y-auto" v-if="sm || isShowContent" v-motion="contentMotion">
                 <NuxtPage></NuxtPage>
             </div>
         </div>
@@ -87,7 +93,8 @@ type ListItem = {
     name: string,
     path: string,
     icon: string,
-    info?: (() => string) | string
+    info?: (() => string) | string,
+    onClick?: () => void
 }
 type ListGroup = {
     groupName: string,
@@ -103,8 +110,8 @@ const listData = ref<ListGroup[]>([
                 icon: 'mingcute:user-4-fill',
             },
             {
-                name: '其他设备',
-                path: '/user',
+                name: '设备管理',
+                path: '/user/devicesList?ui=content',
                 icon: 'mingcute:device-fill',
             },
             {
@@ -139,7 +146,10 @@ const listData = ref<ListGroup[]>([
                 name: '支持我',
                 path: '/user',
                 icon: 'mingcute:github-2-fill',
-                info: '给个Star~',
+                info: '给个Star吧 ~',
+                onClick: () => {
+                    window.open('https://github.com/xjuunn/Mycelis-', '_blank')
+                }
             }
         ]
     }

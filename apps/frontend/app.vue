@@ -42,4 +42,9 @@ onMounted(() => {
 * {
   scrollbar-width: none;
 }
+
+.glass {
+  background-image: none;
+  box-shadow: none;
+}
 </style>

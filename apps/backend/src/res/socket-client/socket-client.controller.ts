@@ -34,7 +34,6 @@ export class SocketClientController {
   @Get(':id')
   findOneDevice(
     @Param('id') id: string,
-    deviceId: number,
     @Token() tokenInfo: TokenInfo,
   ) {
     return this.socketClientService.findOneDevice(+id, tokenInfo.id);

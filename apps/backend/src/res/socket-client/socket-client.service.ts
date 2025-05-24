@@ -111,6 +111,9 @@ export class SocketClientService {
     const [list, count] = await Promise.all([
       prisma.userDevice.findMany({
         where: { userId: userId },
+        orderBy: {
+          connectedAt: 'desc'
+        },
         take: +pageInfo.take,
         skip: +pageInfo.skip,
       }),

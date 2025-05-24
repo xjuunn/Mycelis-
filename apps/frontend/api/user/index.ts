@@ -2,6 +2,9 @@
 import type { Types } from '@mycelis/database';
 import { PageRequest, PageResult, PageResultInfo, Result } from '@mycelis/types';
 import qs from 'qs';
+
+export * as Devices from './device';
+
 /**
  * 用户注册
  * @param name 用户名
