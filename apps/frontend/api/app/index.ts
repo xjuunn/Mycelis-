@@ -7,10 +7,7 @@ export async function checkConnect() {
     let { data } = await useAxios().axios.get<Result<string>>('/checkConnect');
     if (data.code !== 200) throw new Error('无法连接服务器');
     let time2 = Date.now();
-    return {
-        delay: Math.floor((time2 - time1) / 2),
-        data
-    };
+    return new Result({ ...data, delay: Math.floor((time2 - time1) / 2) }, 200, 'ok')
 }
 
 // 检查客户端登录状态

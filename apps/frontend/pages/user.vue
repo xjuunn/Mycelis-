@@ -115,8 +115,8 @@ const listData = ref<ListGroup[]>([
                 icon: 'mingcute:device-fill',
             },
             {
-                name: '连接',
-                path: '/user',
+                name: '连接性',
+                path: '/user/connect?ui=content',
                 icon: 'mingcute:link-2-fill',
             },
         ]
