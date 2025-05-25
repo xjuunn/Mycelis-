@@ -25,8 +25,9 @@ useHead({
     }
   ]
 })
-
 onMounted(() => {
+  useTheme().init();
+
   document.getElementsByTagName('body')[0].addEventListener('contextmenu', (e) => {
     e.preventDefault();
   })

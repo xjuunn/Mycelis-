@@ -125,7 +125,7 @@ const listData = ref<ListGroup[]>([
         list: [
             {
                 name: '主题外观',
-                path: '/user',
+                path: '/user/theme?ui=content',
                 icon: 'mingcute:device-fill',
             },
             {
@@ -134,9 +134,9 @@ const listData = ref<ListGroup[]>([
                 icon: 'mingcute:notification-fill',
             },
             {
-                name: '高级设置',
+                name: '开发者设置',
                 path: '/user',
-                icon: 'mingcute:notification-fill',
+                icon: 'mingcute:terminal-box-fill',
             },
         ]
     }, {

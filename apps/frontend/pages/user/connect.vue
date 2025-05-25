@@ -58,6 +58,7 @@ async function checkServerConnect() {
         isServerConnected.value = true;
         serverDelay.value = data.delay;
     }
+    serverSocketID.value = useSocket()?.socket?.id ?? '';
     useSocket()?.socket?.once('connect', () => {
         serverSocketID.value = useSocket()?.socket?.id ?? '';
     })
