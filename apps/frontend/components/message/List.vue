@@ -32,6 +32,9 @@
             :is-last-item="index === listData.length - 1" @click="onClickItem(item.id)"
             :user="item.senderId === myData?.id ? myData : friendData" :is-selected="item.id === selectedId"
             :type="item.senderId === myData?.id ? 'right' : 'left'"></MessageItem>
+            <div class="text-sm text-base-content/50 text-center p-5 mb-10" v-show="!hasMore" v-motion-slide-visible-bottom>
+                没有更多消息了~
+            </div>
     </div>
 </template>
 
@@ -61,7 +64,7 @@ const { reset } = useInfiniteScroll(messageListRef, () => {
     distance: 10,
     direction: 'top',
     canLoadMore: () => {
-        if (total.value == listData.value.length || !hasMore.value) return false;
+        if (!hasMore.value) return false;
         return true;
     },
 })
@@ -133,6 +136,7 @@ async function loadNextPage() {
     listData.value.push(...data.data.list);
     total.value = data.data.total;
     if (data.data.list.length < pageInfo.value.take) hasMore.value = false;
+    if (total.value <= listData.value.length) hasMore.value = false;
     isLoadingMore.value = false;
 }
 </script>
