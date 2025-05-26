@@ -32,9 +32,10 @@
             :is-last-item="index === listData.length - 1" @click="onClickItem(item.id)"
             :user="item.senderId === myData?.id ? myData : friendData" :is-selected="item.id === selectedId"
             :type="item.senderId === myData?.id ? 'right' : 'left'"></MessageItem>
-            <div class="text-sm text-base-content/50 text-center p-5 mb-10" v-show="!hasMore" v-motion-slide-visible-bottom>
-                没有更多消息了~
-            </div>
+        <div class="text-sm text-base-content/50 text-center p-5 mb-10" v-show="!hasMore && listData.length > 0"
+            v-motion-slide-visible-bottom>
+            没有更多消息了~
+        </div>
     </div>
 </template>
 
@@ -92,7 +93,7 @@ async function initListener() {
 }
 
 function addMessageItem(msg: Types.Message) {
-    listData.value.push(msg);
+    listData.value.unshift(msg);
     if (bottomVisibility.value) nextTick(scrollToBottom);
 }
 
@@ -111,8 +112,10 @@ async function initList() {
 }
 
 const scrollToBottom = (isSmooth: boolean = true) => {
-    bottom.value?.scrollIntoView({
-        behavior: isSmooth ? 'smooth' : 'auto'
+    nextTick(() => {
+        bottom.value?.scrollIntoView({
+            behavior: isSmooth ? 'smooth' : 'auto'
+        })
     })
 }
 defineExpose({
