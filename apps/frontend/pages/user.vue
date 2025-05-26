@@ -130,12 +130,12 @@ const listData = ref<ListGroup[]>([
             },
             {
                 name: '通知',
-                path: '/user',
+                path: '/user/notification?ui=content',
                 icon: 'mingcute:notification-fill',
             },
             {
                 name: '开发者设置',
-                path: '/user',
+                path: '/user/devSetting?ui=content',
                 icon: 'mingcute:terminal-box-fill',
             },
         ]

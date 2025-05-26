@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="p-4 overflow-y-auto flex-1">
-            <div class="border border-base-content/10 rounded-lg p-2 hover:border-base-content/20">
+            <div class="border border-base-content/10 rounded-lg p-2 hover:border-base-content/20 overflow-hidden">
                 <MessageItem type="left" :user="useAppStore().user" :msg="{
                     id: 0,
                     message: 'oi',

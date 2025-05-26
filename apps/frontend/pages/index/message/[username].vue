@@ -4,7 +4,7 @@
             <div class="navbar border-b border-base-content/10">
                 <div class="navbar-start ml-2 font-bold">{{ userData?.displayName ?? userData?.name ?? username }}</div>
             </div>
-            <div class="flex-1 overflow-y-auto">
+            <div class="flex-1 overflow-y-hidden">
                 <MessageList ref="messageList" :userid="userData?.id ?? -1"></MessageList>
             </div>
 

@@ -37,6 +37,7 @@
                             <span v-else>修改</span>
                         </button>
                     </div>
+                    <span class="text-xs opacity-40">* 仅支持png、jpg、webp、gif格式的图片</span>
                 </div>
             </div>
             <div
@@ -72,6 +73,7 @@
                     <div class="text-xs p-1 flex items-center">
                         <span v-show="isBtnUpdateNameLoading" class="loading loading-xs"></span>
                     </div>
+                    <span class="text-xs text-base-content/40">此用户名作为 <span class="text-error/60 link-error">登录的凭证</span>，且不得与其他用户的用户名重复，请谨慎修改。</span>
                 </div>
             </div>
             <div
@@ -98,7 +100,8 @@
 
                     </div>
                     <div class="text-end pr-6">
-                        <button class="btn btn-primary btn-soft btn-sm" v-show="!isBtnUpdatePasswordLoading" @click="btnUpdatePassword">修改</button>
+                        <button class="btn btn-primary btn-soft btn-sm" v-show="!isBtnUpdatePasswordLoading"
+                            @click="btnUpdatePassword">修改</button>
                     </div>
                 </div>
             </div>

@@ -13,7 +13,8 @@
             <span :class="type === 'right' ? 'order-2' : ''">{{ user?.displayName ?? user?.name }}</span>
             <time class="text-xs opacity-0" :class="{ 'opacity-50': isSelected || isLastItem }"> {{ createTime }}</time>
         </div>
-        <div class="chat-bubble text-sm bg-base-100" :class="{ 'bg-base-200': isSelected }" v-html="msg.message">
+        <div class="chat-bubble text-sm bg-base-100 wrap-break-word select-text" :class="{ 'bg-base-200': isSelected }"
+            v-html="msg.message">
         </div>
         <div class="chat-footer opacity-0" :class="{
             'opacity-50': (isSelected && type == 'right') || (isLastItem && type == 'right'),
