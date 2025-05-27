@@ -1,11 +1,10 @@
-import type { Types } from "@mycelis/database";
-import type { PageResult, Result } from "@mycelis/types";
+import type { Model, PageResult, Result } from "@mycelis/types";
 
 /**
  * 查询好友标签
  */
 export function list() {
-    return useAxios().axios.get<PageResult<Types.FriendshipTag>>('/friend-tag');
+    return useAxios().axios.get<PageResult<Model.FriendshipTag>>('/friend-tag');
 }
 
 /**
@@ -14,7 +13,7 @@ export function list() {
  * @param sort 排序
  */
 export function create(tag: string, sort: number) {
-    return useAxios().axios.post<Result<Types.FriendshipTag>>('/friend-tag', { tag, sort })
+    return useAxios().axios.post<Result<Model.FriendshipTag>>('/friend-tag', { tag, sort })
 }
 
 /**
@@ -22,7 +21,7 @@ export function create(tag: string, sort: number) {
  * @param id 好友标签ID
  */
 export function listDetail(id: number) {
-    return useAxios().axios.get<PageResult<Types.Friendship>>('/friend-tag/details/' + id)
+    return useAxios().axios.get<PageResult<Model.Friendship>>('/friend-tag/details/' + id)
 }
 
 /**
@@ -32,7 +31,7 @@ export function listDetail(id: number) {
  * @param sort 排序
  */
 export function update(id: number, tag: string, sort: number) {
-    return useAxios().axios.patch<Result<Types.FriendshipTag & { friendship: Types.Friendship[] }>>('/friend-tag/' + id, { tag, sort })
+    return useAxios().axios.patch<Result<Model.FriendshipTag & { friendship: Model.Friendship[] }>>('/friend-tag/' + id, { tag, sort })
 }
 
 /**
@@ -40,5 +39,5 @@ export function update(id: number, tag: string, sort: number) {
  * @param id 标签ID
  */
 export function del(id: number) {
-    return useAxios().axios.delete<Result<Types.FriendshipTag>>("/friend-tag/" + id);
+    return useAxios().axios.delete<Result<Model.FriendshipTag>>("/friend-tag/" + id);
 }

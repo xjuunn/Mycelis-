@@ -26,8 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Types } from '@mycelis/database';
-import type { PageRequest } from '@mycelis/types';
+import { Enums, type Model, type PageRequest } from '@mycelis/types';
 import * as File from '~/api/file';
 import * as Message from '~/api/message';
 import * as Friend from '~/api/friend';
@@ -38,7 +37,7 @@ const pageInfo = ref<PageRequest>({
     take: 50
 })
 const total = ref(0);
-const listData = ref<(Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number })[]>([])
+const listData = ref<(Model.Message & { sender: Model.User, receiver: Model.User, unReadnum: number })[]>([])
 defineExpose({
     setMessageItem
 })
@@ -56,10 +55,10 @@ function initListener() {
             const friendId = imSender ? item.receiverId : item.senderId;
             if (status.userId === friendId) {
                 if (imSender) {
-                    item.receiver.status = status.isOnline ? 'ONLINE' : 'OFFLINE';
+                    item.receiver.status = status.isOnline ? Enums.UserStatus.ONLINE : Enums.UserStatus.OFFLINE;
                     item.receiver.lastLoginAt = status.time;
                 } else {
-                    item.sender.status = status.isOnline ? 'ONLINE' : 'OFFLINE';
+                    item.sender.status = status.isOnline ? Enums.UserStatus.ONLINE : Enums.UserStatus.OFFLINE;
                     item.sender.lastLoginAt = status.time;
                 }
                 return;
@@ -68,7 +67,7 @@ function initListener() {
     })
 
 }
-function setMessageItem(msg: Types.Message & { sender: Types.User, receiver: Types.User }) {
+function setMessageItem(msg: Model.Message & { sender: Model.User, receiver: Model.User }) {
     let num = 0;
     listData.value = listData.value.filter(item => {
         const myId = useAppStore().user?.id ?? -1;
@@ -92,7 +91,7 @@ async function initList() {
     total.value = data.data.total;
     isloading.value = false;
 }
-function btnClickFriendItem(msg: Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number }) {
+function btnClickFriendItem(msg: Model.Message & { sender: Model.User, receiver: Model.User, unReadnum: number }) {
     msg.unReadnum = 0;
     if (useAppStore().user?.id == msg.senderId) {
         navigateTo(`/message/${msg.receiver.name}?ui=content`)
@@ -100,7 +99,7 @@ function btnClickFriendItem(msg: Types.Message & { sender: Types.User, receiver:
         navigateTo(`/message/${msg.sender.name}?ui=content`)
     }
 }
-function asReceiver(msg: Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number }): boolean {
+function asReceiver(msg: Model.Message & { sender: Model.User, receiver: Model.User, unReadnum: number }): boolean {
     return useAppStore().user?.id !== msg.senderId;
 }
 </script>

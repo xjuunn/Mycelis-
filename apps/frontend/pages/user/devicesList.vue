@@ -73,11 +73,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Types } from '@mycelis/database';
+import type { Model } from '@mycelis/types';
 import * as User from '~/api/user'
 import timeSinceOrDate from '~/utils/time/timeSinceOrDate';
 
-const listData = ref<Types.UserDevice[]>([])
+const listData = ref<Model.UserDevice[]>([])
 function goBack() {
     useRouter().back();
 }
@@ -129,7 +129,7 @@ async function btnUpdate() {
 const isShowDeleteModal = ref(false);
 const delDeviceName = ref<string | null>('')
 let delId = -1;
-function btnDeleteItem(device: Types.UserDevice) {
+function btnDeleteItem(device: Model.UserDevice) {
     delDeviceName.value = device.name;
     isShowDeleteModal.value = true;
     delId = device.id;

@@ -40,8 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Types } from '@mycelis/database';
-import type { PageRequest } from '@mycelis/types';
+import { Enums, type Model, type PageRequest } from '@mycelis/types';
 import * as Message from '~/api/message';
 import * as User from '~/api/user';
 const props = defineProps<{
@@ -51,9 +50,9 @@ const bottom = useTemplateRef('bottom');
 const bottomVisibility = useElementVisibility(bottom)
 const pageInfo = ref<PageRequest>({ take: 30, skip: 0 })
 const total = ref(-1);
-const listData: Ref<Types.Message[]> = ref([]);
-const friendData = ref<Types.User>();
-const myData = ref<Types.User>();
+const listData: Ref<Model.Message[]> = ref([]);
+const friendData = ref<Model.User>();
+const myData = ref<Model.User>();
 const selectedId = ref(-1);
 const isloading = ref(true);
 const messageListRef = useTemplateRef('messageListRef');
@@ -87,12 +86,12 @@ async function initListener() {
     Message.onRead((userId: number) => {
         if (friendData.value?.id !== userId) return;
         listData.value.forEach(item => {
-            item.status = 'Read';
+            item.status = Enums.MessageStatus.Read;
         })
     })
 }
 
-function addMessageItem(msg: Types.Message) {
+function addMessageItem(msg: Model.Message) {
     listData.value.unshift(msg);
     if (bottomVisibility.value) nextTick(scrollToBottom);
 }

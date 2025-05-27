@@ -1,8 +1,7 @@
-import type { Types } from "@mycelis/database";
-import { PageRequest, PageResult, Result } from "@mycelis/types";
+import { Enums, Model, PageRequest, PageResult, Result } from "@mycelis/types";
 import qs from 'qs';
 
-export type MessageANDSenderReceiver = Types.Message & { sender: Types.User, receiver: Types.User };
+export type MessageANDSenderReceiver = Model.Message & { sender: Model.User, receiver: Model.User };
 
 /** 发送消息 Socket */
 export async function send(dto: CreateMessageDto) {
@@ -50,9 +49,9 @@ export type CreateMessageDto = {
     // 消息
     message: string;
     // 消息类型
-    type?: Types.MessageType;
+    type?: Enums.MessageType;
     // 消息源
-    origin?: Types.MessageOrigin;
+    origin?: Enums.MessageOrigin;
     // 回复的消息ID
     replyTo?: number;
     // 额外信息
@@ -63,7 +62,7 @@ export type CreateMessageDto = {
 
 /** 创建消息 */
 export function create(dto: CreateDto) {
-    return useAxios().axios.post<Result<Types.Message>>('/message/create', dto);
+    return useAxios().axios.post<Result<Model.Message>>('/message/create', dto);
 }
 
 // 创建消息类
@@ -80,9 +79,9 @@ export class SearchDto {
     senderId?: number;
     receiverId?: number;
     message?: string;
-    type?: Types.MessageType;
-    origin?: Types.MessageOrigin;
-    status?: Types.MessageStatus;
+    type?: Enums.MessageType;
+    origin?: Enums.MessageOrigin;
+    status?: Enums.MessageStatus;
     replyTo?: number;
     isPinned?: boolean;
     createAt?: string;
@@ -92,27 +91,27 @@ export class SearchDto {
 
 /** 发送的消息列表 */
 export function sentlist(dto: SearchDto, pageInfo: PageRequest) {
-    return useAxios().axios.post<PageResult<Types.Message>>('/message/sentlist?' + qs.stringify(pageInfo), dto);
+    return useAxios().axios.post<PageResult<Model.Message>>('/message/sentlist?' + qs.stringify(pageInfo), dto);
 }
 
 /** 接收的消息列表 */
 export function receivedlist(dto: SearchDto, pageInfo: PageRequest) {
-    return useAxios().axios.post<PageResult<Types.Message>>('/message/receivedlist?' + qs.stringify(pageInfo), dto);
+    return useAxios().axios.post<PageResult<Model.Message>>('/message/receivedlist?' + qs.stringify(pageInfo), dto);
 }
 
 /** 和某人的消息列表 */
 export function listByFriend(dto: SearchDto, pageInfo: PageRequest) {
-    return useAxios().axios.post<PageResult<Types.Message>>('/message/listbyfriend?' + qs.stringify(pageInfo), dto);
+    return useAxios().axios.post<PageResult<Model.Message>>('/message/listbyfriend?' + qs.stringify(pageInfo), dto);
 }
 
 /** 搜索单条消息 */
 export function findOne(id: number) {
-    return useAxios().axios.get<Result<Types.Message>>('/find/' + id);
+    return useAxios().axios.get<Result<Model.Message>>('/find/' + id);
 }
 
 /** 更新消息 */
 export function update(id: number, dto: UpdateDto) {
-    return useAxios().axios.patch<Result<Types.Message>>('/message/' + id, dto);
+    return useAxios().axios.patch<Result<Model.Message>>('/message/' + id, dto);
 }
 
 // 更新消息类
@@ -123,12 +122,12 @@ export class UpdateDto {
 
 /** 删除消息 */
 export function del(id: number) {
-    return useAxios().axios.delete<Result<Types.Message>>('/message/' + id);
+    return useAxios().axios.delete<Result<Model.Message>>('/message/' + id);
 }
 
 /** 获取消息用户列表 */
 export function getFriendList(pageInfo: PageRequest) {
-    return useAxios().axios.get<PageResult<Types.Message & { sender: Types.User, receiver: Types.User, unReadnum: number }>>('/message/friendlist?' + qs.stringify(pageInfo));
+    return useAxios().axios.get<PageResult<Model.Message & { sender: Model.User, receiver: Model.User, unReadnum: number }>>('/message/friendlist?' + qs.stringify(pageInfo));
 }
 
 /** 设置好友的所有消息为已读 */

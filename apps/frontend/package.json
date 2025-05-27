@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "cleanup": "npx nuxi cleanup",
-    "build": "nuxt build",
-    "start": "nuxt dev --host --port 3000",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=20000 nuxt build",
+    "start": "nuxt dev --host --port 80",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",

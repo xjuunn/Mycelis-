@@ -41,15 +41,15 @@
 </template>
 
 <script lang="ts" setup>
-import type { Types } from '@mycelis/database';
 import * as User from '~/api/user';
 import * as File from '~/api/file';
 import * as Friend from '~/api/friend'
+import type { Model } from '@mycelis/types';
 const searchValue = ref('');
 const pageInfo = ref({
     skip: 0, take: 15
 })
-const listData: Ref<Types.User[]> = ref([]);
+const listData: Ref<Model.User[]> = ref([]);
 const isLoading = ref(false);
 async function onSubmit() {
     if (searchValue.value.length <= 0) return;

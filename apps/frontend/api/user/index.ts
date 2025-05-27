@@ -1,6 +1,4 @@
-
-import type { Types } from '@mycelis/database';
-import { PageRequest, PageResult, PageResultInfo, Result } from '@mycelis/types';
+import { Enums, Model, PageRequest, PageResult, PageResultInfo, Result } from '@mycelis/types';
 import qs from 'qs';
 
 export * as Devices from './device';
@@ -11,7 +9,7 @@ export * as Devices from './device';
  * @param password 密码
  */
 export function signUp(name: string, password: string, avatar: string = '') {
-    return useAxios().axios.post<Result<Types.User>>('/auth/signUp', {
+    return useAxios().axios.post<Result<Model.User>>('/auth/signUp', {
         name, password, avatar
     })
 }
@@ -22,7 +20,7 @@ export function signUp(name: string, password: string, avatar: string = '') {
  * @param password 密码
  */
 export function signIn(name: string, password: string) {
-    return useAxios().axios.post<Result<{ token: string, user: Types.User }>>('/auth/signIn', {
+    return useAxios().axios.post<Result<{ token: string, user: Model.User }>>('/auth/signIn', {
         name, password
     })
 }
@@ -32,11 +30,11 @@ export function search(keyword: string, take: number = 15, skip: number = 0) {
 }
 
 export function list(form: ListForm, pageInfo: PageRequest = new PageRequest()) {
-    return useAxios().axios.post<PageResult<Types.User>>('/user?' + qs.stringify(pageInfo), form);
+    return useAxios().axios.post<PageResult<Model.User>>('/user?' + qs.stringify(pageInfo), form);
 }
 
 export function update(form: UpdateForm) {
-    return useAxios().axios.patch<Result<Types.User>>('/user', form)
+    return useAxios().axios.patch<Result<Model.User>>('/user', form)
 }
 
 export function del() {
@@ -44,11 +42,11 @@ export function del() {
 }
 
 export function find(id: number) {
-    return useAxios().axios.get<Result<Types.User>>('/user/id/' + id);
+    return useAxios().axios.get<Result<Model.User>>('/user/id/' + id);
 }
 
 export function findByName(name: string) {
-    return useAxios().axios.get<Result<Types.User>>('/user/name/' + name);
+    return useAxios().axios.get<Result<Model.User>>('/user/name/' + name);
 }
 
 
@@ -58,7 +56,7 @@ export interface UpdateForm {
     newPassword?: string;
     displayName?: string;
     avatarUrl?: string;
-    status?: Types.UserStatus;
+    status?: Enums.UserStatus;
 }
 
 export interface ListForm {
@@ -66,13 +64,13 @@ export interface ListForm {
     name?: string;
     displayName?: string;
     avatarUrl?: string;
-    status?: Types.UserStatus;
-    role?: Types.UserRole;
+    status?: Enums.UserStatus;
+    role?: Enums.UserRole;
     isActive?: boolean;
 }
 
 export interface SearchResult {
-    list: Types.User[],
+    list: Model.User[],
     total: number,
     take: number,
     skip: number

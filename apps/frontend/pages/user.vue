@@ -70,6 +70,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: "app-main" })
 const { sm } = useBreakpoints(breakpointsTailwind)
+import { Enums } from '@mycelis/types';
 import { breakpointsTailwind } from '@vueuse/core';
 import * as File from '~/api/file';
 const isShowLogoutModal = ref(false);
@@ -164,7 +165,7 @@ function logout() {
     localStorage.removeItem('user')
     localStorage.removeItem('token')
     useAppStore().setUser({
-        id: -1, name: '', avatarUrl: '', createAt: new Date(), displayName: '', isActive: false, lastLoginAt: new Date(), passwordHash: '', role: 'USER', status: 'OFFLINE', updateAt: new Date()
+        id: -1, name: '', avatarUrl: '', createAt: new Date(), displayName: '', isActive: false, lastLoginAt: new Date(), passwordHash: '', role: Enums.UserRole.USER, status: Enums.UserStatus.ONLINE, updateAt: new Date()
     });
     navigateTo('/auth/signin')
 }
