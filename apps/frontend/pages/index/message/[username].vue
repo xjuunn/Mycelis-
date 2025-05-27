@@ -26,16 +26,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { Types } from '@mycelis/database';
 import * as User from '~/api/user';
 import * as Message from '~/api/message';
 import * as Friend from '~/api/friend';
+import { Enums, type Model } from '@mycelis/types';
 const { username } = useRoute().params;
 const messageList = useTemplateRef('messageList');
 const editor = useTemplateRef('editor');
 const isKeyboardOpen = ref(false);
 const messageText = ref('')
-const userData = ref<Types.User>()
+const userData = ref<Model.User>()
 const isFriend = ref<boolean>();
 
 function focusin() {
@@ -67,8 +67,8 @@ async function btnSend() {
     let { data } = await Message.send({
         message: messageText.value,
         receiverId: userData.value?.id ?? -1,
-        type: 'Text',
-        origin: 'User'
+        type: Enums.MessageType.Text,
+        origin: Enums.MessageOrigin.User
     })
     messageText.value = '';
     messageList.value?.scrollToBottom(true);

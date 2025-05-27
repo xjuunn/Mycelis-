@@ -1,5 +1,4 @@
-import type { Types } from '@mycelis/database'
-import type { PageRequest, PageResult, Result } from '@mycelis/types'
+import type { Model, PageRequest, PageResult, Result, Enums } from '@mycelis/types'
 import qs from 'qs';
 
 /**
@@ -7,23 +6,23 @@ import qs from 'qs';
  * @param receiverId 被请求者ID
  */
 export function create(receiverId: number) {
-    return useAxios().axios.post<Result<Types.FriendRequest & { receiver: Types.User }>>('/friend-request', { receiverId })
+    return useAxios().axios.post<Result<Model.FriendRequest & { receiver: Model.User }>>('/friend-request', { receiverId })
 }
 
 /**
  * 查询发送的好友请求
  * @param status 请求状态
  */
-export function listSent(status: Types.FriendRequestStatus, pageInfo: PageRequest = { skip: 0, take: 15 }) {
-    return useAxios().axios.get<PageResult<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/sent?status=' + status + '&' + qs.stringify(pageInfo))
+export function listSent(status: Enums.FriendRequestStatus, pageInfo: PageRequest = { skip: 0, take: 15 }) {
+    return useAxios().axios.get<PageResult<Model.FriendRequest & { receiver: Model.User }>>('/friend-request/sent?status=' + status + '&' + qs.stringify(pageInfo))
 }
 
 /**
  * 查询接收的好友请求
  * @param status 请求状态
  */
-export function listReceived(status: Types.FriendRequestStatus, pageInfo: PageRequest = { skip: 0, take: 15 }) {
-    return useAxios().axios.get<PageResult<Types.FriendRequest & { sender: Types.User }>>('/friend-request/received?status=' + status + '&' + qs.stringify(pageInfo))
+export function listReceived(status: Enums.FriendRequestStatus, pageInfo: PageRequest = { skip: 0, take: 15 }) {
+    return useAxios().axios.get<PageResult<Model.FriendRequest & { sender: Model.User }>>('/friend-request/received?status=' + status + '&' + qs.stringify(pageInfo))
 }
 
 /**
@@ -31,7 +30,7 @@ export function listReceived(status: Types.FriendRequestStatus, pageInfo: PageRe
  * @param id 请求ID
  */
 export function getOne(id: number) {
-    return useAxios().axios.get<Result<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/{id}/friend-request/' + id);
+    return useAxios().axios.get<Result<Model.FriendRequest & { receiver: Model.User }>>('/friend-request/{id}/friend-request/' + id);
 }
 
 /**
@@ -39,7 +38,7 @@ export function getOne(id: number) {
  * @param id 请求ID
  */
 export function del(id: number) {
-    return useAxios().axios.delete<Result<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/' + id);
+    return useAxios().axios.delete<Result<Model.FriendRequest & { receiver: Model.User }>>('/friend-request/' + id);
 }
 
 /**
@@ -47,7 +46,7 @@ export function del(id: number) {
  * @param id 请求ID
  */
 export function accept(id: number) {
-    return useAxios().axios.patch<Result<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/accept/' + id)
+    return useAxios().axios.patch<Result<Model.FriendRequest & { receiver: Model.User }>>('/friend-request/accept/' + id)
 }
 
 /**
@@ -55,5 +54,5 @@ export function accept(id: number) {
  * @param id 请求ID
  */
 export function reject(id: number) {
-    return useAxios().axios.patch<Result<Types.FriendRequest & { receiver: Types.User }>>('/friend-request/reject/' + id);
+    return useAxios().axios.patch<Result<Model.FriendRequest & { receiver: Model.User }>>('/friend-request/reject/' + id);
 }

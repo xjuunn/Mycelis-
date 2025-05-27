@@ -1,5 +1,4 @@
-import type { Types } from "@mycelis/database";
-import { PageRequest, type PageResult, type Result } from "@mycelis/types";
+import { Model, PageRequest, type PageResult, type Result } from "@mycelis/types";
 import qs from 'qs';
 
 /**
@@ -9,7 +8,7 @@ import qs from 'qs';
  * @param sort 排序
  */
 export function updateTag(id: number, tag: string, sort: number = 0) {
-    return useAxios().axios.patch<Result<Types.Friendship & { friend: Types.User, tag?: Types.FriendshipTag }>>(`/friendship/${id}/tag`, { tag, sort })
+    return useAxios().axios.patch<Result<Model.Friendship & { friend: Model.User, tag?: Model.FriendshipTag }>>(`/friendship/${id}/tag`, { tag, sort })
 }
 
 /**
@@ -17,7 +16,7 @@ export function updateTag(id: number, tag: string, sort: number = 0) {
  * @param id 标签ID
  */
 export function delTag(id: number) {
-    return useAxios().axios.patch<Result<Types.Friendship & { friend: Types.User, tag?: Types.FriendshipTag }>>(`/friendship/${id}/tag`)
+    return useAxios().axios.patch<Result<Model.Friendship & { friend: Model.User, tag?: Model.FriendshipTag }>>(`/friendship/${id}/tag`)
 }
 
 /**
@@ -26,7 +25,7 @@ export function delTag(id: number) {
  * @param pageInfo 分页
  */
 export function list(form: ListForm, pageInfo: PageRequest) {
-    return useAxios().axios.post<PageResult<Types.Friendship & { friend: Types.User, tag?: Types.FriendshipTag }>>('/friendship?' + qs.stringify(pageInfo), {
+    return useAxios().axios.post<PageResult<Model.Friendship & { friend: Model.User, tag?: Model.FriendshipTag }>>('/friendship?' + qs.stringify(pageInfo), {
         ...form
     })
 }
@@ -44,7 +43,7 @@ export interface ListForm {
  * @param id 好友关系ID
  */
 export function getOne(id: number) {
-    return useAxios().axios.get<Result<Types.Friendship & { friend: Types.User, tag?: Types.FriendshipTag }>>('/friendship/' + id);
+    return useAxios().axios.get<Result<Model.Friendship & { friend: Model.User, tag?: Model.FriendshipTag }>>('/friendship/' + id);
 }
 
 /**
@@ -52,7 +51,7 @@ export function getOne(id: number) {
  * @param id 好友关系ID
  */
 export function del(id: number) {
-    return useAxios().axios.delete<Result<Types.Friendship & { friend: Types.User, tag?: Types.FriendshipTag }>>("/friendship/" + id);
+    return useAxios().axios.delete<Result<Model.Friendship & { friend: Model.User, tag?: Model.FriendshipTag }>>("/friendship/" + id);
 }
 
 /** 当好友状态发生改变 */

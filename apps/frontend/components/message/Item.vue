@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Types } from '@mycelis/database';
+import type { Model } from '@mycelis/types';
 import * as File from '~/api/file';
 import timeSince from '~/utils/time/timeSince';
 const item = useTemplateRef('item');
@@ -33,8 +33,8 @@ const emits = defineEmits<{
     click: void
 }>()
 const props = defineProps<{
-    msg: Types.Message,
-    user: Types.User | undefined,
+    msg: Model.Message,
+    user: Model.User | undefined,
     type: 'left' | 'right',
     isSelected?: boolean,
     isLastItem?: boolean

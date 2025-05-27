@@ -1,4 +1,3 @@
-import { Types } from '@mycelis/database';
 import type { Result } from '@mycelis/types';
 import { io, type Socket } from 'socket.io-client';
 let socket: Socket | null = null;

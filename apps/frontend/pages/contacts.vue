@@ -52,8 +52,7 @@
 import { breakpointsTailwind } from '@vueuse/core';
 import * as Friend from '~/api/friend';
 import * as File from '~/api/file';
-import type { PageRequest } from '@mycelis/types';
-import type { Types } from '@mycelis/database';
+import { Enums, type Model, type PageRequest } from '@mycelis/types';
 import timeSince from '~/utils/time/timeSince';
 
 definePageMeta({ layout: "app-main" });
@@ -76,7 +75,7 @@ const linkList = ref<Link[]>([
     },
 ]);
 const isLoading = ref(true);
-const listData = ref<(Types.Friendship & { friend: Types.User })[]>([])
+const listData = ref<(Model.Friendship & { friend: Model.User })[]>([])
 const pageInfo = ref<PageRequest>({
     skip: 0, take: 100
 })
@@ -102,7 +101,7 @@ async function initListener() {
     Friend.Friendship.onFriendStatusChange(status => {
         listData.value.forEach(item => {
             if (status.userId === item.friendId) {
-                item.friend.status = status.isOnline ? 'ONLINE' : 'OFFLINE';
+                item.friend.status = status.isOnline ? Enums.UserStatus.ONLINE : Enums.UserStatus.OFFLINE;
                 item.friend.lastLoginAt = status.time;
                 return;
             }
@@ -110,7 +109,7 @@ async function initListener() {
     })
 }
 
-function onClickFriendItem(friendShip: (Types.Friendship & { friend: Types.User })) {
+function onClickFriendItem(friendShip: (Model.Friendship & { friend: Model.User })) {
 
 
 }

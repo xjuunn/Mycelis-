@@ -7,7 +7,8 @@
       <div v-show="isLoading" class="w-full text-center mt-15">
         <div class="loading"></div>
       </div>
-      <div v-motion-slide-visible-once-top v-show="listTotal == 0" class="w-full h-[80%] flex items-center justify-center flex-col">
+      <div v-motion-slide-visible-once-top v-show="listTotal == 0"
+        class="w-full h-[80%] flex items-center justify-center flex-col">
         <Icon size="7rem" class="opacity-15" name="mingcute:empty-box-fill"></Icon>
         <div class="font-bold text-xl opacity-15">无好友申请</div>
       </div>
@@ -42,9 +43,8 @@
 <script lang="ts" setup>
 import * as Friend from '~/api/friend';
 import * as File from '~/api/file';
-import type { Types } from '@mycelis/database';
-import type { PageRequest } from '@mycelis/types';
-const listData = ref<(Types.FriendRequest & { sender: Types.User })[]>([])
+import { Enums, type Model, type PageRequest } from '@mycelis/types';
+const listData = ref<(Model.FriendRequest & { sender: Model.User })[]>([])
 const isLoading = ref(true);
 const listTotal = ref(-1);
 const pageInfo = ref<PageRequest>({
@@ -56,7 +56,7 @@ onMounted(() => {
 })
 async function initData() {
   isLoading.value = true;
-  let { data } = await Friend.FriendRequest.listReceived('PENDING', pageInfo.value);
+  let { data } = await Friend.FriendRequest.listReceived(Enums.FriendRequestStatus.PENDING, pageInfo.value);
   listData.value = data.data.list
   listTotal.value = data.data.total
   isLoading.value = false;

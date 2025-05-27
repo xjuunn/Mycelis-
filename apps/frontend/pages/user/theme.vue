@@ -16,11 +16,11 @@
                 <MessageItem type="left" :user="useAppStore().user" :msg="{
                     id: 0,
                     message: 'oi',
-                    origin: 'User',
+                    origin: Enums.MessageOrigin.User,
                     createAt: new Date(),
                     senderId: useAppStore().user?.id ?? 0,
-                    status: 'Read',
-                    type: 'Text',
+                    status: Enums.MessageStatus.Read,
+                    type: Enums.MessageType.Text,
                     extra: '',
                     isPinned: false,
                     readAt: new Date(),
@@ -31,11 +31,11 @@
                 <MessageItem type="right" :is-last-item="true" :user="useAppStore().user" :msg="{
                     id: 0,
                     message: 'hello ~',
-                    origin: 'User',
+                    origin: Enums.MessageOrigin.User,
                     createAt: new Date(),
                     senderId: useAppStore().user?.id ?? 0,
-                    status: 'Read',
-                    type: 'Text',
+                    status: Enums.MessageStatus.Read,
+                    type: Enums.MessageType.Text,
                     extra: '',
                     isPinned: false,
                     readAt: new Date(),
@@ -56,8 +56,7 @@
                             <span v-else>深色</span>
                             <Icon name="mingcute:down-line" size="1rem"></Icon>
                         </div>
-                        <ul tabindex="0"
-                            class="dropdown-content  menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                        <ul tabindex="0" class="dropdown-content  menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                             <li><a @click="setTheme('system')">系统</a></li>
                             <li><a @click="setTheme('light')">亮色</a></li>
                             <li><a @click="setTheme('dark')">深色</a></li>
@@ -72,6 +71,8 @@
 </template>
 
 <script lang="ts" setup>
+import { Enums } from '@mycelis/types';
+
 onMounted(async () => {
     const t1 = localStorage.getItem('theme');
     if (t1 == 'dark') theme.value = 'dark';
