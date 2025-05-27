@@ -3,6 +3,9 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
   ssr: true,
+  routeRules: {
+    '/': { prerender: true }
+  },
   nitro: {
     output: {
       dir: "dist",
@@ -15,6 +18,14 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      exclude: ["@prisma/client"]
+    },
+    resolve: {
+      alias: {
+        ".prisma/client": "./node_modules/@prisma/client"
+      }
+    }
   },
   runtimeConfig: {
     jwt_secret: process.env.JWT_SECRET,
