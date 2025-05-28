@@ -2,8 +2,7 @@
   "tasks": {
     "start": {
       "dependsOn": ["^build"],
-      "outputs": [],
-      "env":["JWT_SECRET","FILE_URL","BASE_URL"]
+      "outputs": []
     },
     "build": {
       "dependsOn": ["^build"],

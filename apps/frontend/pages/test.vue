@@ -6,7 +6,8 @@
 
 <script setup>
 function test() {
-  console.log("test");
-  
+  const runtimeconfig = useRuntimeConfig();
+  console.log(runtimeconfig.public);
+
 }
 </script>

@@ -1,8 +1,12 @@
 import tailwindcss from "@tailwindcss/vite";
+import { getConfig } from '@mycelis/config';
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
   ssr: true,
+  devServer: {
+    port: Number(getConfig('WEB_PORT')), 
+  },
   routeRules: {
     '/': { prerender: true }
   },
@@ -28,9 +32,15 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
-    jwt_secret: process.env.JWT_SECRET,
+    jwt_secret: getConfig("JWT_SECRET"),
     public: {
-      BASE_URL: process.env.BASE_URL
+      BASE_URL: `http://${getConfig('SERVER_HOST')}:${getConfig('SERVER_PORT')}`,
+      APP_NAME: getConfig("APP_NAME"),
+      APP_VERSION: getConfig("APP_VERSION"),
+      WEB_PORT: getConfig("WEB_PORT"),
+      FILE_UPLOAD_PATH: getConfig("FILE_UPLOAD_PATH"),
+      SERVER_HOST: getConfig("SERVER_HOST"),
+      SERVER_PORT: getConfig("SERVER_PORT"),
     },
   },
   css: ["~/assets/app.css"],

@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { config } from 'dotenv';
 import { AllExceptionsFilter } from './f/AllExceptionsFilter';
 import { ValidationPipe } from '@nestjs/common';
+import { getConfig } from '@mycelis/config';
 
 config();
 
@@ -22,7 +23,7 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableCors();
-  await app.listen(process.env.PORT ?? 8080);
+  await app.listen(getConfig('SERVER_PORT') ?? 8080);
 }
 
 bootstrap();

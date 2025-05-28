@@ -5,7 +5,7 @@
   "scripts": {
     "cleanup": "npx nuxi cleanup",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=20000 nuxt build",
-    "start": "nuxt dev --host --port 80",
+    "start": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -15,6 +15,7 @@
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
     "@iconify/json": "^2.2.334",
+    "@mycelis/config": "workspace:*",
     "@mycelis/database": "workspace:^",
     "@mycelis/types": "workspace:^",
     "@nuxt/icon": "1.11.0",

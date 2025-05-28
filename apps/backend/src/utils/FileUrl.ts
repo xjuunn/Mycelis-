@@ -1,9 +1,10 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { join } from 'path';
 import { promises as fs } from 'fs';
+import { getConfig } from "@mycelis/config";
 
 export async function getFileUrl() {
-  const FILE_URL = process.env.FILE_URL ?? './files';
+  const FILE_URL = getConfig('FILE_UPLOAD_PATH') ?? './files';
   if (FILE_URL === '')
     throw new InternalServerErrorException('服务器环境变量FILE_URL为空');
   if (FILE_URL.startsWith('/')) return FILE_URL;

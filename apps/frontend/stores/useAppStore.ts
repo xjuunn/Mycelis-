@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useAppStore = defineStore("app", () => {
     let runtimeConfig = useRuntimeConfig();
     const appname = 'mycelis';
-    const _base_url = ref(runtimeConfig.public.BASE_URL.replace('localhost', window?.location?.host).replace('127.0.0.1', window?.location?.host));
+    const _base_url = ref(runtimeConfig.public.BASE_URL.replace('localhost', window?.location?.hostname).replace('127.0.0.1', window?.location?.hostname));
     const _user: Ref<Model.User | undefined> = ref()
     const baseurl = computed(() => _base_url.value)
     const user = computed(() => {

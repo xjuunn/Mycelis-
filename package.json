@@ -16,17 +16,17 @@
   "license": "ISC",
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
-    "@types/node": "^22.10.7",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.1",
-    "concurrently": "^9.1.2",
-    "typescript": "^5.7.3"
+    "class-validator": "^0.14.1"
   },
   "devDependencies": {
+    "@types/node": "^22.15.17",
+    "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
     "dotenv-cli": "^8.0.0",
     "shx": "^0.4.0",
-    "turbo": "^2.4.4"
+    "turbo": "^2.4.4",
+    "typescript": "^5.8.3"
   }
 }

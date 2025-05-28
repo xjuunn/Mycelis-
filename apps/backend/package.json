@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@mycelis/config": "workspace:*",
     "@mycelis/database": "workspace:^",
     "@mycelis/types": "workspace:^",
     "@mycelis/utils": "workspace:^",
