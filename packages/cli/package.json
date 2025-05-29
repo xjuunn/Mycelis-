@@ -1,0 +1,23 @@
+{
+  "name": "@mycelis/cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "mycelis": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format esm --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.11.0",
+  "dependencies": {
+    "cac": "^6.7.14",
+    "chalk": "^5.4.1",
+    "consola": "^3.4.2",
+    "execa": "^9.6.0"
+  }
+}
