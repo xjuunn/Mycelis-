@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "tsup src/index.ts --format esm --watch"
+    "dev": "tsup src/index.ts --format esm --watch",
+    "mycelis": "node ./dist/index.js"
   },
   "keywords": [],
   "author": "",

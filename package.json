@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "setup": "pnpm install --ignore-scripts && pnpm --filter @mycelis/database exec prisma migrate dev --name init && pnpm --filter @mycelis/config run build && turbo run build --filter \"./packages/*\" && pnpm install -r",
-    "start": "pnpm --filter @mycelis/cli exec mycelis start",
-    "build": "pnpm --filter @mycelis/cli exec mycelis build",
-    "build:packages": "pnpm --filter @mycelis/cli exec mycelis build --packages",
+    "start": "pnpm --filter @mycelis/cli run mycelis start",
+    "build": "pnpm --filter @mycelis/cli run mycelis build",
+    "build:packages": "pnpm --filter @mycelis/cli run mycelis build --packages",
     "cleanup": "npx shx rm -rf packages/*/dist && npx shx rm -rf apps/*/dist && pnpm run --filter @mycelis/frontend cleanup"
   },
   "keywords": [],
