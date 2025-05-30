@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "setup": "pnpm install --ignore-scripts && pnpm --filter @mycelis/config run build && turbo run build --filter \"./packages/*\" && pnpm install -r",
+    "setup": "pnpm install --ignore-scripts && pnpm --filter @mycelis/database exec prisma migrate dev --name init && pnpm --filter @mycelis/config run build && turbo run build --filter \"./packages/*\" && pnpm install -r",
     "dev": "turbo run start",
     "start": "turbo run start",
     "build": "pnpm --filter @mycelis/cli exec mycelis build",
