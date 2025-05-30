@@ -2,7 +2,7 @@
 name: Bug 报告
 about: 创建报告帮我们改建
 title: "[BUG]"
-labels: bug
+labels: bug, enhancement
 assignees: xjuunn
 
 ---
