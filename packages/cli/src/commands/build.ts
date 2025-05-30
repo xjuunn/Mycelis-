@@ -5,9 +5,9 @@ import { runSteps } from '../utils/exec';
 export async function buildCommand(cli: any) {
     cli
         .command('build', '构建包')
-        .option('--name <name>', '多个包名使用`,`分隔', { default: 'all' })
-        .option('--apps', '选中所有apps中的包', { default: false })
-        .option('--packages', '选中所有packages中的包', { default: false })
+        .option('-n, --name <name>', '指定包名，多个包名使用`,`分隔', { default: 'all' })
+        .option('-a, --apps', '选中所有apps中的包', { default: false })
+        .option('-p, --packages', '选中所有packages中的包', { default: false })
         .action(async (options: { name: string, apps: boolean, packages: boolean }) => {
             let pkgNameList = [];
             if (options.name === 'all' && !options.apps && !options.packages) {

@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "setup": "pnpm install -r",
-    "dev": "cross-env NODE_ENV=development dotenv -e .env turbo run start",
-    "start": "dotenv -e .env turbo run start",
-    "build": "turbo run build",
+    "setup": "pnpm install --ignore-scripts && pnpm --filter @mycelis/config run build && turbo run build --filter \"./packages/*\" && pnpm install -r",
+    "dev": "turbo run start",
+    "start": "turbo run start",
+    "build": "pnpm --filter @mycelis/cli exec mycelis build",
     "build:packages": "turbo run build --filter \"./packages/*\"",
     "cleanup": "npx shx rm -rf packages/*/dist && npx shx rm -rf apps/*/dist && pnpm run --filter @mycelis/frontend cleanup"
   },
