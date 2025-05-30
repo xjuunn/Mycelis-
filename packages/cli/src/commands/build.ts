@@ -22,7 +22,7 @@ export async function buildCommand(cli: any) {
             const cmd = `npx turbo run build ${'--filter ' + pkgNameList.join(' --filter ')}`;
             logger.info("正在构建包: " + pkgNameList.join(','));
             logger.info("运行命令：" + cmd)
-            await runSteps([{ name: "构建所有的package", cmd, cwd: findMonorepoRoot() }])
+            await runSteps([{ name: "构建指定的package", cmd, cwd: findMonorepoRoot() }])
             logger.success('构建完成!')
         })
 }

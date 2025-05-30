@@ -13,6 +13,14 @@
 			"path": "apps/frontend"
 		},
 		{
+			"name": "📦 @mycelis/cli",
+			"path": "packages/cli"
+		},
+		{
+			"name": "📦 @mycelis/config",
+			"path": "packages/config"
+		},
+		{
 			"name": "📦 @mycelis/database",
 			"path": "packages/database"
 		},
