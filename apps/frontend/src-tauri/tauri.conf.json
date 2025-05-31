@@ -4,17 +4,17 @@
   "version": "0.1.0",
   "identifier": "com.mycelis.dev",
   "build": {
-    "frontendDist": "./dist",
-    "devUrl": "http://localhost:3000",
+    "frontendDist": "../dist/public",
     "beforeDevCommand": "pnpm run start",
-    "beforeBuildCommand": "pnpm run build"
+    "beforeBuildCommand": "pnpm --filter @mycelis/frontend run generate",
+    "devUrl": "http://localhost:3000"
   },
   "app": {
     "windows": [
       {
         "title": "mycelis",
-        "width": 800,
-        "height": 600,
+        "width": 1000,
+        "height": 650,
         "resizable": true,
         "fullscreen": false
       }

@@ -5,7 +5,12 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   ssr: true,
   devServer: {
-    port: Number(getConfig('WEB_PORT')), 
+    port: Number(getConfig('WEB_PORT')),
+  },
+  builder: 'vite',
+  typescript: {
+    typeCheck: false,
+    shim: false
   },
   routeRules: {
     '/': { prerender: true }
