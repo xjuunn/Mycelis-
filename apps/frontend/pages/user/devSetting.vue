@@ -8,14 +8,34 @@
                 <span>开发者设置</span>
             </div>
             <div class="absolute bottom-5 sm:bottom-3 right-3">
-
+                <div class="inline-flex items-center">
+                    <span class="text-xs">日志记录：</span>
+                    <input type="checkbox" :checked="debug" @change="debugToggleChange" class="toggle toggle-primary" />
+                </div>
             </div>
+        </div>
+        <div class="p-4">
+            <DevLogList></DevLogList>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-function goBack() {
-    useRouter().back();
+const { log, logDefault, logError, logSuccess, debug } = useLogger();
+
+function debugToggleChange(e: Event) {
+    const target = e.target as HTMLInputElement;
+    useLogger().setDebug(target.checked);
+    if (target.checked) showHello();
 }
+onMounted(() => {
+    showHello();
+})
+
+function showHello() {
+
+}
+
+
+function goBack() { useRouter().back(); }
 </script>

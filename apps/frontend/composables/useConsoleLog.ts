@@ -28,10 +28,10 @@ export class ConsoleBuilder {
         return this;
     }
 
-    addBackground(bg: keyof typeof ConsoleColor) {
-        if (this.styles.length == 0) return;
+    addBackground(bg: keyof typeof ConsoleColor): ConsoleBuilder {
+        if (this.styles.length == 0) return this;
         let style = this.styles.pop();
-        if (!style) return;
+        if (!style) return this;
         style += `background:${resolveConsoleColor(ConsoleColor[bg])};`;
         this.styles.push(style);
         return this;
