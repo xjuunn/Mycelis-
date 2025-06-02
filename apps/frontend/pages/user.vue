@@ -135,7 +135,7 @@ const listData = ref<ListGroup[]>([
                 icon: 'mingcute:notification-fill',
             },
             {
-                name: '开发者设置',
+                name: '日志',
                 path: '/user/devSetting?ui=content',
                 icon: 'mingcute:terminal-box-fill',
             },

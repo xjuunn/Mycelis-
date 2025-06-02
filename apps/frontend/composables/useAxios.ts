@@ -21,10 +21,20 @@ export const useAxios = () => {
         });
     };
     const axiosInstance = ref(initAxios());
+
+    axiosInstance.value.interceptors.request.use(
+        (req) => {
+            useLogger().logDefault('网络请求：' + req.baseURL + req.url)
+            return req;
+        }
+    )
     axiosInstance.value.interceptors.response.use(
-        (res) => res,
+        (res) => {
+            return res
+        },
         (error): Promise<Result<any>> => {
             console.error("Axios错误: ", error);
+            useLogger().logError(error);
             return Promise.reject<Result<any>>(error.response.data);
         }
     );

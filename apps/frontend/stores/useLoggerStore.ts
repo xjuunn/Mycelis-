@@ -4,10 +4,6 @@ export const useLogger = defineStore('logger', () => {
     const debug = computed(() => _debug.value);
     const loggerList = computed(() => _loggerList.value);
 
-    onMounted(() => {
-        showHello()
-    })
-
     function showHello() {
         log(useConsoleLog().builder.default('设备名:').addBackground('primary').default(localStorage.getItem('deviceName') + ""));
         log(useConsoleLog().builder.default('用户:').addBackground('primary').default(localStorage.getItem('user') + ""));
@@ -38,7 +34,7 @@ export const useLogger = defineStore('logger', () => {
 
     return {
         loggerList, logDefault, logSuccess, logError, log,
-        debug, setDebug
+        debug, setDebug, showHello
     };
 })
 

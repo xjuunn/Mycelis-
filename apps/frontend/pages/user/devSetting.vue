@@ -5,7 +5,7 @@
                 <button class="btn btn-ghost btn-square mr-2 sm:hidden" @click="goBack">
                     <Icon name="mingcute:left-line" size="1.6rem"></Icon>
                 </button>
-                <span>开发者设置</span>
+                <span>日志</span>
             </div>
             <div class="absolute bottom-5 sm:bottom-3 right-3">
                 <div class="inline-flex items-center">
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-const { log, logDefault, logError, logSuccess, debug } = useLogger();
+const { debug } = useLogger();
 
 function debugToggleChange(e: Event) {
     const target = e.target as HTMLInputElement;
