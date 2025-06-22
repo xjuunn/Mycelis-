@@ -13,4 +13,6 @@ export type Config = {
     SERVER_HOST?: string;
     /** 后端服务端口 */
     SERVER_PORT?: number;
+    /** Peer 服务端口 */
+    PEER_SERVER_PORT:number
 }

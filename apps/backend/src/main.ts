@@ -5,6 +5,7 @@ import { config } from 'dotenv';
 import { AllExceptionsFilter } from './f/AllExceptionsFilter';
 import { ValidationPipe } from '@nestjs/common';
 import { getConfig } from '@mycelis/config';
+import { startPeerServer } from './peer-server';
 
 config();
 
@@ -23,7 +24,10 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableCors();
-  await app.listen(getConfig('SERVER_PORT') ?? 8080);
+  await app.listen(getConfig('SERVER_PORT') ?? 8080, () => {
+    console.log(`🦊 API 服务已在 ${getConfig('SERVER_PORT') ?? 8080} 端口监听`);
+  });
+  startPeerServer(Number(getConfig('PEER_SERVER_PORT')) ?? 9000);
 }
 
 bootstrap();

@@ -46,6 +46,7 @@ export default defineNuxtConfig({
       FILE_UPLOAD_PATH: getConfig("FILE_UPLOAD_PATH"),
       SERVER_HOST: getConfig("SERVER_HOST"),
       SERVER_PORT: getConfig("SERVER_PORT"),
+      PEER_SERVER_PORT: getConfig("PEER_SERVER_PORT")
     },
   },
   css: ["~/assets/app.css"],
