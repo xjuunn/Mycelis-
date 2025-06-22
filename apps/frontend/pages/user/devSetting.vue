@@ -9,6 +9,7 @@
             </div>
             <div class="absolute bottom-5 sm:bottom-3 right-3">
                 <div class="inline-flex items-center">
+                    <NuxtLink to="/test" class="text-xs link link-accent me-2">测试入口</NuxtLink>
                     <span class="text-xs">日志记录：</span>
                     <input type="checkbox" :checked="debug" @change="debugToggleChange" class="toggle toggle-primary" />
                 </div>
