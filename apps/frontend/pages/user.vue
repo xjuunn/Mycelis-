@@ -114,12 +114,7 @@ const listData = ref<ListGroup[]>([
                 name: '设备管理',
                 path: '/user/devicesList?ui=content',
                 icon: 'mingcute:device-fill',
-            },
-            {
-                name: '连接性',
-                path: '/user/connect?ui=content',
-                icon: 'mingcute:link-2-fill',
-            },
+            }
         ]
     }, {
         groupName: '应用设置',
@@ -128,6 +123,11 @@ const listData = ref<ListGroup[]>([
                 name: '主题外观',
                 path: '/user/theme?ui=content',
                 icon: 'mingcute:device-fill',
+            },
+            {
+                name: '连接性',
+                path: '/user/connect?ui=content',
+                icon: 'mingcute:link-2-fill',
             },
             {
                 name: '通知',

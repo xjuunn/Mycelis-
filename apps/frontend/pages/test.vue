@@ -9,16 +9,6 @@
 const runtimeconfig = useRuntimeConfig();
 import Peer from 'peerjs';
 function test() {
-  const peer = new Peer({
-    host: "127.0.0.1",
-    port: runtimeconfig.public.PEER_SERVER_PORT ?? 9000,
-    path: '/peerjs'
-  })
-  peer.on('open', (id) => {
-    console.log(id);
-  })
-  peer.on('error', (error) => {
-    console.log(error);
-  })
+  usePeer()
 }
 </script>

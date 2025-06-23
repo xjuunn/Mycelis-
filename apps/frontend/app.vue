@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="font-mono select-none h-[100dvh] bg-base-300 text-base-content/90"
-  >
+  <div class="font-mono select-none h-[100dvh] bg-base-300 text-base-content/90">
     <div id="appTop"></div>
     <NuxtLayout>
       <NuxtPage />
@@ -37,6 +35,8 @@ onMounted(() => {
   if (import.meta.client) {
     // 初始化 Socket 客户端
     useSocket()?.init();
+    // 初始化 Peer 客户端
+    usePeer();
     // 检查客户端状态
     useCheck().check();
   }

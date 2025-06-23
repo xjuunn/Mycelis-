@@ -14,7 +14,7 @@
         </div>
         <div class="p-4 overflow-y-auto">
             <div
-                class="border p-4 rounded-lg border-base-content/10 bg-base-200 hover:border-base-content/20 flex flex-col sm:flex-row">
+                class="border p-4 rounded-lg border-base-content/10 bg-base-200 hover:border-base-content/20 flex flex-col md:flex-row">
                 <div class="flex items-center gap-2 flex-1">
                     <span v-if="isServerConnected == undefined" class="status"></span>
                     <span v-else-if="isServerConnected" class="status status-success animate-pulse"></span>
@@ -23,7 +23,7 @@
                     <span class="text-xs opacity-60"> {{ serverDelay }}ms</span>
                 </div>
                 <div class="mt-1 text-sm opacity-80 inline-flex items-center gap-2" v-show="serverSocketID">
-                    Socket: {{ serverSocketID }}
+                    Socket_ID: {{ serverSocketID }}
                     <button @click="btnCopySocketId">
                         <label class="swap swap-flip" :class="{ 'swap-active': isShowCopyIcon }">
                             <Icon class="link link-accent swap-on" name="mingcute:copy-2-fill" size="0.9rem"></Icon>
@@ -31,7 +31,59 @@
                         </label>
                     </button>
                 </div>
+            </div>
 
+            <div class="bg-base-200 mt-4 border-base-content/10 border p-4 rounded-lg hover:border-base-content/20">
+                <div class=" flex flex-col md:flex-row">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="status status-success animate-pulse" v-if="peer.open"></span>
+                        <span class="status" v-else></span>
+                        <span class="text-sm">对等服务</span>
+                    </div>
+                    <div class="opacity-80 text-sm inline-flex gap-2 items-center mt-1">
+                        Peer_ID: {{ peer.id }}
+                        <button @click="btnCopyPeerId">
+                            <label class="swap swap-flip" :class="{ 'swap-active': isShowCopyIconPeer }">
+                                <Icon class="link link-accent swap-on" name="mingcute:copy-2-fill" size="0.9rem"></Icon>
+                                <Icon class="link link-accent swap-off" name="mingcute:check-fill" size="0.9rem"></Icon>
+                            </label>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <ul class="menu w-full p-0 mt-3">
+                        <li class="bg-base-300 rounded-lg">
+                            <details>
+                                <summary class="text-base-content/70">
+                                    <Icon name="mingcute:earth-2-line"></Icon>
+                                    IceServers
+                                </summary>
+                                <div class="p-3 pt-1">
+                                    <div class="text-sm text-base-content/70"
+                                        v-for="item in peer.options.config.iceServers">
+                                        <div v-if="typeof item.urls === 'string'" v-motion
+                                            :initial="{ x: 100, opacity: 0 }" :visible="{
+                                                x: 0, opacity: 1, transition: {
+                                                    ease: 'backInOut'
+                                                }
+                                            }" :delay="Math.random() * 100" :duration="400">
+                                            {{ item.urls }}
+                                        </div>
+                                        <div v-else v-for="url in item.urls" v-motion :initial="{ x: 100, opacity: 0 }"
+                                            :visible="{
+                                                x: 0, opacity: 1, transition: {
+                                                    ease: 'backInOut'
+                                                }
+                                            }" :delay="Math.random() * 100" :duration="400">
+                                            {{ url }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+                        </li>
+                    </ul>
+
+                </div>
             </div>
 
 
@@ -72,5 +124,20 @@ function btnCopySocketId() {
 }
 
 
-
+const peer = ref(usePeer().peer);
+function onOpen() {
+    peer.value = usePeer().peer;
+}
+usePeer().peer.on('open', onOpen)
+onUnmounted(() => {
+    usePeer().peer.off('open', onOpen)
+})
+const isShowCopyIconPeer = ref(true)
+function btnCopyPeerId() {
+    useClipboard().copy(peer.value.id);
+    isShowCopyIconPeer.value = false;
+    setTimeout(() => {
+        isShowCopyIconPeer.value = true;
+    }, 1000);
+}
 </script>
