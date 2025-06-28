@@ -3,9 +3,9 @@
         <ClientOnly>
             <div v-if="sm || $route.query.ui !== 'content'" v-motion-slide-left="animeLeft"
                 class="flex-1 flex min-h-full sm:max-w-[300px] sm:border-r sm:border-r-base-content/10 flex-col">
-                <div class="navbar border-b border-b-base-content/10" v-if="$props.isShowTitle">
-                    <div class="navbar-start pl-2">{{ props.title }}</div>
-                    <div class="navbar-end">
+                <div class="navbar min-h-4 h-10 border-b border-b-base-content/10" v-if="$props.isShowTitle">
+                    <div class="navbar-start pl-2" data-tauri-drag-region>{{ props.title }}</div>
+                    <div class="navbar-end" data-tauri-drag-region>
                         <slot name="title-right"></slot>
                     </div>
                 </div>

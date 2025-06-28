@@ -1,8 +1,30 @@
 <template>
     <ClientOnly>
         <div class="h-full flex flex-col relative">
-            <div class="navbar border-b border-base-content/10">
-                <div class="navbar-start ml-2 font-bold">{{ userData?.displayName ?? userData?.name ?? username }}</div>
+            <div class="navbar min-h-4 h-10 border-b border-base-content/10">
+                <div class="navbar-start ml-2 font-bold">
+                    <button @click="btnBack" class="btn btn-square btn-ghost mr-2 sm:hidden btn-sm">
+                        <Icon name="mingcute:left-line"></Icon>
+                    </button>
+                    {{ userData?.displayName ?? userData?.name ?? username }}
+                </div>
+                <div class="navbar-end pr-2 z-10">
+                    <NuxtLink to="/media"
+                        class="btn btn-sm btn-ghost tooltip tooltip-bottom text-base-content/70 hover:text-base-content/100"
+                        data-tip="语音通话">
+                        <Icon name="mingcute:phone-fill" size="1.1rem"></Icon>
+                    </NuxtLink>
+                    <NuxtLink to="/media"
+                        class="btn btn-sm btn-ghost tooltip tooltip-bottom text-base-content/70 hover:text-base-content/100"
+                        data-tip="视频通话">
+                        <Icon name="mingcute:camcorder-fill" size="1.1rem"></Icon>
+                    </NuxtLink>
+                    <NuxtLink to="/media"
+                        class="btn btn-sm btn-ghost tooltip tooltip-bottom text-base-content/70 hover:text-base-content/100"
+                        data-tip="共享屏幕">
+                        <Icon name="mingcute:computer-fill" size="1.1rem"></Icon>
+                    </NuxtLink>
+                </div>
             </div>
             <div class="flex-1 overflow-y-hidden">
                 <MessageList ref="messageList" :userid="userData?.id ?? -1"></MessageList>
@@ -37,6 +59,10 @@ const isKeyboardOpen = ref(false);
 const messageText = ref('')
 const userData = ref<Model.User>()
 const isFriend = ref<boolean>();
+
+function btnBack() {
+    history.back();
+}
 
 function focusin() {
     setTimeout(() => {

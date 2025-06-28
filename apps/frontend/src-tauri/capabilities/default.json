@@ -30,6 +30,7 @@
     "deep-link:default",
     "fs:default",
     "http:allow-fetch-cancel",
-    "http:allow-fetch-read-body"
+    "http:allow-fetch-read-body",
+    "core:window:allow-start-dragging"
   ]
 }

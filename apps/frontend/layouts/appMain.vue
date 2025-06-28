@@ -3,9 +3,9 @@
         <ClientOnly>
             <!-- 大屏 DOCK -->
             <div class="w-15 border-r border-r-base-content/10 flex items-center flex-col" v-if="sm"
-                v-motion-slide-left>
-                <div class="m-3 mt-4 opacity-30">
-                    <Icon name="solar:ghost-bold" size="1.7rem"></Icon>
+                v-motion-slide-left data-tauri-drag-region>
+                <div class="m-3 mt-4 opacity-30" data-tauri-drag-region>
+                    <Icon name="solar:ghost-bold" size="1.7rem" data-tauri-drag-region></Icon>
                 </div>
                 <div class="flex flex-col gap-1">
                     <button v-for="(item, index) in dockList" :key="item.name"
@@ -29,9 +29,14 @@
                     </Icon>
                 </button>
             </div>
-            <div class="sm:h-full transition-[height] flex-1 m-0" ref="page"
+            <div class="sm:h-full transition-[height] flex-1 m-0 flex flex-col" ref="page"
                 :class="(!sm && $route.query.ui !== 'content') ? 'h-[calc(100%-4rem)]' : 'h-full'">
-                <slot></slot>
+                <UtilShowOnDevice :show-on="['isDesktop']" :tauri="true">
+                    <TitleBar></TitleBar>
+                </UtilShowOnDevice>
+                <div class="flex-1 overflow-scroll">
+                    <slot></slot>
+                </div>
             </div>
         </ClientOnly>
     </div>
@@ -147,7 +152,7 @@ function slideAnimation(type: 'lefttoright' | 'rightroleft', path: string) {
         }).add(page.value, {
             duration: 120,
             opacity: 1,
-        },'+=50')
+        }, '+=50')
     }
 }
 </script>
