@@ -11,6 +11,10 @@
   ],
   "permissions": [
     "core:default",
+    "core:window:allow-close",
+    "core:window:allow-maximize",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
     {
       "identifier": "http:default",
       "allow": [

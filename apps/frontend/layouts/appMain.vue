@@ -2,8 +2,8 @@
     <div class="h-full w-full flex overflow-hidden">
         <ClientOnly>
             <!-- 大屏 DOCK -->
-            <div class="w-15 border-r border-r-base-content/10 flex items-center flex-col" v-if="sm"
-                v-motion-slide-left data-tauri-drag-region>
+            <div class="w-15 border-r border-r-base-content/10 flex items-center flex-col" v-if="sm" v-motion-slide-left
+                data-tauri-drag-region>
                 <div class="m-3 mt-4 opacity-30" data-tauri-drag-region>
                     <Icon name="solar:ghost-bold" size="1.7rem" data-tauri-drag-region></Icon>
                 </div>
