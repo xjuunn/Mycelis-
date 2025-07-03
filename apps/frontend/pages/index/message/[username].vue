@@ -9,21 +9,21 @@
                     {{ userData?.displayName ?? userData?.name ?? username }}
                 </div>
                 <div class="navbar-end pr-2 z-10">
-                    <NuxtLink to="/media"
+                    <span @click="btnShowCallModal('voice')"
                         class="btn btn-sm btn-ghost tooltip tooltip-bottom text-base-content/70 hover:text-base-content/100"
                         data-tip="语音通话">
                         <Icon name="mingcute:phone-fill" size="1.1rem"></Icon>
-                    </NuxtLink>
-                    <NuxtLink to="/media"
+                    </span>
+                    <span @click="btnShowCallModal('video')"
                         class="btn btn-sm btn-ghost tooltip tooltip-bottom text-base-content/70 hover:text-base-content/100"
                         data-tip="视频通话">
                         <Icon name="mingcute:camcorder-fill" size="1.1rem"></Icon>
-                    </NuxtLink>
-                    <NuxtLink to="/media"
+                    </span>
+                    <span @click="btnShowCallModal('screen')"
                         class="btn btn-sm btn-ghost tooltip tooltip-bottom text-base-content/70 hover:text-base-content/100"
                         data-tip="共享屏幕">
                         <Icon name="mingcute:computer-fill" size="1.1rem"></Icon>
-                    </NuxtLink>
+                    </span>
                 </div>
             </div>
             <div class="flex-1 overflow-y-hidden">
@@ -44,6 +44,35 @@
                 <!-- <Icon name="mingcute:add-line"></Icon> -->
             </div>
         </div>
+        <Modal title="通话" :is-show="isShowCallModal" @on-backdrop-click="onCallModalBackdropClick"
+            @on-close="isShowCallModal = false" class="w-96">
+            <template #content>
+                <div class="p-3 pt-4 flex gap-3 items-center justify-center">
+                    <label for="call-option-audio" class="opacity-70 text-sm inline-flex items-center">语音：
+                        <input id="call-option-audio" v-model="callOption.audio" type="checkbox"
+                            class="toggle toggle-sm">
+                    </label> <br>
+                    <label for="call-option-video" class="opacity-70 text-sm inline-flex items-center">相机：
+                        <input id="call-option-video" v-model="callOption.video" type="checkbox"
+                            class="toggle toggle-sm">
+                    </label> <br>
+                    <label for="call-option-screen" class="opacity-70 text-sm inline-flex items-center">屏幕：
+                        <input id="call-option-screen" v-model="callOption.screen" type="checkbox"
+                            class="toggle toggle-sm">
+                    </label> <br>
+                </div>
+                <MediaPreview v-show="isShowCallModal" ref="mediaPreview" :call-option="callOption"></MediaPreview>
+            </template>
+            <template #action>
+                <div class="join">
+                    <button class="btn btn-sm btn-ghost join-item" @click="btnCancelCallModal">
+                        取消
+                    </button>
+                    <button class="btn btn-sm btn-primary join-item" @click="btnDoCall">呼叫</button>
+                </div>
+            </template>
+
+        </Modal>
     </ClientOnly>
 </template>
 
@@ -59,7 +88,13 @@ const isKeyboardOpen = ref(false);
 const messageText = ref('')
 const userData = ref<Model.User>()
 const isFriend = ref<boolean>();
-
+const isShowCallModal = ref(false);
+const callOption = ref({
+    audio: true,
+    video: false,
+    screen: false
+})
+const mediaPreview = useTemplateRef('mediaPreview');
 function btnBack() {
     history.back();
 }
@@ -102,5 +137,40 @@ async function btnSend() {
 }
 function btnTest() {
     messageList.value?.scrollToBottom(true);
+}
+
+// 发起通话按钮
+async function btnShowCallModal(type: 'voice' | 'video' | 'screen') {
+    if (!userData.value) return;
+    isShowCallModal.value = true;
+    if (type === 'voice') {
+        callOption.value.audio = true;
+        callOption.value.video = false;
+        callOption.value.screen = false;
+    } else if (type === 'video') {
+        callOption.value.audio = true;
+        callOption.value.video = true;
+        callOption.value.screen = false;
+    } else if (type === 'screen') {
+        callOption.value.audio = false;
+        callOption.value.video = false;
+        callOption.value.screen = true;
+    }
+    // mediaPreview.value?.start();
+    mediaPreview.value?.startWatch();
+}
+// 点击通话Modal背景，如果未发起通话，则关闭Modal，如果已发起通话，则转移到后台
+function onCallModalBackdropClick() {
+    btnCancelCallModal();
+}
+function btnCancelCallModal() {
+    isShowCallModal.value = false;
+    if (mediaPreview.value) {
+        mediaPreview.value.stop();
+        mediaPreview.value.stopWatch();
+    }
+}
+function btnDoCall() {
+
 }
 </script>
