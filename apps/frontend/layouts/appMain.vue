@@ -18,6 +18,13 @@
                         </Icon>
                     </button>
                 </div>
+                <div class="flex-1 mb-3 content-end">
+                    <!-- <button v-show="useCallStore().isBackground"
+                        class="btn btn-ghost btn-square btn-sm text-base-content/60">
+                        <Icon v-show="useCallStore().callStatus == 'Initiating'" class="animate-pulse"
+                            name="mingcute:phone-outgoing-fill" size="1.2rem"></Icon>
+                    </button> -->
+                </div>
             </div>
             <!-- 小屏 DOCK -->
             <div class="dock bg-base-200" v-if="!sm && $route.query.ui !== 'content'" v-motion-slide-bottom>

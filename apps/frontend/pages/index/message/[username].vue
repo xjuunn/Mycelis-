@@ -47,6 +47,12 @@
         <Modal title="通话" :is-show="isShowCallModal" @on-backdrop-click="onCallModalBackdropClick"
             @on-close="isShowCallModal = false" class="w-96">
             <template #content>
+                <div class="text-center text-base-content/70 text-sm mb-2">
+                    <div class="avatar w-16 rounded-full overflow-hidden">
+                        <img :src="File.getFileUrl(userData?.avatarUrl ?? '')" />
+                    </div>
+                    <p class="mt-2 font-bold">{{ userData?.displayName ?? userData?.name ?? username }}</p>
+                </div>
                 <div class="p-3 pt-4 flex gap-3 items-center justify-center">
                     <label for="call-option-audio" class="opacity-70 text-sm inline-flex items-center">语音：
                         <input id="call-option-audio" v-model="callOption.audio" type="checkbox"
@@ -80,6 +86,7 @@
 import * as User from '~/api/user';
 import * as Message from '~/api/message';
 import * as Friend from '~/api/friend';
+import * as File from '~/api/file';
 import { Enums, type Model } from '@mycelis/types';
 const { username } = useRoute().params;
 const messageList = useTemplateRef('messageList');
@@ -162,6 +169,9 @@ async function btnShowCallModal(type: 'voice' | 'video' | 'screen') {
 // 点击通话Modal背景，如果未发起通话，则关闭Modal，如果已发起通话，则转移到后台
 function onCallModalBackdropClick() {
     btnCancelCallModal();
+    if (useCallStore().callStatus !== 'Idle') {
+        useCallStore().setBackground(true);
+    }
 }
 function btnCancelCallModal() {
     isShowCallModal.value = false;
@@ -171,6 +181,6 @@ function btnCancelCallModal() {
     }
 }
 function btnDoCall() {
-
+    useCallStore().connect();
 }
 </script>
