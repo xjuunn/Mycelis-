@@ -9,6 +9,14 @@ export async function send(dto: CreateMessageDto) {
     useEmitt().emitter.emit('message:send', msg.data);
     return msg;
 }
+
+/** 发送临时消息 Socket */
+export async function sendTemp(dto: CreateMessageDto) {
+    const msg = await useSocket()?.emit('message:tempSend', dto) ?? new Result({}, 900, 'useSocket() 为null');
+    useEmitt().emitter.emit('message:tempSend', msg.data);
+    return msg;
+}
+
 /** 已读 */
 export async function read(friendId: number) {
     return await useSocket()?.emit('message:userreadAll', friendId);
@@ -21,6 +29,15 @@ export function onReceived(listener: (msg: MessageANDSenderReceiver) => void) {
     }
     useSocket()?.socket?.on('message:receive', handler)
     onUnmounted(() => useSocket()?.socket?.off('message:receive', handler))
+}
+
+/** 当接收临时消息 */
+export function onReceivedTemp(listener: (msg: MessageANDSenderReceiver) => void) {
+    const handler = (data: unknown) => {
+        listener(data as MessageANDSenderReceiver);
+    }
+    useSocket()?.socket?.on('message:receiveTemp', handler)
+    onUnmounted(() => useSocket()?.socket?.off('message:receiveTemp', handler))
 }
 
 /** 当发送消息 */

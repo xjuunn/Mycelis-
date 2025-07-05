@@ -34,6 +34,17 @@ export class MessageGateway {
     return message;
   }
 
+  @SubscribeMessage('message:tempSend')
+  async sendTempMessage(
+    @MessageBody() msg: CreateMessageDto,
+    @Token() tokenInfo: TokenInfo,
+    @ConnectedSocket() client: Socket
+  ) {
+    client.to('user:' + msg.receiverId).emit('message:receiveTemp', msg);
+    client.to('user:' + tokenInfo.id).emit('message:receiveTemp', msg);
+    return msg;
+  }
+
   @SubscribeMessage('message:userreadAll')
   readAll(@MessageBody() userId: string, @Token() tokenInfo: TokenInfo) {
     return this.doReadAll(tokenInfo.id, +userId)
