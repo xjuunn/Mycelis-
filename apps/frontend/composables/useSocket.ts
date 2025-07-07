@@ -13,11 +13,7 @@ export const useSocket = () => {
             // 注册设备
             socket.emit('client:connect', { name: deviceName, os: "Browser" }, ({ data }: any) => {
                 localStorage.setItem("deviceName", data.name); // 更新设备名
-            })
-            // // 监听接收消息
-            // socket.on('message:receive', (msg) => {
-            //     console.log("receive:", msg);
-            // })
+            });
         }
     }
     function emit<T = any>(ev: string, data: any = {}): Promise<Result<T>> {
@@ -26,9 +22,6 @@ export const useSocket = () => {
                 Math.floor(msg.code / 100) === 2 ? res(msg) : rej(msg))
         })
     }
-    // function on<T = any>(ev: string, listener: (data: T, ...args: any[]) => void) {
-    //     socket?.on(ev, listener);
-    // }
 
     return {
         socket, emit, init

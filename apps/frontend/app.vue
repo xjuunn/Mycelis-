@@ -15,6 +15,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { init as initTempMessage } from "~/api/message/tempMessage";
 useHead({
   link: [
     {
@@ -35,6 +36,7 @@ onMounted(() => {
   if (import.meta.client) {
     // 初始化 Socket 客户端
     useSocket()?.init();
+    initTempMessage();
     // 初始化 Peer 客户端
     usePeer();
     // 检查客户端状态

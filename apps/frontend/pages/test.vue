@@ -6,9 +6,10 @@
 </template>
 
 <script setup>
-const runtimeconfig = useRuntimeConfig();
-import Peer from 'peerjs';
-function test() {
-  usePeer()
+import { test as SendTempMessage, getUserInfo } from '~/api/message/tempMessage';
+async function test() {
+  const data = await getUserInfo(22)
+  console.log(data);
+
 }
 </script>

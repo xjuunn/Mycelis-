@@ -40,9 +40,16 @@ export class MessageGateway {
     @Token() tokenInfo: TokenInfo,
     @ConnectedSocket() client: Socket
   ) {
-    client.to('user:' + msg.receiverId).emit('message:receiveTemp', msg);
-    client.to('user:' + tokenInfo.id).emit('message:receiveTemp', msg);
-    return msg;
+    const msgSend = {
+      ...msg,
+      senderId: tokenInfo.id,
+      timestamp: Date.now(),
+    };
+    client.to('user:' + msg.receiverId).emit('message:receiveTemp', msgSend);
+    client.to('user:' + tokenInfo.id).emit('message:receiveTemp', msgSend);
+    console.log("后端收到消息", msgSend);
+
+    return msgSend;
   }
 
   @SubscribeMessage('message:userreadAll')
