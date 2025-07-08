@@ -47,8 +47,6 @@ export class MessageGateway {
     };
     client.to('user:' + msg.receiverId).emit('message:receiveTemp', msgSend);
     client.to('user:' + tokenInfo.id).emit('message:receiveTemp', msgSend);
-    console.log("后端收到消息", msgSend);
-
     return msgSend;
   }
 

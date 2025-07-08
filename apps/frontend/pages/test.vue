@@ -8,8 +8,9 @@
 <script setup>
 import { test as SendTempMessage, getUserInfo } from '~/api/message/tempMessage';
 async function test() {
-  const data = await getUserInfo(22)
-  console.log(data);
+  getUserInfo(22, info => {
+    console.log('getUserInfo', info);
+  })
 
 }
 </script>

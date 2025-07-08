@@ -2,7 +2,7 @@ import { Model, Result } from '@mycelis/types';
 export type ReceiveTempMessage = CreateTempMessageDto & { senderId: number, timestamp: number };
 
 /** 发送临时消息 Socket */
-export async function sendTemp(dto: CreateTempMessageDto) {
+export async function sendTemp(dto: CreateTempMessageDto, callback?: (msg: ReceiveTempMessage) => void) {
     if (dto.uid === undefined) {
         dto.uid = crypto.randomUUID();
     }
@@ -11,6 +11,7 @@ export async function sendTemp(dto: CreateTempMessageDto) {
     return new Promise((res, rej) => {
         useSocket()?.socket?.on('message:receiveTemp', (data: ReceiveTempMessage) => {
             if (data.uid !== dto.uid) return;
+            if (callback) callback(data);
             res(data);
         });
         if (dto.needReply === false) res('ok');
@@ -80,11 +81,11 @@ export function test(msg: CreateTempMessageDto) {
 }
 
 /** 获取用户详细信息 */
-export function getUserInfo(userId: number) {
+export function getUserInfo(userId: number, callback: (info: ReceiveTempMessage) => void) {
     return sendTemp({
         receiverId: userId,
         message: "getUserInfo",
         type: 'Request',
         payload: {}
-    })
+    }, callback)
 }
