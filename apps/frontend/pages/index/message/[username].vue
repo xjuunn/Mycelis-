@@ -53,7 +53,7 @@
                     </div>
                     <p class="mt-2 font-bold">{{ userData?.displayName ?? userData?.name ?? username }}</p>
                 </div>
-                <div class="p-3 pt-4 flex gap-3 items-center justify-center">
+                <div class="p-3 pt-4 flex gap-2 items-center justify-center">
                     <label for="call-option-audio" class="opacity-70 text-sm inline-flex items-center">语音：
                         <input id="call-option-audio" v-model="callOption.audio" type="checkbox"
                             class="toggle toggle-sm">
@@ -74,7 +74,11 @@
                     <button class="btn btn-sm btn-ghost join-item" @click="btnCancelCallModal">
                         取消
                     </button>
-                    <button class="btn btn-sm btn-primary join-item" @click="btnDoCall">呼叫</button>
+                    <button class="btn btn-sm btn-primary join-item" v-motion-slide-right
+                        v-if="useCallStore().callStatus == 'Idle'" @click="btnDoCall">呼叫</button>
+                    <button v-else v-motion-slide-right class="btn btn-sm btn-success join-item">呼叫中
+                        <span class="loading loading-ring loading-sm"></span>
+                    </button>
                 </div>
             </template>
 
@@ -99,7 +103,7 @@ const isShowCallModal = ref(false);
 const callOption = ref({
     audio: true,
     video: false,
-    screen: false
+    screen: false,
 })
 const mediaPreview = useTemplateRef('mediaPreview');
 function btnBack() {
@@ -163,24 +167,26 @@ async function btnShowCallModal(type: 'voice' | 'video' | 'screen') {
         callOption.value.video = false;
         callOption.value.screen = true;
     }
-    // mediaPreview.value?.start();
-    mediaPreview.value?.startWatch();
+    mediaPreview.value?.start();
+
 }
 // 点击通话Modal背景，如果未发起通话，则关闭Modal，如果已发起通话，则转移到后台
 function onCallModalBackdropClick() {
     btnCancelCallModal();
-    if (useCallStore().callStatus !== 'Idle') {
+    if (useCallStore().callStatus === 'Active') {
         useCallStore().setBackground(true);
     }
 }
 function btnCancelCallModal() {
     isShowCallModal.value = false;
-    if (mediaPreview.value) {
-        mediaPreview.value.stop();
-        mediaPreview.value.stopWatch();
-    }
+    useCallStore().disconnect();
+    mediaPreview.value?.stop();
 }
 function btnDoCall() {
-    useCallStore().connect();
+    useCallStore().connect(userData.value?.id ?? -1, {
+        audio: callOption.value.audio,
+        video: callOption.value.video,
+        screen: callOption.value.screen,
+    });
 }
 </script>

@@ -39,6 +39,7 @@ onMounted(() => {
     initTempMessage();
     // 初始化 Peer 客户端
     usePeer();
+    useCallStore().init();
     // 检查客户端状态
     useCheck().check();
   }

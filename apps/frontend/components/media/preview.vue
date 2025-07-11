@@ -8,6 +8,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { WatchHandle } from 'vue';
+
 const userVideoEL = useTemplateRef('userVideo');
 const displayVideoEL = useTemplateRef('displayVideo');
 type callOptionType = {
@@ -18,101 +20,40 @@ type callOptionType = {
 const props = defineProps<{
     callOption: callOptionType;
 }>();
-const { stream: streamDisplay, start: startDisplay, stop: stopDisplay } = useDisplayMedia();
-const { stream: streamUser, start: startUser, stop: stopUser } = useUserMedia({
-    constraints: {
-        audio: false,
-        video: true
-    }
-});
 
+let unwatchUserMedia: WatchHandle | null = null;
+let unwatchDisplayMedia: WatchHandle | null = null;
+async function start() {
+    unwatchUserMedia = watch(() => [props.callOption.audio, props.callOption.video], async () => {
+        useMediaStore().userMedia.stop();
+        if (!props.callOption.audio && !props.callOption.video) return;
+        const stream = await useMediaStore().startUserMedia(props.callOption.video, props.callOption.audio);
+        if (userVideoEL.value && stream) {
+            userVideoEL.value.srcObject = stream;
+            userVideoEL.value.play();
+        }
+    }, { immediate: true })
+    unwatchDisplayMedia = watch(() => props.callOption.screen, async () => {
+        useMediaStore().displayMedia.stop();
+        if (!props.callOption.screen) return;
+        const stream = await useMediaStore().startDisplayMedia(props.callOption.screen);
+        if (displayVideoEL.value && stream) {
+            displayVideoEL.value.srcObject = stream;
+            displayVideoEL.value.play();
+        }
+    }, { immediate: true });
+}
 
-function start() {
-    // if (props.callOption.video) {
-    //     startUserMedia();
-    // } else {
-    //     stopUserMedia();
-    // }
-    // if (props.callOption.screen) {
-    //     startDisplayMedia();
-    // } else {
-    //     stopDisplayMedia();
-    // }
-}
-function startUserMedia() {
-    if (props.callOption.video) {
-        startUser();
-        watchEffect(() => {
-            if (userVideoEL.value && streamUser.value) {
-                userVideoEL.value.srcObject = streamUser.value;
-                userVideoEL.value.play();
-            }
-        });
-    }
-}
-function startDisplayMedia() {
-    if (props.callOption.screen) {
-        startDisplay();
-        watchEffect(() => {
-            if (displayVideoEL.value && streamDisplay.value) {
-                displayVideoEL.value.srcObject = streamDisplay.value;
-                displayVideoEL.value.play();
-            }
-        });
-    }
-}
 function stop() {
-    stopUserMedia();
-    stopDisplayMedia();
-}
-function stopUserMedia() {
-    stopUser();
-}
-function stopDisplayMedia() {
-    stopDisplay();
-}
-
-let watchUserMedia: any = null;
-let watchDisplayMedia: any = null;
-
-function startWatch() {
-    watchUserMedia = watchEffect(() => {
-        if (props.callOption.video) {
-            startUserMedia();
-        } else {
-            stopUserMedia();
-        }
-    });
-
-    watchDisplayMedia = watchEffect(() => {
-        if (props.callOption.screen) {
-            startDisplayMedia();
-        } else {
-            stopDisplayMedia();
-        }
-    });
-}
-
-function stopWatch() {
-    if (watchUserMedia) {
-        watchUserMedia();
-        watchUserMedia = null;
-    }
-    if (watchDisplayMedia) {
-        watchDisplayMedia();
-        watchDisplayMedia = null;
-    }
+    if (unwatchDisplayMedia) unwatchDisplayMedia();
+    if (unwatchUserMedia) unwatchUserMedia();
+    useMediaStore().userMedia.stop();
+    useMediaStore().displayMedia.stop();
 }
 
 defineExpose({
     start,
-    stop,
-    startUserMedia,
-    startDisplayMedia,
-    stopUserMedia,
-    stopDisplayMedia,
-    startWatch,
-    stopWatch
-});
+    stop
+})
 
 </script>
