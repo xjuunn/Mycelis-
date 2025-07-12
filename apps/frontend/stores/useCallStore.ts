@@ -19,31 +19,12 @@ export const useCallStore = defineStore("call", () => {
     }
 
     function connect(userid: number, options: { audio?: boolean; video?: boolean; screen?: boolean, deviceAudio?: boolean } = {}) {
-        console.log(options);
-
-        const { start: userMediaStart, stop: userMediaStop, stream: userMediaStream } = useUserMedia({
-            constraints: {
-                audio: options.audio ?? false,
-                video: options.video ?? false,
-            }
-        })
-        const { start: displayMediaStart, stop: displayMediaStop, stream: displayMediaStream } = useDisplayMedia({
-            audio: options.deviceAudio ?? false,
-            video: options.screen ?? false,
-        });
 
         if (import.meta.client) {
             getUserInfo(userid, info => {
-                displayMediaStart();
-                if (displayMediaStream.value) {
-                    console.log("123");
-                    usePeer().peer.call(info.payload.peerId, displayMediaStream.value);
-                    console.log("呼叫：", info.payload.peerId);
 
-                }
             });
         }
-
         _callStatus.value = 'Initiating';
     }
 

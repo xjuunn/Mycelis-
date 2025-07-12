@@ -11,6 +11,7 @@
       <div class="alert alert-success"></div>
       <div class="alert alert-warning"></div>
     </div>
+    <MediaAnswer></MediaAnswer>
     <div id="appBottom"></div>
   </div>
 </template>
