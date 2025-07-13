@@ -42,8 +42,12 @@ onMounted(() => {
 })
 
 function init() {
-    usePeer().peer.on('call', (call) => {
-        call.answer();
+    usePeer().peer.on('call', async (call) => {
+        // const stream = await useMediaStore().startDisplayMedia(true);
+        const stream = new MediaStream();
+        console.log("stream：", stream);
+
+        call.answer(stream);
         callOption.value = call;
         isShow.value = true;
         call.on('close', () => {
@@ -55,8 +59,9 @@ function btnReject() {
     useCallStore().disconnect();
     isShow.value = false;
 }
-function btnAnswer() {
-    
+async function btnAnswer() {
+    const stream = await useMediaStore().startUserMedia(false, true);
+    callOption.value?.addStream(stream);
     isShow.value = false;
 }
 </script>

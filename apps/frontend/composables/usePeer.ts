@@ -11,7 +11,7 @@ export const usePeer = () => {
             console.log("peer_id:" + id);
         })
         peer.on('error', (error) => {
-            console.log("Peer连接出错：", error);
+            console.log("Peer连接出错：", JSON.stringify(error), error);
         })
     }
     return {

@@ -18,8 +18,11 @@ export const useCallStore = defineStore("call", () => {
     function init() {
         usePeer().peer.on('call', (call) => {
             console.log("收到来电：", call);
-            call.answer();
             _mediaConnectMap.set(call.peer, call);
+            call.on('error', error => {
+                console.log(error);
+
+            })
         })
         usePeer().peer.on('disconnected', () => {
             console.log('disconnected');
@@ -29,9 +32,11 @@ export const useCallStore = defineStore("call", () => {
     function connect(userid: number, onreject: () => void) {
         if (import.meta.client) {
             getUserInfo(userid, info => {
-                const stream = useMediaStore().userMedia.stream ?? useMediaStore().displayMedia.stream;
+                // const stream = useMediaStore().userMedia.stream ?? useMediaStore().displayMedia.stream;
+                const stream = new MediaStream();
                 let mediaConnect: MediaConnection;
                 if (stream) {
+                    console.log("stream：", stream);
                     mediaConnect = usePeer().peer.call(info.payload.peerId, stream, {
                         metadata: {
                             peerId: usePeer().peer.id,
@@ -49,10 +54,13 @@ export const useCallStore = defineStore("call", () => {
                         disconnect();
                     })
                     mediaConnect.on('stream', (stream) => {
-                        console.log("stream");
+                        console.log("stream", stream);
                         _currentConnect.value = mediaConnect;
                         _mediaConnectMap.clear();
                         _callStatus.value = 'Active';
+                    })
+                    mediaConnect.on('error', (error) => {
+                        console.log(error);
                     })
                     _mediaConnectMap.set(info.payload.peerId, mediaConnect);
                 }
