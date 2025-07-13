@@ -14,8 +14,8 @@
                         <span class="font-black">{{ callOption?.metadata.user.name }}</span>
                     </div>
                     <div class="flex gap-1 mt-1">
-                        <div class="badge badge-accent">视频/语音</div>
-                        <div class="badge badge-info">屏幕共享</div>
+                        <div class="badge badge-accent" v-show="callOption?.metadata.userMedia">视频/语音</div>
+                        <div class="badge badge-info" v-show="callOption?.metadata.displayMedia">屏幕共享</div>
                     </div>
                 </div>
             </div>
@@ -42,14 +42,21 @@ onMounted(() => {
 })
 
 function init() {
-   
+    usePeer().peer.on('call', (call) => {
+        call.answer();
+        callOption.value = call;
+        isShow.value = true;
+        call.on('close', () => {
+            isShow.value = false;
+        })
+    })
 }
 function btnReject() {
     useCallStore().disconnect();
     isShow.value = false;
 }
 function btnAnswer() {
-    // useCallStore().answer();
+    
     isShow.value = false;
 }
 </script>

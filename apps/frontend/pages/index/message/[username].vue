@@ -183,6 +183,8 @@ function btnCancelCallModal() {
     mediaPreview.value?.stop();
 }
 function btnDoCall() {
-    useCallStore().connect(userData.value?.id ?? -1);
+    useCallStore().connect(userData.value?.id ?? -1, () => {
+        isShowCallModal.value = false;
+    });
 }
 </script>
