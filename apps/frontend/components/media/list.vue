@@ -1,13 +1,6 @@
 <template>
     <div data-tauri-drag-region class="border h-full p-2 grid items-center justify-center gap-2 overflow-y-auto"
         :class="gridClass">
-        <div class="aspect-video">
-            <div class="border h-full flex items-center justify-center gap-2">
-                <button class="btn btn-sm btn-accent" @click="decrementCount">-1</button>
-                {{ count }}
-                <button class="btn btn-sm btn-accent" @click="incrementCount">+1</button>
-            </div>
-        </div>
         <div class="aspect-video" v-for="item in count" :key="item">
             <MediaItem />
         </div>
@@ -16,19 +9,8 @@
 
 <script lang="ts" setup>
 import { breakpointsTailwind } from '@vueuse/core';
-
 const { md, lg, xl, '2xl': xxl } = useBreakpoints(breakpointsTailwind);
-
 const count = ref(0);
-
-const decrementCount = () => {
-    if (count.value <= 0) return;
-    count.value--;
-};
-
-const incrementCount = () => {
-    count.value++;
-};
 
 const gridClass = computed(() => {
     const totalItems = count.value + 1;
@@ -53,4 +35,11 @@ const gridClass = computed(() => {
     }
     return 'grid-cols-1';
 });
+
+onMounted(() => {
+    console.log(useCallStore().currentConnect);
+})
+
+
+
 </script>

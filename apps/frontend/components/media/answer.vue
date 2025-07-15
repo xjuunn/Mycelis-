@@ -43,6 +43,7 @@ onMounted(() => {
 
 function init() {
     usePeer().peer.on('call', async (call) => {
+        if (call.metadata.trust) return;
         callOption.value = call;
         isShow.value = true;
         call.on('close', () => {
@@ -56,11 +57,9 @@ function btnReject() {
     isShow.value = false;
 }
 async function btnAnswer() {
-    const stream = await useMediaStore().startUserMedia(false, true);
+    callOption.value?.close();
     if (callOption.value) {
-        useCallStore().connectByPeerId(callOption.value.peer, () => {
-
-        }, true);
+        useCallStore().connectByPeerId(callOption.value.peer, () => { }, true, { trust: true });
     }
     isShow.value = false;
 }
