@@ -52,16 +52,11 @@ export const useCallStore = defineStore("call", () => {
             })
             const stream = new MediaStream();
             if (_readyForUserPeerId.includes(call.peer)) {
-                // const userStream = useMediaStore().userMedia.stream;
-                // const displayStream = useMediaStore().displayMedia.stream;
-                // console.log("x1:", userStream, displayStream);
-                // if (userStream) userStream.getTracks().forEach(track => stream.addTrack(track));
-                // if (displayStream) displayStream.getTracks().forEach(track => stream.addTrack(track));
                 if (useMediaStore().option.audio || useMediaStore().option.video) {
                     const userStream = await useMediaStore().startUserMedia(useMediaStore().option.video, useMediaStore().option.audio);
                     if (userStream) userStream.getTracks().forEach(track => stream.addTrack(track));
                 }
-                if(useMediaStore().option.screen) {
+                if (useMediaStore().option.screen) {
                     const displayStream = await useMediaStore().startDisplayMedia(true);
                     if (displayStream) displayStream.getTracks().forEach(track => stream.addTrack(track));
                 }
