@@ -59,6 +59,7 @@ function btnReject() {
 async function btnAnswer() {
     callOption.value?.close();
     if (callOption.value) {
+        useCallStore().setCurrentUserInfo(callOption.value.metadata)
         useCallStore().connectByPeerId(callOption.value.peer, () => { }, true, { trust: true });
     }
     isShow.value = false;

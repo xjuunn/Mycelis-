@@ -27,7 +27,6 @@ async function start() {
     unwatchUserMedia = watch(() => [props.callOption.audio, props.callOption.video], async () => {
         useMediaStore().userMedia.stop();
         if (!props.callOption.audio && !props.callOption.video) return;
-        console.log("启动UserMedia");
         const stream = await useMediaStore().startUserMedia(props.callOption.video, props.callOption.audio);
         if (userVideoEL.value && stream) {
             userVideoEL.value.srcObject = stream;

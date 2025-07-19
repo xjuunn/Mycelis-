@@ -1,5 +1,6 @@
 import { getUserInfo } from '~/api/message/tempMessage';
 import { type MediaConnection } from 'peerjs';
+import type { Model } from '@mycelis/types';
 export const useCallStore = defineStore("call", () => {
     // 定义通话状态
     const _callStatus = ref<'Idle' | 'Initiating' | 'Active'>('Idle');
@@ -8,11 +9,16 @@ export const useCallStore = defineStore("call", () => {
     const _mediaConnectMap = new Map<string, MediaConnection>();
     const _currentConnect = ref<MediaConnection | null>(null);
     let _readyForUserPeerId: string[] = [];
+    let _currentUserInfo: Ref<CallMetaData | null> = ref(null);
+    type CallMetaData = { peerId: string; user: Model.User }
     const callStatus = computed(() => _callStatus.value);
     const isBackground = computed(() => _isBackground.value);
-    const readyForUserPeerId = computed(() => _readyForUserPeerId.valueOf);
     const currentConnect = computed(() => _currentConnect.value);
+    const currentUserInfo = computed(() => _currentUserInfo.value);
 
+    function setCurrentUserInfo(userInfo: CallMetaData) {
+        _currentUserInfo.value = userInfo
+    }
     function setBackground(isBackground: boolean) {
         _isBackground.value = isBackground;
     }
@@ -32,10 +38,6 @@ export const useCallStore = defineStore("call", () => {
     }
 
     function init() {
-        watch(() => useMediaStore().userMedia.stream, (stream) => {
-            console.log('stream改变了：', useMediaStore().userMedia.stream);
-
-        })
         usePeer().peer.on('call', async (call) => {
             if (call.metadata.errorMsg) console.warn(call.metadata.errorMsg);
             if (_callStatus.value !== 'Idle') {
@@ -61,8 +63,15 @@ export const useCallStore = defineStore("call", () => {
                     if (displayStream) displayStream.getTracks().forEach(track => stream.addTrack(track));
                 }
                 setCurrentConnect(call);
+
+                const hasAudio = stream.getAudioTracks().length > 0;
+                const hasVideo = stream.getVideoTracks().length > 0;
+
+                if (!hasAudio) stream.addTrack(createEmptyAudioTrack());
+                if (!hasVideo) stream.addTrack(createDummyVideoTrack());
+                setCurrentUserInfo(call.metadata)
             }
-            // const stream = await useMediaStore().startUserMedia(true, true)
+
             call.answer(stream);
             _mediaConnectMap.set(call.peer, call);
 
@@ -89,10 +98,16 @@ export const useCallStore = defineStore("call", () => {
             }
 
         }
-        // let stream = await useMediaStore().startUserMedia(true, true);
+
+        const hasAudio = stream.getAudioTracks().length > 0;
+        const hasVideo = stream.getVideoTracks().length > 0;
+
+        if (!hasAudio) stream.addTrack(createEmptyAudioTrack());
+        if (!hasVideo) stream.addTrack(createDummyVideoTrack());
+
         let mediaConnect: MediaConnection;
         if (stream) {
-            console.log("stream:", stream.getTracks(), trust);
+            console.log("发送流：", stream.getTracks());
 
             mediaConnect = usePeer().peer.call(peerId, stream, {
                 metadata: {
@@ -103,6 +118,7 @@ export const useCallStore = defineStore("call", () => {
                     ...metadata
                 }
             });
+            
             mediaConnect.on('close', () => {
                 _mediaConnectMap.delete(peerId);
                 useMediaStore().userMedia.stop();
@@ -111,13 +127,11 @@ export const useCallStore = defineStore("call", () => {
                 setStatus('Idle');
                 disconnect();
             })
-            // mediaConnect.on('stream', (stream) => {
-            //     console.log("收到stream");
-
-            //     _currentConnect.value = mediaConnect;
-            //     _mediaConnectMap.clear();
-            //     _callStatus.value = 'Active';
-            // })
+            mediaConnect.on('stream', (stream) => {
+                // _currentConnect.value = mediaConnect;
+                // _mediaConnectMap.clear();
+                // _callStatus.value = 'Active';
+            })
             mediaConnect.on('error', (error) => {
                 console.log(error);
             })
@@ -134,6 +148,7 @@ export const useCallStore = defineStore("call", () => {
             call.close();
         })
         _currentConnect.value?.close();
+        _currentUserInfo.value = null;
         setStatus('Idle');
     }
 
@@ -141,6 +156,41 @@ export const useCallStore = defineStore("call", () => {
         disconnect();
         _readyForUserPeerId = [];
     }
+
+
+    // 构造一个空的视频轨道
+    function createDummyVideoTrack(): MediaStreamTrack {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1;
+        canvas.height = 1;
+        const ctx = canvas.getContext('2d');
+        if (ctx) ctx.fillRect(0, 0, 1, 1);
+
+        const stream = canvas.captureStream();
+        const [track] = stream.getVideoTracks();
+
+        return track;
+    }
+
+    // 构造一个空的音频轨道
+    function createEmptyAudioTrack(): MediaStreamTrack {
+        const ctx = new AudioContext();
+        const oscillator = ctx.createOscillator(); // 创建一个持续输出音频的信号发生器
+        const dst = ctx.createMediaStreamDestination(); // 创建一个目标（即媒体流）
+
+        oscillator.connect(dst); // 把信号连接到目标
+        oscillator.start();
+
+        const [track] = dst.stream.getAudioTracks(); // 获取音频轨道
+
+        const gainNode = ctx.createGain();
+        gainNode.gain.value = 0; // 设置为 0，即静音
+        oscillator.disconnect(); // 断开原来的连接
+        oscillator.connect(gainNode).connect(dst); // 重连接，先经过静音
+
+        return track;
+    }
+
 
     return {
         init,
@@ -152,6 +202,8 @@ export const useCallStore = defineStore("call", () => {
         isBackground,
         setBackground,
         setReadyForUser,
-        reset
+        reset,
+        setCurrentUserInfo,
+        currentUserInfo
     }
 })
