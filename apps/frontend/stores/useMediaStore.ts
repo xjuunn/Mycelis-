@@ -12,8 +12,6 @@ export const useMediaStore = defineStore('media', () => {
     const option = computed(() => _option.value)
 
     function startUserMedia(video: boolean, audio: boolean) {
-        console.log(`video:${video},audio:${audio}`);
-
         _option.value.audio = audio;
         _option.value.video = video;
         _userMedia.value.stop();

@@ -54,18 +54,44 @@
                     <p class="mt-2 font-bold">{{ userData?.displayName ?? userData?.name ?? username }}</p>
                 </div>
                 <div class="p-3 pt-4 flex gap-2 items-center justify-center">
-                    <label for="call-option-audio" class="opacity-70 text-sm inline-flex items-center">语音：
+                    <!-- <label for="call-option-audio" class="opacity-70 text-sm inline-flex items-center">语音：
                         <input id="call-option-audio" v-model="callOption.audio" type="checkbox"
                             class="toggle toggle-sm">
-                    </label> <br>
-                    <label for="call-option-video" class="opacity-70 text-sm inline-flex items-center">相机：
-                        <input id="call-option-video" v-model="callOption.video" type="checkbox"
-                            class="toggle toggle-sm">
-                    </label> <br>
-                    <label for="call-option-screen" class="opacity-70 text-sm inline-flex items-center">屏幕：
-                        <input id="call-option-screen" v-model="callOption.screen" type="checkbox"
-                            class="toggle toggle-sm">
-                    </label> <br>
+                    </label> <br> -->
+                    <div class="tabs">
+                        <label class="tab" :class="{ 'opacity-50': !callOption.audio }"
+                            @click="callOption.audio = !callOption.audio">
+                            <input type="radio" name="my_tabs_4" />
+                            <label class="swap swap-rotate">
+                                <input type="checkbox" disabled v-model="callOption.audio" />
+                                <Icon name="mingcute:mic-fill" class="swap-on"></Icon>
+                                <Icon name="mingcute:mic-off-fill" class="swap-off"></Icon>
+                            </label> &nbsp;
+
+                            <span v-motion-slide-bottom v-if="callOption.audio">语</span>
+                            <span v-motion-slide-top v-else>静</span>音
+                        </label>
+
+                        <label class="tab" :class="{ 'opacity-50': !callOption.video }" @click="checkVideo">
+                            <input type="radio" name="my_tabs_4" />
+                            <label class="swap swap-rotate">
+                                <input type="checkbox" disabled v-model="callOption.video" />
+                                <Icon name="mingcute:camera-2-fill" class="swap-on"></Icon>
+                                <Icon name="mingcute:camera-2-off-fill" class="swap-off"></Icon>
+                            </label> &nbsp;
+                            视频
+                        </label>
+
+                        <label class="tab" :class="{ 'opacity-50': !callOption.screen }" @click="checkScreen">
+                            <input type="radio" name="my_tabs_4" />
+                            <label class="swap swap-rotate">
+                                <input type="checkbox" disabled v-model="callOption.screen" />
+                                <Icon name="material-symbols:computer" class="swap-on"></Icon>
+                                <Icon name="material-symbols:computer-cancel" class="swap-off"></Icon>
+                            </label>&nbsp;
+                            屏幕
+                        </label>
+                    </div>
                 </div>
                 <MediaPreview v-show="isShowCallModal" ref="mediaPreview" :call-option="callOption"></MediaPreview>
             </template>
@@ -148,6 +174,16 @@ async function btnSend() {
 }
 function btnTest() {
     messageList.value?.scrollToBottom(true);
+}
+
+function checkVideo() {
+    callOption.value.video = !callOption.value.video;
+    callOption.value.screen = false;
+}
+
+function checkScreen() {
+    callOption.value.screen = !callOption.value.screen;
+    callOption.value.video = false;
 }
 
 // 发起通话按钮
