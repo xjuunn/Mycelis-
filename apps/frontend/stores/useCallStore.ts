@@ -107,8 +107,6 @@ export const useCallStore = defineStore("call", () => {
 
         let mediaConnect: MediaConnection;
         if (stream) {
-            console.log("发送流：", stream.getTracks());
-
             mediaConnect = usePeer().peer.call(peerId, stream, {
                 metadata: {
                     peerId: usePeer().peer.id,

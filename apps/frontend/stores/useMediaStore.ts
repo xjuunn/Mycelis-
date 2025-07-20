@@ -8,8 +8,13 @@ export const useMediaStore = defineStore('media', () => {
         screen: false,
     })
     const userMedia = computed(() => _userMedia.value);
-    const displayMedia = computed(() => _displayMedia.value)
-    const option = computed(() => _option.value)
+    const displayMedia = computed(() => _displayMedia.value);
+    const option = computed(() => _option.value);
+    function setOption(audio: boolean, video: boolean, screen: boolean) {
+        _option.value.audio = audio;
+        _option.value.video = video;
+        _option.value.screen = screen;
+    }
 
     function startUserMedia(video: boolean, audio: boolean) {
         _option.value.audio = audio;
@@ -45,5 +50,6 @@ export const useMediaStore = defineStore('media', () => {
         startUserMedia,
         startDisplayMedia,
         option,
+        setOption
     }
 })

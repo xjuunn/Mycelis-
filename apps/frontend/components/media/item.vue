@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full border">{{ trackItem.kind }} {{ trackItem.origin }}
+    <div class="h-full rounded-md overflow-hidden">
         <video ref="video" class="w-full h-full"></video>
     </div>
 </template>

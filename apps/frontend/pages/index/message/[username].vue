@@ -219,6 +219,9 @@ function btnCancelCallModal() {
     mediaPreview.value?.stop();
 }
 function btnDoCall() {
+    useMediaStore().setOption(callOption.value.audio, callOption.value.video, callOption.value.screen);
+    if (!callOption.value.screen) useMediaStore().displayMedia.stop();
+    if (!callOption.value.video) useMediaStore().userMedia.stop();
     useCallStore().connectByUser(userData.value?.id ?? -1, () => {
         isShowCallModal.value = false;
     });
