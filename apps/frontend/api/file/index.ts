@@ -34,5 +34,6 @@ export function uploadAvatar(file: File) {
  * @param fileUrl 文件名
  */
 export function getFileUrl(fileUrl: string) {
-    return `${useAppStore().baseurl}/file${fileUrl}`
+    if (fileUrl) return `${useAppStore().baseurl}/file${fileUrl}`
+    else return '';
 }
