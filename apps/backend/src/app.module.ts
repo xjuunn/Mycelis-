@@ -19,6 +19,7 @@ import { FriendTagModule } from './res/friend-tag/friend-tag.module';
 import { MessageModule } from './res/message/message.module';
 import { SocketClientModule } from './res/socket-client/socket-client.module';
 import { UserService } from './res/user/user.service';
+import { AppinfoModule } from './res/appinfo/appinfo.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { UserService } from './res/user/user.service';
     FriendTagModule,
     MessageModule,
     SocketClientModule,
+    AppinfoModule,
   ],
   controllers: [AppController],
   providers: [

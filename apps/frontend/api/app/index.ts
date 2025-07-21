@@ -1,6 +1,6 @@
 import { Result } from '@mycelis/types';
 import type { Model } from '@mycelis/types';
-
+export * as Info from './info';
 // 检查服务器连通性和延迟
 export async function checkConnect() {
     let time1 = Date.now();
@@ -13,4 +13,5 @@ export async function checkConnect() {
 // 检查客户端登录状态
 export function checkLogin() {
     return useAxios().axios.get<Result<Model.User>>('/checkLogin');
-} 
+}
+
