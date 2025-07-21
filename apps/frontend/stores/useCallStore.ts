@@ -116,7 +116,7 @@ export const useCallStore = defineStore("call", () => {
                     ...metadata
                 }
             });
-            
+
             mediaConnect.on('close', () => {
                 _mediaConnectMap.delete(peerId);
                 useMediaStore().userMedia.stop();
@@ -189,6 +189,20 @@ export const useCallStore = defineStore("call", () => {
         return track;
     }
 
+    async function useVideoMedia() {
+
+        currentConnect.value?.localStream.getTracks().forEach(track => {
+            track.stop();
+            currentConnect.value?.localStream.removeTrack(track);
+        })
+        const stream = await useMediaStore().startUserMedia(true, useMediaStore().option.audio);
+        stream.getTracks().forEach(track => {
+            console.log(track);
+            currentConnect.value?.localStream.addTrack(track)
+        })
+        console.log(currentConnect.value?.localStream.getTracks());
+
+    }
 
     return {
         init,
@@ -202,6 +216,7 @@ export const useCallStore = defineStore("call", () => {
         setReadyForUser,
         reset,
         setCurrentUserInfo,
-        currentUserInfo
+        currentUserInfo,
+        useVideoMedia
     }
 })

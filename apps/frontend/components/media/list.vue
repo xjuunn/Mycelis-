@@ -46,8 +46,12 @@ onMounted(() => {
 
 useCallStore().currentConnect?.on('stream', (stream) => {
     stream.getTracks().forEach(track => addTrack(track, 'remote'));
-    stream.onaddtrack = trackEvent => addTrack(trackEvent.track, 'remote');
-    stream.onaddtrack = trackEvent => addTrack(trackEvent.track, 'remote');
+    stream.onaddtrack = trackEvent => {
+        console.log("添加轨道事件：", trackEvent.target);
+
+        addTrack(trackEvent.track, 'remote');
+    }
+    stream.onremovetrack = trackEvent => removeTrack(trackEvent.track.id);
 })
 
 function addTrack(track: MediaStreamTrack, origin: 'local' | 'remote') {
