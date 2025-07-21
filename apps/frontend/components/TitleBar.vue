@@ -1,6 +1,11 @@
 <template>
-    <div class="flex" data-tauri-drag-region>
-        <div class="flex-1" data-tauri-drag-region></div>
+    <div class="flex relative" data-tauri-drag-region>
+        <div class="flex-1" data-tauri-drag-region>
+            <div class="flex-1 flex min-h-full sm:max-w-[300px] sm:border-r sm:border-r-base-content/10 flex-col"
+                data-tauri-drag-region>
+
+            </div>
+        </div>
         <div class="inline-flex items-center justify-center gap-4 p-2" data-tauri-drag-region>
             <Icon class="text-base-content/70 hover:text-base-content/100 cursor-pointer" name="mingcute:minimize-line"
                 size="0.9rem" @click="minimizeWindow"></Icon>

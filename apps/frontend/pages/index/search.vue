@@ -1,6 +1,6 @@
 <template>
     <div class="h-full flex flex-col">
-        <div class="navbar border-b border-b-base-content/10">
+        <div class="navbar min-h-4 h-10 border-b border-b-base-content/10">
 
         </div>
         <div class="flex-1 overflow-y-auto flex flex-col items-center">
