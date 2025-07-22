@@ -23,7 +23,7 @@
                         {{ new Date(item.committer.date).toLocaleDateString() }}
                     </span>
                     <span v-else>
-                        {{ item.committer.relativeTime.replace('hours ago', '小时前').replace('days ago', '天前')
+                        {{ item.committer.relativeTime?.replace('hours ago', '小时前').replace('days ago', '天前')
                             .replace('minutes ago', '分钟前').replace('seconds ago', '秒前') }}
                     </span>
 
@@ -32,15 +32,15 @@
             <div class="inline-flex gap-1 items-center">
                 <a @click="doOpenUrl(`${gitInfo?.url}/commit/${item.shortHash}`)"
                     class="link opacity-60 hover:opacity-90 text-accent">#{{ item.shortHash }}</a>
-                <div v-show="item.title.includes(':')" class="badge badge-sm badge-soft" :class="{
-                    'badge-success': item.title.slice(0, item.title.indexOf(':')).includes('feat'),
-                    'badge-info': item.title.slice(0, item.title.indexOf(':')).includes('style'),
-                    'badge-accent': item.title.slice(0, item.title.indexOf(':')).includes('fix'),
-                    'badge-primary': item.title.slice(0, item.title.indexOf(':')).includes('refactor'),
-                }">{{ item.title.slice(0, item.title.indexOf(':')) }}</div>
-                {{ item.title.slice(item.title.indexOf(':') + 1) }}
+                <div v-show="item.title?.includes(':')" class="badge badge-sm badge-soft" :class="{
+                    'badge-success': item.title?.slice(0, item.title.indexOf(':')).includes('feat'),
+                    'badge-info': item.title?.slice(0, item.title.indexOf(':')).includes('style'),
+                    'badge-accent': item.title?.slice(0, item.title.indexOf(':')).includes('fix'),
+                    'badge-primary': item.title?.slice(0, item.title.indexOf(':')).includes('refactor'),
+                }">{{ item.title?.slice(0, item.title.indexOf(':')) }}</div>
+                {{ item.title?.slice(item.title.indexOf(':') + 1) }}
                 <span v-show="item.body" class="link opacity-60 hover:opacity-90"
-                    @click="showUpdateModal(item)">详情</span>
+                    @click="showUpdateModal(item)">其他内容</span>
             </div>
         </div>
         <br>
@@ -59,7 +59,10 @@
                         <div class="text-base-content/60">{{ updateDetails?.shortHash }}</div>
                     </div>
                     提交信息: {{ updateDetails?.title }} <br>
-                    详情: {{ updateDetails?.body }}
+                    其他内容: <br> <br>
+                    <div class="text-sm opacity-80 ml-4" v-for="item in updateDetails?.body?.split('\n')">
+                        {{ item }}
+                    </div>
                 </div>
             </template>
             <template #action>
@@ -72,7 +75,7 @@
 <script lang="ts" setup>
 import { openUrl } from '@tauri-apps/plugin-opener'
 import * as APP from '~/api/app';
-let listData = ref<APP.Info.GitLogsResultCommitItem[]>([])
+let listData = ref<APP.Info.GitLogsResultCommitItem[] | any>([])
 const isShowUpdateModal = ref(false);
 const isLoading = ref(true);
 const updateDetails = ref<APP.Info.GitLogsResultCommitItem>();
@@ -91,6 +94,8 @@ async function initData() {
     listData.value = [];
     const { data } = await APP.Info.gitLogs((pageInfo.value.pageNum - 1) * pageInfo.value.pageSize, pageInfo.value.pageSize);
     listData.value = data.data.commits;
+    console.log(listData.value);
+
     isLoading.value = false;
 }
 function showUpdateModal(item: APP.Info.GitLogsResultCommitItem) {

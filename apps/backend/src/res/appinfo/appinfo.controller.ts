@@ -14,26 +14,24 @@ export class AppinfoController {
     try {
       // 使用自定义格式获取 Git 日志
       const { stdout } = await execAsync(
-        `git log --pretty=format:"%h||||||%s||||||%b||||||%cN||||||%ce||||||%ar||||||%aI" --max-count=${pageInfo.take} --skip=${pageInfo.skip} --no-merges`
+        `git log --pretty=format:"%h||||||%s||||||%cN||||||%ce||||||%ar||||||%aI||||||%b++++ " --max-count=${pageInfo.take} --skip=${pageInfo.skip} --no-merges`
       );
-
       // 将日志按行分割
-      const logLines = stdout.split('\n').filter(line => line.trim() !== '');
-
+      const logLines = stdout.split('++++').filter(line => line.trim() !== '');
       // 解析每行日志为 JSON 对象
       const logs = logLines.map(line => {
-        const [
+        let [
           shortHash,
           title,
-          body,
           committerName,
           committerEmail,
           relativeTime,
           committerDateISO,
+          body,
         ] = line.split('||||||');
 
         return {
-          shortHash,
+          shortHash: shortHash.replace('\n', '').trim(),
           title,
           body: body.trim(),
           committer: {
