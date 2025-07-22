@@ -19,3 +19,12 @@ export type GitLogsResultCommitItem = {
         relativeTime: string
     }
 }
+
+export function gitInfo() {
+    return useAxios().axios.get<Result<GitInfoResult>>('/appinfo/gitinfo');
+}
+
+export type GitInfoResult = {
+    name: string,
+    url: string,
+}

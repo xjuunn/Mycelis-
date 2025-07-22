@@ -51,4 +51,20 @@ export class AppinfoController {
     }
   }
 
+  @Get('/gitinfo')
+  async getGitInfo() {
+    let name = '';
+    let url = '';
+    try {
+      const { stdout } = await execAsync('git remote get-url origin');
+      url = stdout.replace('.git', '').replace('\n', '');
+      name = url.split('/').slice(-1)[0];
+    } catch (error) {
+      throw new Error('错误的执行git remote get-url origin：' + error.message);
+    }
+    return {
+      name, url
+    }
+
+  }
 }

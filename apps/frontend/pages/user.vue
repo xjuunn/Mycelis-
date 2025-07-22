@@ -68,6 +68,8 @@
 </template>
 
 <script setup lang="ts">
+import { openUrl } from '@tauri-apps/plugin-opener';
+import * as APP from '~/api/app';
 definePageMeta({ layout: "app-main" })
 const { sm } = useBreakpoints(breakpointsTailwind)
 import { Enums } from '@mycelis/types';
@@ -75,6 +77,7 @@ import { breakpointsTailwind } from '@vueuse/core';
 import * as File from '~/api/file';
 const isShowLogoutModal = ref(false);
 const isShowContent = ref(false);
+const gitInfo = ref<APP.Info.GitInfoResult>()
 const contentMotion = ref({
     initial: { x: 100, opacity: 0 },
     enter: { x: 0, opacity: 1, transition: { duration: 0 } },
@@ -85,9 +88,11 @@ const listMotion = ref({
     enter: { x: 0, opacity: 1, transition: { duration: 0 } },
     delay: 20
 })
-onMounted(() => {
+onMounted(async () => {
     listMotion.value.enter.transition.duration = 200
     contentMotion.value.enter.transition.duration = 200
+    const { data } = await APP.Info.gitInfo();
+    gitInfo.value = data.data;
 })
 
 type ListItem = {
@@ -149,7 +154,11 @@ const listData = ref<ListGroup[]>([
                 icon: 'mingcute:github-2-fill',
                 info: '给个Star吧 ~',
                 onClick: () => {
-                    window.open('https://github.com/xjuunn/Mycelis-', '_blank')
+                    if (useApp().isTauri.value) {
+                        openUrl(gitInfo.value?.url ?? '')
+                    } else {
+                        navigateTo(gitInfo.value?.url ?? '', { open: { target: "_blank" } })
+                    }
                 }
             }
         ]

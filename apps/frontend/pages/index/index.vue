@@ -5,5 +5,12 @@
 </template>
 
 <script setup lang="ts">
+import * as APP from '~/api/app'
+onMounted(() => {
+    init();
+})
+async function init() {
+    
 
+}
 </script>
