@@ -1,12 +1,15 @@
-import { Controller, Get, Query, } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, } from '@nestjs/common';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import { PageInfo } from 'src/d/pageinfo/pageinfo.decorator';
 import { PageRequest } from '@mycelis/types';
+import { ApiOperation } from '@nestjs/swagger';
+import { ContributeHeatmapDTO } from './dto/ContributeHeatmapDTO';
 const execAsync = promisify(exec);
 @Controller('appinfo')
 export class AppinfoController {
 
+  @ApiOperation({ summary: "分页获取git的提交记录" })
   @Get('gitlogs')
   async getGitLogs(@PageInfo() pageInfo: PageRequest = { skip: 0, take: 15 }) {
     if (pageInfo.skip === undefined) pageInfo.skip = 0;
@@ -49,6 +52,7 @@ export class AppinfoController {
     }
   }
 
+  @ApiOperation({ summary: "获取git仓库信息" })
   @Get('/gitinfo')
   async getGitInfo() {
     let name = '';
@@ -65,6 +69,25 @@ export class AppinfoController {
     }
   }
 
-
-  
+  @ApiOperation({ summary: "获取贡献热力图数据" })
+  @Post('/contributeHeatmap')
+  async contributeHeatmap(@Body() contributeHeatmapDTO: ContributeHeatmapDTO) {
+    let cmd = 'git log --pretty=format:"%ad" --date=short';
+    if (contributeHeatmapDTO.start) cmd += ` --since="${contributeHeatmapDTO.start}"`;
+    if (contributeHeatmapDTO.end) cmd += ` --until="${contributeHeatmapDTO.end}"`;
+    if (contributeHeatmapDTO.author) cmd += ` --author="${contributeHeatmapDTO.author}"`;
+    const commitsByDate: Record<string, number> = {};
+    try {
+      const { stdout } = await execAsync(cmd)
+      stdout.split('\n').forEach(date => {
+        commitsByDate[date] = (commitsByDate[date] || 0) + 1;
+      })
+    } catch (error) {
+      throw new Error(`获取贡献热力图数据，执行:${cmd}失败！${error.message}`);
+    }
+    return Object.entries(commitsByDate).map(([date, count]) => ({
+      date,
+      count,
+    }));
+  }
 }
