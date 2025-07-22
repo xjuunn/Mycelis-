@@ -63,6 +63,8 @@ export class AppinfoController {
     return {
       name, url
     }
-
   }
+
+
+  
 }

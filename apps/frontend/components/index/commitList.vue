@@ -1,7 +1,6 @@
 <template>
     <div class="p-2">
         <div>
-            {{ useApp().isTauri }}
             <b>更新</b>
         </div>
         <div v-show="isLoading" class="flex items-center justify-center h-30">
@@ -94,8 +93,6 @@ async function initData() {
     listData.value = [];
     const { data } = await APP.Info.gitLogs((pageInfo.value.pageNum - 1) * pageInfo.value.pageSize, pageInfo.value.pageSize);
     listData.value = data.data.commits;
-    console.log(listData.value);
-
     isLoading.value = false;
 }
 function showUpdateModal(item: APP.Info.GitLogsResultCommitItem) {

@@ -1,6 +1,7 @@
 <template>
     <div class="h-full overflow-scroll p-2">
-        <index-commit-list></index-commit-list>
+        <!-- <index-commit-list></index-commit-list> -->
+        <index-contribute-heatmap></index-contribute-heatmap>
     </div>
 </template>
 
@@ -10,7 +11,7 @@ onMounted(() => {
     init();
 })
 async function init() {
-    
+
 
 }
 </script>
