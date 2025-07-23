@@ -1,15 +1,15 @@
 <template>
-    <div class="overflow-scroll">
+    <div class="w-full overflow-scroll">
         贡献热力图
-        <table>
+        <table v-show="!isloading">
             <tr v-for="tr in 7">
                 <td v-for="td in (option.days / 7) + 1">
-                    <div v-show="heatMapList[7 * (td - 1) + tr]?.date !== undefined"
+                    <div ref="block" v-show="heatMapList[7 * (td - 1) + tr]?.date !== undefined"
                         class="w-[11px] h-[11px] m-[2px] rounded-[3px] bg-success" :class="{
                             'opacity-5': heatMapList[7 * (td - 1) + tr]?.level === 0,
                             'opacity-30': heatMapList[7 * (td - 1) + tr]?.level === 1,
-                            'opacity-60': heatMapList[7 * (td - 1) + tr]?.level === 2,
-                            'opacity-90': heatMapList[7 * (td - 1) + tr]?.level === 3,
+                            'opacity-70': heatMapList[7 * (td - 1) + tr]?.level === 2,
+                            'opacity-100': heatMapList[7 * (td - 1) + tr]?.level === 3,
                         }">
                     </div>
                 </td>
@@ -19,7 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import * as APP from '~/api/app'
+import { animate, stagger } from 'animejs';
+import * as APP from '~/api/app';
 const option = ref({
     days: 22 * 7
 })
@@ -29,13 +30,17 @@ type HeatMapItem = {
     count: number,
     level: 0 | 1 | 2 | 3 | 4,
 }
+const blocks = useTemplateRef('block')
 const heatMapList = ref<HeatMapItem[]>([]);
+const isloading = ref(true);
 onMounted(() => {
     initHeatMap();
     initData();
+
 })
 async function initData() {
-    const { data } = await APP.Info.contributeHeatmap();
+    isloading.value = true;
+    const { data } = await APP.Info.contributeHeatmap({ start: new Date(getFirstDay().date).toLocaleDateString() });
     const map = new Map<string, number>();
     data.data.forEach(date => {
         map.set(new Date(date.date).toLocaleDateString(), date.count);
@@ -65,7 +70,32 @@ async function initData() {
         }
         date.level = 4;
     })
+    isloading.value = false;
+    startAnimate();
 }
+
+function startAnimate() {
+    if (blocks.value)
+        animate(blocks.value, {
+            scale: [
+                { to: [0, 1.25] },
+                { to: 1 }
+            ],
+            boxShadow: [
+                { to: '0 0 1rem 0 currentColor' },
+                { to: '0 0 0rem 0 currentColor' }
+            ],
+            x: [
+                { to: '5px' },
+                { to: 0 }
+            ],
+            delay: stagger(100, {
+                grid: [blocks.value.length / 7, 7],
+                from: Math.random() * blocks.value.length
+            }),
+        });
+}
+
 function initHeatMap() {
     let firstDayInfo = getFirstDay();
     let firstDay = firstDayInfo.date;
