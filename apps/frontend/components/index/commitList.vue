@@ -1,8 +1,5 @@
 <template>
     <div class="p-2">
-        <div>
-            <b>更新</b>
-        </div>
         <div v-show="isLoading" class="flex items-center justify-center h-30">
             <div class="loading"></div>
         </div>
