@@ -21,9 +21,9 @@
                 <button class="btn btn-primary btn-sm">
                     开始新对话
                 </button>
-                <a href="#commitList" class="btn btn-ghost btn-sm">
+                <button @click="btnShowCommitList" class="btn btn-ghost btn-sm">
                     更新记录
-                </a>
+                </button>
             </div>
         </div>
 
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-
+const emit = defineEmits(['btnShowCommitList'])
 // 问候语库（按时间段分类）
 const greetings = {
     morning: [
@@ -75,9 +75,9 @@ const getRandomGreeting = () => {
     const hour = new Date().getHours()
     let greetingsPool: string[] = []
 
-    if (hour < 12) {
+    if (hour < 11) {
         greetingsPool = greetings.morning
-    } else if (hour < 18) {
+    } else if (hour < 20) {
         greetingsPool = greetings.afternoon
     } else {
         greetingsPool = greetings.evening
@@ -91,6 +91,9 @@ onMounted(() => {
     currentGreeting.value = getRandomGreeting()
 })
 
+function btnShowCommitList() {
+    emit('btnShowCommitList');
+}
 
 </script>
 

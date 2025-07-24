@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full overflow-scroll flex items-center justify-center flex-col p-2 gap-2">
+    <div class="w-full mt-2 overflow-scroll flex items-center justify-center flex-col p-2 gap-2">
         <div>
             <table v-show="!isloading">
                 <tr v-for="tr in 7">
@@ -24,7 +24,8 @@
                 </tr>
             </table>
         </div>
-        <div class="float-right text-sm text-base-content/70 flex flex-row gap-3 justify-end">
+        <div v-show="selectedItem"
+            class="float-right mt-1 text-sm text-base-content/70 flex flex-row gap-3 justify-end">
             <div>
                 {{ selectedItem?.date }}
             </div>
