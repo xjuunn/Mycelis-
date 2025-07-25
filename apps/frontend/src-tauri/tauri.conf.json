@@ -13,7 +13,7 @@
     "windows": [
       {
         "title": "mycelis",
-        "width": 1000,
+        "width": 1050,
         "height": 650,
         "resizable": true,
         "fullscreen": false,

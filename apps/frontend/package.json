@@ -13,6 +13,7 @@
     "tauriBuild": "tauri build"
   },
   "dependencies": {
+    "@editorjs/editorjs": "^2.30.8",
     "@formkit/auto-animate": "^0.8.2",
     "@iconify/json": "^2.2.334",
     "@mycelis/config": "workspace:*",
