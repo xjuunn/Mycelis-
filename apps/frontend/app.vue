@@ -12,6 +12,7 @@
       <div class="alert alert-warning"></div>
     </div>
     <MediaAnswer></MediaAnswer>
+    <SearchModal></SearchModal>
     <div id="appBottom"></div>
   </div>
 </template>

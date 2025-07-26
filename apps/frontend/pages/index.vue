@@ -4,7 +4,7 @@
       <BaseLayoutLR title="消 息">
         <template #title-right>
           <NuxtLink to="/search?ui=content" class="btn btn-sm btn-ghost opacity-60 hover:opacity-100">
-            <Icon name="mingcute:search-2-line"></Icon>
+            <Icon name="mingcute:add-line"></Icon>
           </NuxtLink>
         </template>
         <template #list>

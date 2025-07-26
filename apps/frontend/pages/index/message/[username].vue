@@ -113,6 +113,7 @@
 </template>
 
 <script lang="ts" setup>
+// BUG 第一次打开页面有明显延迟 
 import * as User from '~/api/user';
 import * as Message from '~/api/message';
 import * as Friend from '~/api/friend';
