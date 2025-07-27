@@ -1,3 +1,4 @@
+import { UserStatus } from "@mycelis/types/dist/esm/Enum";
 import { ModalSearchItem, type IModalItem } from "./ModalItem";
 import * as User from '~/api/user';
 
@@ -33,9 +34,14 @@ export class SearchUserHandler implements ISearchHandler {
         const { data } = await User.search(keyword, skip, take);
         const searchHandlerResult = new SearchHandlerResult(this.groupName);
         data.data.list.forEach(user => {
-            const item: ModalSearchItem = new ModalSearchItem(user.displayName ?? user.name, () => {
-                navigateTo(`http://localhost:3000/message/${user.name}?ui=content`)
-            }, { type: 'image', url: user.avatarUrl ?? '' })
+            const item: ModalSearchItem = new ModalSearchItem(user.displayName ?? '', () => {
+                navigateTo(`/message/${user.name}?ui=content`);
+            }, { type: 'image', url: user.avatarUrl ?? '' }, user.name)
+            item.extra = {
+                status: user.status, ui: user.status === UserStatus.ONLINE ? <div class={''}>
+                    <span class={'status status-success'}></span> 在线
+                </div> : <span></span>
+            }
             searchHandlerResult.addItem(item);
         })
         return searchHandlerResult;

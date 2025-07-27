@@ -13,6 +13,8 @@ export interface IModalItem {
     imgOrIcon: ModalItemIcon | ModalItemImg;
     type: 'search' | 'command';
     text: string;
+    description: string;
+    extra: any;
     onClick: () => void;
 }
 
@@ -20,13 +22,17 @@ export class ModalSearchItem implements IModalItem {
     imgOrIcon: ModalItemIcon | ModalItemImg
     type: "search" | "command"
     text: string
+    description: string
+    extra: any;
     onClick: () => void
 
-    constructor(text: string, onClick: () => void, imgOrIcon: ModalItemIcon | ModalItemImg) {
+    constructor(text: string, onClick: () => void, imgOrIcon: ModalItemIcon | ModalItemImg, description: string) {
         this.type = 'search';
         this.text = text;
         this.imgOrIcon = imgOrIcon;
         this.onClick = onClick;
+        this.description = description;
+        this.extra = {};
     }
 
 
