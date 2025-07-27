@@ -15,6 +15,9 @@
 <script setup lang="ts">
 const text = ref('');
 const inputEl = useTemplateRef('inputEL')
+const emit = defineEmits<{
+    (e: 'onTextChange', value: string): void
+}>()
 
 const mode = computed(() => {
     if (text.value[0] === '/') return 'command';
@@ -23,8 +26,11 @@ const mode = computed(() => {
 function btnClose() {
     text.value = '';
 }
-function onInput(e: Event) {
-    console.log(e);
+function onInput() {
+    onTextChange()
+}
+function onTextChange() {
+    emit('onTextChange', text.value)
 }
 
 </script>
