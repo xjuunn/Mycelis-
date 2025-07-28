@@ -39,6 +39,7 @@
 <script setup lang="ts">
 import { SearchUserHandler, type IModalHandlerResult } from '~/core/searchModal/ModalHandler';
 import * as File from '~/api/file';
+import { SearchTaskManager } from '~/core/searchModal/SearchTaskManager';
 const listData: Ref<IModalHandlerResult[]> = ref([]);
 const isloading = ref(false);
 const isEmptyResult = ref(false)
@@ -50,11 +51,14 @@ async function textChange(text: string) {
         return
     };
     isloading.value = true;
-    const searchUserHandler = new SearchUserHandler();
-    const data = await searchUserHandler.doSearch(text, 0, 5);
-    listData.value = [];
-    listData.value.push(data);
-    if (data.modalSearchItemList.length == 0) isEmptyResult.value = true;
+    const searchTaskHandler = SearchTaskManager.getInstance();
+    searchTaskHandler.registerHandler(new SearchUserHandler());
+    searchTaskHandler.executeSearch(text, (data) => {
+        listData.value = [];
+        listData.value.push(data);
+        if (data.modalSearchItemList.length == 0) isEmptyResult.value = true;
+    })
+
     isloading.value = false;
 }
 
