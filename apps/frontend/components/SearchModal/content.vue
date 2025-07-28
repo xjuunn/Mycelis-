@@ -43,6 +43,13 @@ import { SearchTaskManager } from '~/core/searchModal/SearchTaskManager';
 const listData: Ref<IModalHandlerResult[]> = ref([]);
 const isloading = ref(false);
 const isEmptyResult = ref(false)
+onMounted(() => {
+    useEmitt().emitter.on('search-modal-close', () => {
+        isEmptyResult.value = false;
+        isloading.value = false;
+        listData.value = [];
+    });
+})
 async function textChange(text: string) {
     isEmptyResult.value = false;
     if (!text) {
@@ -58,7 +65,6 @@ async function textChange(text: string) {
         listData.value.push(data);
         if (data.modalSearchItemList.length == 0) isEmptyResult.value = true;
     })
-
     isloading.value = false;
 }
 

@@ -6,7 +6,10 @@ export const useSearchModal = () => {
 
     function init() {
         onKeyStroke('Escape', () => {
-            if (isshow.value) useSearchModal().closeModal();
+            if (isshow.value) {
+                useSearchModal().closeModal();
+                useEmitt().emitter.emit('search-modal-close');
+            }
         }, { dedupe: true });
     }
 
@@ -15,6 +18,7 @@ export const useSearchModal = () => {
     }
 
     function closeModal() {
+        text.value = '';
         isshow.value = false;
     }
 
