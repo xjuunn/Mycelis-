@@ -134,6 +134,6 @@ export class UserService {
       const bScore = bNameMatch * 2 + bDisplayNameMatch;
       return bScore - aScore;
     });
-    return new PageResultInfo(list, total, pageInfo.skip, pageInfo.take);
+    return new PageResultInfo(list.slice(pageInfo.skip, pageInfo.skip + pageInfo.take), total, pageInfo.skip, pageInfo.take);
   }
 }

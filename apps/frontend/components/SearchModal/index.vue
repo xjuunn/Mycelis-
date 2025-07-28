@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-const isOpen = ref(true);
+const isOpen = useSearchModal().isshow;
 let timer: any;
 const contentEL = useTemplateRef('content');
 async function onTextChange(text: string) {

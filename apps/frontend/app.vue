@@ -30,6 +30,8 @@ useHead({
 onMounted(() => {
   useTheme().init();
   useLogger().showHello();
+  useSearchModal().init();
+  useHotKey().init();
   document
     .getElementsByTagName("body")[0]
     .addEventListener("contextmenu", (e) => {

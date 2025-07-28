@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-const text = ref('');
+const text = useSearchModal().text;
 const inputEl = useTemplateRef('inputEL')
 const emit = defineEmits<{
     (e: 'onTextChange', value: string): void

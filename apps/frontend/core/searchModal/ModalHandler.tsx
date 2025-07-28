@@ -31,7 +31,7 @@ export class SearchUserHandler implements ISearchHandler {
         this.groupName = '用户';
     }
     doSearch = async (keyword: string, skip: number = 0, take: number = 3): Promise<SearchHandlerResult> => {
-        const { data } = await User.search(keyword, skip, take);
+        const { data } = await User.search(keyword, take, skip);
         const searchHandlerResult = new SearchHandlerResult(this.groupName);
         data.data.list.forEach(user => {
             const item: ModalSearchItem = new ModalSearchItem(user.displayName ?? '', () => {
