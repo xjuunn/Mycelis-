@@ -50,7 +50,12 @@ onMounted(() => {
         listData.value = [];
     });
 })
+const mode = computed(() => {
+    if (useSearchModal().text.value[0] === '/') return 'command';
+    return 'default';
+})
 async function textChange(text: string) {
+    if (mode.value === 'command') return;
     isEmptyResult.value = false;
     if (!text) {
         listData.value = [];

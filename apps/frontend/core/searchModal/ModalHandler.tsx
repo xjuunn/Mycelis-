@@ -36,6 +36,7 @@ export class SearchUserHandler implements ISearchHandler {
         data.data.list.forEach(user => {
             const item: ModalSearchItem = new ModalSearchItem(user.displayName ?? '', () => {
                 navigateTo(`/message/${user.name}?ui=content`);
+                useSearchModal().closeModal();
             }, { type: 'image', url: user.avatarUrl ?? '' }, user.name)
             item.extra = {
                 status: user.status, ui: user.status === UserStatus.ONLINE ? <div class={''}>

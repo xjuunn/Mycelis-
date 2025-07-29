@@ -1,0 +1,48 @@
+import type { ICommand } from "./Commands";
+
+type CommandLoader = () => Promise<ICommand>;
+
+export class CommandRegister {
+    private static instance: CommandRegister;
+    private commandLoaders: Map<string, CommandLoader> = new Map();
+    private commands: Map<string, ICommand> = new Map();
+
+    constructor() {
+        if (CommandRegister.instance) {
+            return CommandRegister.instance;
+        }
+        CommandRegister.instance = this;
+        // 动态导入注册命令
+        this.registerLazy('call', () => import('./Commands').then(m => new m.CallCommand()));
+    }
+
+    static getInstance(): CommandRegister {
+        if (!CommandRegister.instance) {
+            CommandRegister.instance = new CommandRegister();
+        }
+        return CommandRegister.instance;
+    }
+
+    registerLazy(name: string, loader: CommandLoader) {
+        this.commandLoaders.set(name, loader);
+    }
+
+    async getCommand(name: string): Promise<ICommand> {
+        if (this.commands.has(name)) {
+            const command = this.commands.get(name);
+            if (command) return command;
+        }
+        const loader = this.commandLoaders.get(name);
+        if (loader) {
+            try {
+                const command = await loader();
+                this.commands.set(name, command);
+                return command;
+            } catch (error) {
+                console.log(`加载命令${name}失败`, error);
+                throw new Error(`加载命令${name}失败: ${error instanceof Error ? error.message : '未知错误'}`);
+            }
+        }
+        throw new Error(`命令${name}未注册`);
+    }
+}

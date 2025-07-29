@@ -1,6 +1,11 @@
 <template>
     <div class="h-12 flex items-center p-2 gap-1 border-b border-base-content/10">
-        <Icon name="mingcute:search-2-line" size="1.2rem"></Icon>
+
+        <label class="swap swap-rotate">
+            <input type="checkbox" :checked="mode == 'default'" />
+            <Icon class="swap-on" name="mingcute:search-2-line"></Icon>
+            <Icon class="swap-off" name="mingcute:terminal-line"></Icon>
+        </label>
         <span class="text-base-content/70 flex-1 text-sm">
             <input ref="inputEL" @input="onInput" v-model="text" type="text" tabindex="0"
                 class="input w-full bg-transparent border-0 focus-within:outline-0 shadow-none focus-within:shadow-none"
@@ -31,7 +36,6 @@ watch(() => useSearchModal().isshow.value, (isShow) => {
         })
     }
 }, { immediate: true })
-
 const mode = computed(() => {
     if (text.value[0] === '/') return 'command';
     return 'default';
