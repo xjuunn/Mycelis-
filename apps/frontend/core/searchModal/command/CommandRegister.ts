@@ -1,11 +1,11 @@
-import type { ICommand } from "./Commands";
+import type { BaseCommand, ICommand } from "./Commands";
 
-type CommandLoader = () => Promise<ICommand>;
+type CommandLoader = () => Promise<BaseCommand>;
 
 export class CommandRegister {
     private static instance: CommandRegister;
     private commandLoaders: Map<string, CommandLoader> = new Map();
-    private commands: Map<string, ICommand> = new Map();
+    private commands: Map<string, BaseCommand> = new Map();
 
     constructor() {
         if (CommandRegister.instance) {
@@ -27,7 +27,7 @@ export class CommandRegister {
         this.commandLoaders.set(name, loader);
     }
 
-    async getCommand(name: string): Promise<ICommand> {
+    async getCommand(name: string): Promise<BaseCommand> {
         if (this.commands.has(name)) {
             const command = this.commands.get(name);
             if (command) return command;

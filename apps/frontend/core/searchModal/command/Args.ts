@@ -7,36 +7,60 @@ export interface IArgs<T = any> {
     required?: boolean; // 是否必填
     setValue: (value: T) => void; // 设置值
     getValue: () => T | undefined; // 获取当前值
-    choices?: () => T[]; // 可选值列表
+    choices?: () => Promise<T[]>; // 可选值列表
     validate?: (value: T) => boolean; // 验证函数
     format?: (value: T) => string; // 格式化函数，将参数值转换为字符串
 }
 
-export class UserArg implements IArgs<string> {
-    _value: string | undefined;
-    defaultValue?: string | undefined;
-    name: string = 'user';
-    description: string = '用户名';
-    required = true;
-
-    format?: ((value: string) => string) | undefined = () => {
-        return this._value || '';
-    };
-
-    setValue: (value: string) => void = (value: string) => {
+export abstract class BaseArg<T = any> implements IArgs<T> {
+    name: string;
+    description: string;
+    _value: T | undefined;
+    defaultValue?: T | undefined;
+    required?: boolean | undefined;
+    constructor(name: string, description: string, defaultValue?: T, required: boolean = true) {
+        this.name = name;
+        this.description = description;
+        this.defaultValue = defaultValue;
+        this._value = defaultValue;
+        this.required = required;
+    }
+    setValue(value: T) {
         this._value = value;
-    };
+    }
 
-    getValue: () => string | undefined = () => {
+    getValue(): T | undefined {
         return this._value;
-    };
+    }
 
-    validate?: ((value: string) => boolean) | undefined = (value: string) => {
+    setRequired(required: boolean) {
+        this.required = required;
+        return this;
+    }
+
+    getRequired(): boolean | undefined {
+        return this.required;
+    }
+
+    public abstract choices(): Promise<T[]>;
+
+    public abstract validate(value: T): boolean;
+
+}
+
+export class UserArg extends BaseArg<string> {
+
+    constructor() {
+        super('username', '用户名');
+    }
+
+    public override choices(): Promise<string[]> {
+        return Promise.resolve(['user01', 'user02', 'user03']);
+    }
+
+    public override validate(value: string): boolean {
         if (!value) return false;
         return true;
-    };
+    }
 
-    choices?: (() => string[]) | undefined = () => {
-        return ['user01', 'user02', 'user03'];
-    };
 }
