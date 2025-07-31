@@ -6,6 +6,7 @@
 </template>
 
 <script setup lang="ts">
+import { CommandInputHelper } from '~/core/searchModal/command/CommandInputHelper';
 import { CommandRegister } from '~/core/searchModal/command/CommandRegister';
 
 definePageMeta({
@@ -18,11 +19,11 @@ onMounted(() => {
 })
 
 async function test() {
-  const commandRegister = CommandRegister.getInstance();
-  const callCommand = await commandRegister.getCommand('call');
-  callCommand.setUserInput(cmd.value);
-  console.log(callCommand);
-  const result = await callCommand.execute();
-  console.log(result);
+  // const commandHelper = new CommandInputHelper();
+  // const commands = commandHelper.searchCommand(commandHelper.extractCommandName(cmd.value));
+  // const command = await commandHelper.getCommand(commands[0]);
+  // command.setUserInput(cmd.value);
+  // const result = await command.execute();
+  // console.log(result);
 }
 </script>

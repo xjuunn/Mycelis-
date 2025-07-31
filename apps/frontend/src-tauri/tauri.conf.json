@@ -5,7 +5,7 @@
   "identifier": "com.mycelis.dev",
   "build": {
     "frontendDist": "../dist/public",
-    "beforeDevCommand": "pnpm run start",
+    "beforeDevCommand": "pnpm --filter frontend --filter backend run start",
     "beforeBuildCommand": "pnpm --filter @mycelis/frontend run generate",
     "devUrl": "http://localhost:3000"
   },

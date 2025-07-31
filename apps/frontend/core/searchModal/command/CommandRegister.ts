@@ -4,7 +4,7 @@ type CommandLoader = () => Promise<BaseCommand>;
 
 export class CommandRegister {
     private static instance: CommandRegister;
-    private commandLoaders: Map<string, CommandLoader> = new Map();
+    private commandLoaders: Map<string, { loader: CommandLoader, description: string }> = new Map();
     private commands: Map<string, BaseCommand> = new Map();
 
     constructor() {
@@ -13,7 +13,7 @@ export class CommandRegister {
         }
         CommandRegister.instance = this;
         // 动态导入注册命令
-        this.registerLazy('call', () => import('./Commands').then(m => new m.CallCommand()));
+        this.registerLazy('call', () => import('./Commands').then(m => new m.CallCommand()), '向指定用户打电话');
     }
 
     static getInstance(): CommandRegister {
@@ -23,8 +23,8 @@ export class CommandRegister {
         return CommandRegister.instance;
     }
 
-    registerLazy(name: string, loader: CommandLoader) {
-        this.commandLoaders.set(name, loader);
+    registerLazy(name: string, loader: CommandLoader, description: string): void {
+        this.commandLoaders.set(name, { loader, description });
     }
 
     async getCommand(name: string): Promise<BaseCommand> {
@@ -32,7 +32,7 @@ export class CommandRegister {
             const command = this.commands.get(name);
             if (command) return command;
         }
-        const loader = this.commandLoaders.get(name);
+        const loader = this.commandLoaders.get(name)?.loader;
         if (loader) {
             try {
                 const command = await loader();
@@ -44,5 +44,13 @@ export class CommandRegister {
             }
         }
         throw new Error(`命令${name}未注册`);
+    }
+
+    public getCommandNames(): { name: string, description: string }[] {
+        const commandInfos = Array.from(this.commandLoaders.entries()).map(([name, { description }]) => ({
+            name,
+            description
+        }));
+        return commandInfos;
     }
 }

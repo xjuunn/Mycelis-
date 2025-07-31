@@ -1,3 +1,10 @@
+export type ChoicesResult<T = any> = {
+    title: string;
+    description?: string;
+    prefixUI?: any;
+    suffixUI?: any;
+    data?: T;
+}
 
 export interface IArgs<T = any> {
     name: string; // 参数名称
@@ -7,7 +14,7 @@ export interface IArgs<T = any> {
     required?: boolean; // 是否必填
     setValue: (value: T) => void; // 设置值
     getValue: () => T | undefined; // 获取当前值
-    choices?: () => Promise<T[]>; // 可选值列表
+    choices?: (keyword: string) => Promise<ChoicesResult<T>[]>; // 可选值列表
     validate?: (value: T) => boolean; // 验证函数
     format?: (value: T) => string; // 格式化函数，将参数值转换为字符串
 }
@@ -42,7 +49,7 @@ export abstract class BaseArg<T = any> implements IArgs<T> {
         return this.required;
     }
 
-    public abstract choices(): Promise<T[]>;
+    public abstract choices(keyword: string): Promise<ChoicesResult<T>[]>;
 
     public abstract validate(value: T): boolean;
 
@@ -54,8 +61,19 @@ export class UserArg extends BaseArg<string> {
         super('username', '用户名');
     }
 
-    public override choices(): Promise<string[]> {
-        return Promise.resolve(['user01', 'user02', 'user03']);
+    public override async choices(keyword: string): Promise<ChoicesResult<string>[]> {
+        const list: ChoicesResult[] = [];
+
+        // TODO 获取选了列表
+        list.push({
+            title: "用户1",
+            description: '描述',
+            prefixUI: (<span class={'text-sm'}>前缀</span>),
+            suffixUI: (<span>后缀</span>),
+            data: ''
+        })
+
+        return list;
     }
 
     public override validate(value: string): boolean {
