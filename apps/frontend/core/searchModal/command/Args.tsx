@@ -1,3 +1,6 @@
+import type { Model } from '@mycelis/types';
+import { UserStatus } from '@mycelis/types/dist/esm/Enum';
+import * as APPAPI from '~/api/file'
 export type ChoicesResult<T = any> = {
     title: string;
     description?: string;
@@ -55,28 +58,34 @@ export abstract class BaseArg<T = any> implements IArgs<T> {
 
 }
 
-export class UserArg extends BaseArg<string> {
+export class UserArg extends BaseArg<Model.User> {
 
     constructor() {
         super('username', '用户名');
     }
 
-    public override async choices(keyword: string): Promise<ChoicesResult<string>[]> {
+    public override async choices(keyword: string): Promise<ChoicesResult<Model.User>[]> {
+        const userSearch = await import('~/api/user')
+        const { data } = await userSearch.search(keyword, 5, 0);
         const list: ChoicesResult[] = [];
-
-        // TODO 获取选了列表
-        list.push({
-            title: "用户1",
-            description: '描述',
-            prefixUI: (<span class={'text-sm'}>前缀</span>),
-            suffixUI: (<span>后缀</span>),
-            data: ''
+        data.data.list.forEach(user => {
+            list.push({
+                title: user.displayName ? user.displayName : user.name,
+                description: user.displayName ? `(${user.name})` : '',
+                data: user,
+                prefixUI: (
+                    <div class={'avatar w-7 h-7 rounded-full overflow-hidden'}>
+                        <img src={APPAPI.getFileUrl(user.avatarUrl ?? '')} />
+                    </div>
+                ),
+                suffixUI: user.status === UserStatus.ONLINE ? <span class='text-success'>在线</span> : <span></span>
+            })
         })
 
         return list;
     }
 
-    public override validate(value: string): boolean {
+    public override validate(value: Model.User): boolean {
         if (!value) return false;
         return true;
     }

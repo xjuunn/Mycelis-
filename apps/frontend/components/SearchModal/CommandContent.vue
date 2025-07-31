@@ -8,7 +8,7 @@
         <div v-else class="text-sm">
             <span class="text-base-content/70 ml-2">格式: {{ command?.usage }}</span>
             <div v-for="item in optionList"
-                class="text-base-content/70 p-2 m-1 border border-transparent hover:border-base-content/10 hover:bg-base-100/30 rounded-lg flex gap-1 items-center">
+                class="text-base-content/70 p-2 m-1 border border-transparent hover:border-base-content/10 hover:bg-base-100/30 rounded-lg flex gap-2 items-center">
                 <component :is="item.prefixUI"></component>
                 <span>{{ item.title }}</span>
                 <span class="flex-1">{{ item.description }}</span>
