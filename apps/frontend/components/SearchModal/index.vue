@@ -2,7 +2,8 @@
     <client-only>
         <teleport to="body">
             <dialog class="modal modal-bottom sm:modal-middle select-none" :class="{ 'modal-open': isOpen }">
-                <div class="modal-box p-0 glass bg-base-300/50 outline-1 outline-base-content/10 flex flex-col">
+                <div v-if="isOpen"
+                    class="modal-box p-0 glass bg-base-300/50 outline-1 outline-base-content/10 flex flex-col">
                     <SearchModalInput @on-text-change="onTextChange"></SearchModalInput>
                     <SearchModalSearchContent v-if="mode == 'default'" class="flex-1" ref="searchContent">
                     </SearchModalSearchContent>
