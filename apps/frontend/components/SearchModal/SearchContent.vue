@@ -59,14 +59,17 @@ onMounted(() => {
         selectIndex.value++;
     })
     onKeyStroke('ArrowUp', (e) => {
+        e.preventDefault()
         if (selectIndex.value <= 0) return;
         selectIndex.value--;
     })
     onKeyStroke('ArrowDown', (e) => {
+        e.preventDefault()
         if (selectIndex.value >= listTotalNum.value - 1) return;
         selectIndex.value++;
     })
     onKeyStroke('Enter', (e) => {
+        e.preventDefault()
         const item = getSelectItem();
         item?.onClick()
     })

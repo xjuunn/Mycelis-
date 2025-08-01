@@ -114,9 +114,10 @@ export class ThemeCommand extends BaseCommand<'theme <themename>'> {
     public override execute(): Promise<CommandExecuteResult> | CommandExecuteResult {
         const themename = this.getArg('themename');
         useTheme().setTheme(themename?.getValue());
+        
         return {
             success: true,
-            message: `成功切换为 ${themename} 主题`
+            message: `成功切换为 ${themename?.name} 主题`
         }
     }
 
