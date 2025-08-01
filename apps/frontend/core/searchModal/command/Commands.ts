@@ -1,4 +1,4 @@
-import { UserArg, type IArgs } from "./Args";
+import { ThemeArg, UserArg, type IArgs } from "./Args";
 type ExtractArgNames<Usage extends string> =
     Usage extends `${string}<${infer ArgName}>${infer Rest}`
     ? ArgName | ExtractArgNames<Rest>
@@ -94,7 +94,7 @@ export abstract class BaseCommand<Usage extends string = any> implements IComman
 export class CallCommand extends BaseCommand<'call <username>'> {
     constructor() {
         super('call', '向某人打电话', 'call <username>');
-        this.addArg(new UserArg())
+        this.addArg(new UserArg());
     }
 
     public override execute(): Promise<CommandExecuteResult> | CommandExecuteResult {
@@ -103,6 +103,21 @@ export class CallCommand extends BaseCommand<'call <username>'> {
             message: `成功向${this.getArg('username')?.getValue()}打电话`,
         };
     }
+}
 
+export class ThemeCommand extends BaseCommand<'theme <themename>'> {
+    constructor() {
+        super('theme', '修改系统主题', 'theme <themename>')
+        this.addArg(new ThemeArg());
+    }
+
+    public override execute(): Promise<CommandExecuteResult> | CommandExecuteResult {
+        const themename = this.getArg('themename');
+        useTheme().setTheme(themename?.getValue());
+        return {
+            success: true,
+            message: `成功切换为 ${themename} 主题`
+        }
+    }
 
 }

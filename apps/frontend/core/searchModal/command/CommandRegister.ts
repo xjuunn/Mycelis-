@@ -14,6 +14,7 @@ export class CommandRegister {
         CommandRegister.instance = this;
         // 动态导入注册命令
         this.registerLazy('call', () => import('./Commands').then(m => new m.CallCommand()), '向指定用户打电话');
+        this.registerLazy('theme', () => import('./Commands').then(m => new m.ThemeCommand()), '修改系统主题');
     }
 
     static getInstance(): CommandRegister {

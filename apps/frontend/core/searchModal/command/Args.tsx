@@ -60,9 +60,7 @@ export abstract class BaseArg<T = any> implements IArgs<T> {
 
 export class UserArg extends BaseArg<Model.User> {
 
-    constructor() {
-        super('username', '用户名');
-    }
+    constructor() { super('username', '用户名') }
 
     public override async choices(keyword: string): Promise<ChoicesResult<Model.User>[]> {
         const userSearch = await import('~/api/user')
@@ -88,6 +86,24 @@ export class UserArg extends BaseArg<Model.User> {
     public override validate(value: Model.User): boolean {
         if (!value) return false;
         return true;
+    }
+}
+
+export class ThemeArg extends BaseArg<string> {
+
+    constructor() { super('themename', '主题名') }
+
+    public override async choices(keyword: string): Promise<ChoicesResult<string>[]> {
+        const list: ChoicesResult<string>[] = [];
+        useTheme().themeList.forEach(themeName => {
+            if (themeName.startsWith(keyword))
+                list.push({ title: themeName })
+        })
+        return list;
+    }
+
+    public override validate(value: string): boolean {
+        return useTheme().themeList.includes(value)
     }
 
 }
