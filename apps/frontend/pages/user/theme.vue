@@ -53,13 +53,12 @@
                             class="text-sm inline-flex items-center transition active:scale-95">
                             <span v-if="theme == 'system'">系统</span>
                             <span v-else-if="theme == 'light'">亮色</span>
-                            <span v-else>深色</span>
+                            <span v-else-if="theme == 'dark'">深色</span>
+                            <span v-else>{{ theme }}</span>
                             <Icon name="mingcute:down-line" size="1rem"></Icon>
                         </div>
                         <ul tabindex="0" class="dropdown-content  menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                            <li><a @click="setTheme('system')">系统</a></li>
-                            <li><a @click="setTheme('light')">亮色</a></li>
-                            <li><a @click="setTheme('dark')">深色</a></li>
+                            <li v-for="item in useTheme().themeList"><a @click="setTheme(item)">{{ item }}</a></li>
                         </ul>
                     </div>
 
@@ -83,9 +82,9 @@ onMounted(async () => {
 function goBack() {
     useRouter().back();
 }
-const theme = ref<'system' | 'dark' | 'light'>();
+const theme = ref<string>();
 
-function setTheme(t: 'system' | 'dark' | 'light') {
+function setTheme(t: string) {
     theme.value = t;
     useTheme().setTheme(t);
 }

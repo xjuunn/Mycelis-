@@ -1,11 +1,13 @@
 export const useTheme = () => {
-
+    const themeList = [
+        'system', 'dark', 'light'
+    ]
     function init() {
         const theme = localStorage.getItem('theme');
-        setTheme(theme)
+        if (theme) setTheme(theme)
     }
 
-    function setTheme(theme: 'system' | 'dark' | 'light' | null | string) {
+    function setTheme(theme: typeof themeList[number]) {
         if (!theme) return;
         const html = document.getElementsByTagName('html')[0];
         localStorage.setItem('theme', theme);
@@ -13,18 +15,11 @@ export const useTheme = () => {
             html.removeAttribute('data-theme');
             return;
         }
-        if (theme == 'dark') {
-            html.setAttribute('data-theme', 'dark');
-            return;
-        }
-        if (theme == 'light') {
-            html.setAttribute('data-theme', 'light');
-            return;
-        }
+        html.setAttribute('data-theme', theme);
     }
 
 
     return {
-        init, setTheme
+        init, setTheme, themeList
     }
 }
