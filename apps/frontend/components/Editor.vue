@@ -6,9 +6,11 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount, watch, nextTick, type Ref } from 'vue'
-import Quill, { Range, type Delta, type QuillOptions } from 'quill'
+import Quill, { Delta, Range, type QuillOptions } from 'quill'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+import { QuillConfig } from '~/core/editor/QuillConfig'
+import { CustomQuill } from '~/core/editor/CustomQuill'
 const { isMobile } = useDevice()
 type ToolbarOption =
     | string
@@ -80,10 +82,10 @@ const initEditor = (): void => {
         theme: props.theme,
         placeholder: props.placeholder,
         readOnly: props.readOnly,
-        modules: mergedModules.value
+        modules: mergedModules.value,
     }
 
-    const editor = markRaw(new Quill(editorElement.value, options));
+    const editor = markRaw(new CustomQuill(editorElement.value, options));
     quillInstance.value = editor
 
     if (props.modelValue) {
@@ -93,12 +95,15 @@ const initEditor = (): void => {
     editor.on('text-change', (
         delta: Delta,
         oldDelta: Delta,
-        source: 'api' | 'user' | 'silent'
+        source: 'api' | 'user' | 'silent',
     ) => {
         const html = editor.root.innerHTML
         emit('update:modelValue', html)
         emit('change', html, delta, source)
+
     })
+    const quillConfig = new QuillConfig(quillInstance.value);
+
     editor.root.addEventListener('keydown', handlerKeyDown)
     emit('ready', editor)
 }
