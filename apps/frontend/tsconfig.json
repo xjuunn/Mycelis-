@@ -3,7 +3,7 @@
   "compilerOptions": {
     "jsxFactory": "h",
     "jsxImportSource": "vue",
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "paths": {
       "~/*": [
         "./*"
